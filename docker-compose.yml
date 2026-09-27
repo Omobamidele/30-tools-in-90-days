@@ -1,0 +1,29 @@
+# Tool 01 local services. Ports are fixed by /PORTS.md, so don't change them.
+name: tool-01-exposure-register
+
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: er
+      POSTGRES_PASSWORD: er
+      POSTGRES_DB: exposure_register
+    ports:
+      - "5401:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres-init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U er -d exposure_register"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "4001:8025" # web inbox
+      - "2501:1025" # SMTP
+
+volumes:
+  pgdata:
