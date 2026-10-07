@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+/* "Signal room" tokens. Source of truth: docs/09-design-system.md. Ink-teal chrome, light
+   surfaces on a faint grid, chartreuse only for live markers. Contrast is computed there. */
+:root {
+  --ink: #0f2b2e;
+  --ink-2: #163b3f;
+  --on-ink: #ffffff;
+  --on-ink-muted: #a9bdba; /* 7.6:1 on ink */
+
+  --signal: #c8f03c; /* live markers only; never text on white */
+  --signal-ink: #4a6600; /* signal-coloured text on light (6.6:1) */
+
+  --canvas: #f3f5f3;
+  --surface: #ffffff;
+  --sunken: #e8edeb;
+  --text: #10201f;
+  --muted: #485957;
+  --faint: #5a6967;
+  --rule: #dde3e1;
+  --rule-strong: #c3ccc9;
+  --field: #7a8b88;
+
+  --brand: #0d6b6b; /* white-labelled: primaryColor */
+  --brand-strong: color-mix(in srgb, var(--brand) 82%, black);
+  --brand-tint: color-mix(in srgb, var(--brand) 8%, white);
+  --accent: var(--signal); /* white-labelled: accentColor */
+
+  --risk: #b42318;
+  --risk-bg: #fef3f2;
+  --watch: #a15c07;
+  --watch-bg: #fff8eb;
+  --won: #157347;
+  --won-bg: #edf8f1;
+  --by-cs: #6b46c1;
+  --by-sales: #1d5fa6;
+
+  --shadow-pop: 0 8px 24px rgb(15 43 46 / 0.16);
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-on-ink: var(--on-ink);
+  --color-on-ink-muted: var(--on-ink-muted);
+  --color-signal: var(--accent);
+  --color-signal-ink: var(--signal-ink);
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-field: var(--field);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-tint: var(--brand-tint);
+  --color-risk: var(--risk);
+  --color-risk-bg: var(--risk-bg);
+  --color-watch: var(--watch);
+  --color-watch-bg: var(--watch-bg);
+  --color-won: var(--won);
+  --color-won-bg: var(--won-bg);
+  --color-by-cs: var(--by-cs);
+  --color-by-sales: var(--by-sales);
+
+  --font-sans: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
+
+  /* Type scale (docs/09 § Type) */
+  --text-display: 30px;
+  --text-display--line-height: 38px;
+  --text-display--letter-spacing: -0.01em;
+  --text-title: 22px;
+  --text-title--line-height: 28px;
+  --text-section: 15px;
+  --text-section--line-height: 22px;
+  --text-body: 14px;
+  --text-body--line-height: 20px;
+  --text-table: 13px;
+  --text-table--line-height: 18px;
+  --text-meta: 12px;
+  --text-meta--line-height: 16px;
+  --text-tag: 11px;
+  --text-tag--line-height: 14px;
+  --text-figure: 24px;
+  --text-figure--line-height: 30px;
+
+  --radius-control: 6px;
+  --radius-panel: 8px;
+  --shadow-pop: var(--shadow-pop);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  background-color: var(--canvas);
+  /* Faint 24px grid (docs/09): structure, not decoration. Panels are opaque on top of it. */
+  background-image:
+    linear-gradient(to right, rgb(15 43 46 / 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(15 43 46 / 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-panel);
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Links in body text are always underlined: teal on body text is 2.67:1 (docs/09). */
+.link {
+  color: var(--brand);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--brand) 45%, transparent);
+  text-underline-offset: 2px;
+}
+.link:hover {
+  text-decoration-color: currentColor;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.on-ink :focus-visible {
+  outline-color: var(--accent);
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateX(16px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "name": "Fernway",
+  "slug": "fernway",
+  "timezone": "America/New_York",
+  "currency": "USD",
+  "demo": true,
+  "config": {
+    "brand": { "productName": "Signal Desk", "logoText": "FW", "primaryColor": "#0D6B6B", "accentColor": "#C8F03C" },
+    "terminology": {
+      "csql": "CSQL",
+      "csqlPlural": "CSQLs",
+      "seats": "Analyst seats",
+      "seatSingular": "analyst seat",
+      "usageMetric": "Document credits",
+      "usageUnit": "documents"
+    },
+    "priceBook": {
+      "currency": "USD",
+      "seatPriceMinor": 120000,
+      "minSeatAddOn": 5,
+      "seatHeadroomPct": 10,
+      "creditTiers": [
+        { "committed": 25000, "priceMinor": 1100000 },
+        { "committed": 50000, "priceMinor": 2000000 },
+        { "committed": 75000, "priceMinor": 2700000 },
+        { "committed": 100000, "priceMinor": 3400000 },
+        { "committed": 150000, "priceMinor": 4600000 }
+      ],
+      "overagePer1000Minor": 40000,
+      "addons": [
+        { "key": "ap_automation", "name": "AP Automation", "priceMinor": 1800000 },
+        { "key": "forecasting", "name": "Forecasting", "priceMinor": 1200000 }
+      ]
+    },
+    "segments": [
+      { "key": "mid", "name": "Mid-market" },
+      { "key": "upper", "name": "Upper mid-market" }
+    ],
+    "deadlines": { "triageBusinessDays": 2, "sellerBusinessDays": 1, "businessDays": [1, 2, 3, 4, 5], "holidays": ["2026-11-26", "2026-12-25", "2027-01-01"] },
+    "detection": { "staleAfterDays": 3, "expireAfterDays": 7, "materialChangePct": 25, "renewalBoostDays": 120, "highPriorityScore": 70 },
+    "dismissReasons": [
+      "Usage is temporary (project, migration or audit)",
+      "Seats are contractors or a fixed team",
+      "Budget is frozen or already spent",
+      "Customer is at risk; not the time to sell",
+      "Already in conversation with the customer",
+      "Signal is wrong (data issue)"
+    ],
+    "returnReasons": [
+      "Not enough context in the handoff",
+      "Wrong owner or territory",
+      "Customer isn't ready to talk",
+      "Already working this deal"
+    ],
+    "lostReasons": ["No budget", "Chose to stay on current plan", "Went with a competitor", "Champion left", "Timing: revisit at renewal"]
+  },
+  "rules": [
+    { "key": "seat-pressure", "type": "SEAT_PRESSURE", "name": "Analyst seats nearly full", "params": { "utilisationPct": 90, "sustainDays": 14 }, "weight": 10, "cooldownDays": 30 },
+    { "key": "usage-pace", "type": "USAGE_PACE", "name": "On pace to exceed document commitment", "params": { "projectedPct": 110, "minElapsedPct": 25 }, "weight": 12, "cooldownDays": 45 },
+    { "key": "new-team", "type": "NEW_TEAM", "name": "A new team adopted Fernway", "params": { "withinDays": 45, "minActiveUsers": 5 }, "weight": 8, "cooldownDays": 60 },
+    { "key": "feature-intent", "type": "FEATURE_INTENT", "name": "Trying to open an add-on they don't own", "params": { "minAttempts": 12, "windowDays": 30 }, "weight": 10, "cooldownDays": 45 },
+    { "key": "new-exec", "type": "NEW_EXECUTIVE", "name": "A new senior stakeholder is active", "params": { "withinDays": 21, "seniorities": ["EXEC", "VP"] }, "weight": 5, "cooldownDays": 90 }
+  ]
+}
