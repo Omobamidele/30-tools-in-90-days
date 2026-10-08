@@ -108,6 +108,24 @@ One entry per milestone: what was built, how it was checked, what broke, and how
   - axe (WCAG 2.1 A/AA) on 23 screens across CSM, seller and RevOps, plus sign-in
 - **Zero accessibility violations.**
 
+### Design revision 2: modern CRM workspace (2026-10-08)
+Feedback: the product still read as a trading screen, and the split sign-in page didn't feel premium. Chosen direction: a modern CRM workspace ([09](09-design-system.md), revision 2).
+
+Changed:
+- light sidebar shell with org header, search, notifications, a waiting badge on Signals, and the user menu at the bottom; mobile bottom nav
+- centred sign-in card replaces the split page
+- Home: a plain-language headline, one stat strip, and "Ready to review" with company logos, signal pills, value and due date
+- Signals: status tabs with counts, filter chips, and rows showing who hands off to whom
+- CSQL board: roomier cards (name, value, deadline, handoff)
+- Results: people shown with avatars, signal types in plain words, a light period switch
+- signal types renamed in the UI ("Seats nearly full", "Usage ahead of plan", …); priority shown as words
+
+Fixed during review:
+- Home overflowed sideways on phones. Single-column grids had no `minmax(0,1fr)` base, so truncated text set the width. All two-column page grids now have a base column.
+- Accounts showed "1 $0" when an open signal had no estimate; it now shows only the count.
+
+Verified: typecheck, 44 Vitest, 7 Playwright (axe zero violations on 23 screens), and screenshots at 1440 and 390 px.
+
 ## Testing checklist (brief §14)
 - [x] **Happy paths:** e2e full loop; integration loop.
 - [x] **Incorrect inputs:** ingest per-row rejections; money parsing; rule parameter bounds; webhook URL validation.

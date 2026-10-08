@@ -10,7 +10,7 @@ export default async function SettingsLayout({ children }: LayoutProps<"/setting
   return (
     <>
       <PageHeader title="Settings" meta="How this workspace is set up: data in, routing, and who can do what." />
-      <div className="grid gap-4 lg:grid-cols-[200px_minmax(0,1fr)]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[200px_minmax(0,1fr)]">
         <SettingsNav />
         <div className="min-w-0">{children}</div>
       </div>

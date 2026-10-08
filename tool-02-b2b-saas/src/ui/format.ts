@@ -23,15 +23,17 @@ export function ago(d: Date, now: Date): string {
   return `${months} month${months === 1 ? "" : "s"} ago`;
 }
 
-/** "Due tomorrow" / "Overdue by 2 business days", with the tone the deadline deserves. */
+/** "Due Thu", "Due tomorrow", "2 days late": the way people say deadlines. */
 export function deadlineText(startedAt: Date, dueAt: Date, now: Date, cal: BusinessCalendar): { text: string; tone: Tone } {
   const state = deadlineState(startedAt, dueAt, now, cal);
   const days = businessDaysUntil(now, dueAt, cal);
   if (state === "OVERDUE" || state === "ESCALATE") {
     const late = Math.max(1, -days);
-    return { text: state === "ESCALATE" ? `Overdue ${late} business days` : late <= 1 ? "Overdue" : `Overdue ${late} business days`, tone: "risk" };
+    return { text: late <= 1 ? "Overdue" : `${late} days late`, tone: "risk" };
   }
-  const text = days <= 0 ? "Due today" : days === 1 ? "Due tomorrow" : `Due in ${days} business days`;
+  const weekday = dueAt.toLocaleDateString("en-US", { weekday: "short", timeZone: cal.timezone });
+  const date = dueAt.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: cal.timezone });
+  const text = days <= 0 ? "Due today" : days === 1 ? "Due tomorrow" : days <= 4 ? `Due ${weekday}` : `Due ${date}`;
   return { text, tone: state === "DUE_SOON" ? "watch" : "neutral" };
 }
 

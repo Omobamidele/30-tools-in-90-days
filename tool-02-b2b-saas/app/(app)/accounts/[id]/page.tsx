@@ -8,7 +8,7 @@ import { csqlLabel } from "@/services/csqls";
 import { termElapsed } from "@/core/rules/evaluate";
 import type { Trace } from "@/core/rules/types";
 import { Attributes, PageHeader, Panel } from "@/ui/page";
-import { MoneyShort, RuleTag, SimulatedTag, Status } from "@/ui/bits";
+import { CompanyLogo, MoneyShort, RuleTag, SimulatedTag, Status } from "@/ui/bits";
 import { SignalTrace } from "@/ui/trace";
 import { formatDateTime } from "@/ui/format";
 import { TeamEditor } from "./team-editor";
@@ -45,7 +45,12 @@ export default async function AccountPage({ params }: PageProps<"/accounts/[id]"
     <>
       <PageHeader
         crumbs={[{ href: "/accounts", label: "Accounts" }, { label: a.name }]}
-        title={a.name}
+        title={
+          <span className="flex items-center gap-3">
+            <CompanyLogo name={a.name} size={40} />
+            {a.name}
+          </span>
+        }
         meta={
           <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <span>{cfg.segments.find((s) => s.key === a.segment)?.name ?? "No segment"}</span>
@@ -56,7 +61,7 @@ export default async function AccountPage({ params }: PageProps<"/accounts/[id]"
           </span>
         }
       />
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="flex min-w-0 flex-col gap-4">
           <Panel title="Usage, last 90 days" id="usage">
             <div className="grid gap-6 p-4 xl:grid-cols-2">

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { appCtx } from "@/services/app-ctx";
 import { listAccounts } from "@/services/accounts";
 import { Chips, EmptyState, PageHeader, Panel } from "@/ui/page";
-import { MoneyShort, SimulatedTag, Status } from "@/ui/bits";
+import { Avatar, CompanyLogo, MoneyShort, SimulatedTag, Status } from "@/ui/bits";
 import { cx } from "@/ui/cx";
 
 export const metadata: Metadata = { title: "Accounts" };
@@ -65,12 +65,17 @@ export default async function AccountsPage({ searchParams }: PageProps<"/account
                 const stale = r.dataAgeDays === null || r.dataAgeDays > staleAfter;
                 return (
                   <tr key={r.account.id} className="hover:bg-sunken/50">
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-2.5">
+                      <span className="flex items-center gap-3">
+                      <CompanyLogo name={r.account.name} size={32} />
+                      <span>
                       <Link href={`/accounts/${r.account.id}`} className="font-medium hover:underline">
                         {r.account.name}
                       </Link>
                       <span className="block text-meta text-muted">
                         {cfg.segments.find((s) => s.key === r.account.segment)?.name ?? "No segment"} · {r.account.industry ?? r.account.domain}
+                      </span>
+                      </span>
                       </span>
                     </td>
                     <td className="px-2 py-2 text-right">
@@ -92,14 +97,14 @@ export default async function AccountsPage({ searchParams }: PageProps<"/account
                     </td>
                     <td className={cx("px-2 py-2 text-right num", r.usagePacePct !== null && r.usagePacePct >= 110 ? "font-semibold text-signal-ink" : "")}>{r.usagePacePct !== null ? `${r.usagePacePct}%` : "—"}</td>
                     <td className="px-2 py-2">{r.renewalInDays !== null ? <span className={r.renewalInDays <= 60 ? "text-watch" : ""}>{r.renewalInDays} days</span> : "—"}</td>
-                    <td className="px-2 py-2">{r.csmName ?? <span className="text-faint">None</span>}</td>
+                    <td className="px-2 py-2">{r.csmName ? <span className="flex items-center gap-1.5"><Avatar name={r.csmName} size={22} className="ring-0" />{r.csmName}</span> : <span className="text-faint">None</span>}</td>
                     <td className="px-2 py-2">{r.ownerName ?? <span className="text-faint">Queue</span>}</td>
                     <td className="px-4 py-2">
                       {stale ? (
                         <Status tone="watch">{r.dataAgeDays === null ? "No usage yet" : `Usage ${r.dataAgeDays} days old`}</Status>
                       ) : r.openSignals ? (
                         <span>
-                          <span className="num font-semibold">{r.openSignals}</span> <MoneyShort minor={r.openSignalValue} currency={ctx.actor.currency} className="text-muted" />
+                          <span className="num font-semibold">{r.openSignals}</span>{r.openSignalValue ? <> <MoneyShort minor={r.openSignalValue} currency={ctx.actor.currency} className="text-muted" /></> : null}
                         </span>
                       ) : (
                         <span className="text-faint">None</span>

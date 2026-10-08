@@ -17,7 +17,7 @@ export default async function WorkspaceSettings() {
           consultant setting up a new company changes them there; editing them in the app is on the roadmap.
         </p>
       </Panel>
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 xl:grid-cols-2">
         <Panel title="Branding and wording" id="brand">
           <Attributes
             items={[
@@ -62,7 +62,7 @@ export default async function WorkspaceSettings() {
           />
         </Panel>
         <Panel title="Reasons people choose from" id="reasons">
-          <div className="grid gap-4 px-4 py-3 text-table sm:grid-cols-3">
+          <div className="grid gap-4 px-4 py-3 text-table sm:grid-cols-3 lg:grid-cols-1 2xl:grid-cols-3">
             {[
               ["Dismissing a signal", c.dismissReasons],
               ["Returning to CS", c.returnReasons],

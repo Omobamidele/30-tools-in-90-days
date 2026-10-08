@@ -24,7 +24,7 @@ export default async function RulePage({ params }: PageProps<"/rules/[id]">) {
   return (
     <>
       <PageHeader crumbs={[{ href: "/rules", label: "Rules" }, { label: r.name }]} title={r.name} meta={<span className="flex items-center gap-2"><RuleTag type={r.type} /> version {r.version}</span>} />
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
         <RuleEditor
           rule={{ id: r.id, type: r.type, name: r.name, params: r.params as Record<string, unknown>, weight: r.weight, minArr: r.minArrMinor ? String(r.minArrMinor / 100) : "", segments: r.segments, cooldownDays: r.cooldownDays, enabled: r.enabled, version: r.version }}
           segments={ctx.actor.config.segments}

@@ -4,7 +4,7 @@ import { appCtx } from "@/services/app-ctx";
 import { getResults, type Period } from "@/services/results";
 import { formatMoneyShort } from "@/core/money";
 import { EmptyState, PageHeader, Panel } from "@/ui/page";
-import { MoneyShort, RULE_META } from "@/ui/bits";
+import { Avatar, MoneyShort, RULE_META } from "@/ui/bits";
 import { cx } from "@/ui/cx";
 
 export const metadata: Metadata = { title: "Results" };
@@ -43,9 +43,9 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
         meta={own ? "Your own results. Leaders see the whole team." : "What signals turned into, from what people recorded."}
         actions={
           <>
-            <div role="group" aria-label="Period" className="inline-flex flex-wrap rounded-control border border-field bg-surface p-0.5">
+            <div role="group" aria-label="Period" className="inline-flex flex-wrap rounded-control bg-sunken p-0.5">
               {PERIODS.map((p) => (
-                <Link key={p.key} href={`/results?period=${p.key}`} aria-current={period === p.key ? "true" : undefined} className={cx("rounded-[4px] px-3 py-1 text-table", period === p.key ? "bg-ink text-on-ink" : "text-muted hover:text-text")}>
+                <Link key={p.key} href={`/results?period=${p.key}`} aria-current={period === p.key ? "true" : undefined} className={cx("rounded-[6px] px-3 py-1 text-table", period === p.key ? "bg-surface font-medium text-text shadow-card" : "text-muted hover:text-text")}>
                   {p.label}
                 </Link>
               ))}
@@ -106,7 +106,7 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
                 <tbody className="divide-y divide-rule">
                   {r.byType.map((x) => (
                     <tr key={x.type}>
-                      <td className="px-4 py-2 font-medium">{RULE_META[x.type].label}</td>
+                      <td className="px-4 py-2 font-medium">{RULE_META[x.type].plain}</td>
                       <td className="num px-2 py-2 text-right">{x.raised}</td>
                       <td className="num px-2 py-2 text-right">{x.accepted}</td>
                       <td className="num px-2 py-2 text-right">{x.dismissed}</td>
@@ -127,10 +127,10 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
           )}
         </Panel>
 
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-2">
           {[
-            { key: "csm", title: "Sourced by customer success", rows: r.byCsm, color: "text-by-cs" },
-            { key: "seller", title: "Worked by sellers", rows: r.bySeller, color: "text-by-sales" },
+            { key: "csm", title: "Sourced by customer success", rows: r.byCsm },
+            { key: "seller", title: "Worked by sellers", rows: r.bySeller },
           ].map((g) => (
             <Panel key={g.key} title={g.title} id={`by-${g.key}`}>
               {g.rows.length ? (
@@ -146,7 +146,7 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
                   <tbody className="divide-y divide-rule">
                     {g.rows.map((p) => (
                       <tr key={p.name}>
-                        <td className={cx("px-4 py-2 font-medium", g.color)}>{p.name}</td>
+                        <td className="px-4 py-2 font-medium"><span className="flex items-center gap-2"><Avatar name={p.name} size={24} className="ring-0" />{p.name}</span></td>
                         <td className="num px-2 py-2 text-right">{p.routed}</td>
                         <td className="px-2 py-2 text-right">
                           <MoneyShort minor={p.pipelineMinor} currency={c} />
@@ -165,7 +165,7 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
           ))}
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-2">
           <Panel title="Why signals were dismissed" id="dismissed" description="RevOps uses this to tune rules.">
             {r.dismissReasons.length ? (
               <ul className="divide-y divide-rule">

@@ -103,11 +103,10 @@ Usage feed (warehouse/product → API) ─► daily snapshot ─► rules ─►
   - routing queues
   - people and roles
 - Notifications (in-app plus email), a Monday digest, an opt-out under Your account, password change.
-- Designed as "Signal room":
-  - ink-teal chrome
-  - chartreuse only for live markers
-  - Space Grotesk with JetBrains Mono
-  - Phosphor icons
+- Designed as a modern CRM workspace (revision 2, replacing the earlier dark "Signal room" look):
+  - light left sidebar, white canvas, one teal accent
+  - company logo tiles and people avatars, so lists read as customers and owners rather than tickers
+  - Geist type, Phosphor icons, soft status pills, centred sign-in card
   - WCAG AA throughout (axe: zero violations on 23 screens)
   - responsive down to 390 px
 

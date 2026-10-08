@@ -11,7 +11,7 @@ import { daysBetween } from "@/core/dates";
 import { localDate } from "@/core/business-time";
 import { csqlLabel } from "@/services/csqls";
 import { Attributes, PageHeader, Panel } from "@/ui/page";
-import { Money, MoneyShort, RuleTag, SimulatedTag, Status } from "@/ui/bits";
+import { CompanyLogo, Money, MoneyShort, RuleTag, SimulatedTag, Status } from "@/ui/bits";
 import { SignalTrace } from "@/ui/trace";
 import { ago, deadlineText, formatDateTime, priorityReason, priorityWord } from "@/ui/format";
 import { TriageActions } from "./triage-actions";
@@ -41,6 +41,7 @@ export default async function SignalPage({ params }: PageProps<"/signals/[id]">)
         crumbs={[{ href: "/signals", label: "Signals" }, { label: account.name }]}
         title={
           <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <CompanyLogo name={account.name} size={36} />
             <Link href={`/accounts/${account.id}`} className="hover:underline">
               {account.name}
             </Link>
@@ -60,7 +61,7 @@ export default async function SignalPage({ params }: PageProps<"/signals/[id]">)
         }
       />
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex min-w-0 flex-col gap-4">
           <Panel>
             <div className="p-4">

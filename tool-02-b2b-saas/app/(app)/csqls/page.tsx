@@ -6,7 +6,7 @@ import { calendarOf } from "@/services/org";
 import { formatMoneyShort } from "@/core/money";
 import type { CsqlStatus } from "@/core/workflow";
 import { Chips, EmptyState, PageHeader, Panel } from "@/ui/page";
-import { Avatar, MoneyShort, Status } from "@/ui/bits";
+import { CompanyLogo, Handoff, MoneyShort, Status } from "@/ui/bits";
 import { ago, deadlineText } from "@/ui/format";
 import { cx } from "@/ui/cx";
 
@@ -42,19 +42,16 @@ export default async function CsqlsPage({ searchParams }: PageProps<"/csqls">) {
     const c = r.csql;
     const due = (c.status === "ROUTED" || c.status === "RETURNED") && c.dueAt && c.clockStartedAt ? deadlineText(c.clockStartedAt, c.dueAt, now, cal) : null;
     return (
-      <Link href={`/csqls/${c.id}`} className="block rounded-panel border border-rule bg-surface p-3 hover:border-field">
-        <div className="flex items-start justify-between gap-2">
+      <Link href={`/csqls/${c.id}`} className="block rounded-panel border border-rule bg-surface p-3.5 shadow-card hover:border-rule-strong">
+        <div className="flex items-start gap-2.5">
+          <CompanyLogo name={r.account.name} size={30} />
           <span className="min-w-0">
-            <span className="text-meta text-muted">{csqlLabel(t.csql, c.number)}</span>
-            <span className="block truncate text-body font-semibold">{r.account.name}</span>
+            <span className="line-clamp-2 text-body leading-snug font-semibold">{r.account.name}</span>
+            <span className="text-meta text-faint">{csqlLabel(t.csql, c.number)}</span>
           </span>
-          <MoneyShort minor={value(c)} currency={ctx.actor.currency} className="shrink-0 font-medium" empty="—" />
         </div>
-        <div className="mt-2 flex items-center justify-between gap-2 text-meta text-muted">
-          <span className="flex items-center gap-1">
-            <Avatar name={r.ownerName} size={16} />
-            {r.ownerName ?? "Unassigned"}
-          </span>
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+          <MoneyShort minor={value(c)} currency={ctx.actor.currency} className="font-semibold" empty="—" />
           {due ? (
             <Status tone={due.tone} className="text-meta">
               {due.text}
@@ -72,10 +69,12 @@ export default async function CsqlsPage({ searchParams }: PageProps<"/csqls">) {
               No opportunity
             </Status>
           ) : (
-            <span>{ago(c.updatedAt, now)}</span>
+            <span className="text-meta text-muted">{ago(c.updatedAt, now)}</span>
           )}
         </div>
-        <p className="mt-1 text-meta text-faint">From {r.sourcedByName}</p>
+        <div className="mt-3 border-t border-rule pt-2.5 text-meta text-muted">
+          <Handoff from={r.sourcedByName} to={r.ownerName} />
+        </div>
       </Link>
     );
   };
@@ -86,9 +85,9 @@ export default async function CsqlsPage({ searchParams }: PageProps<"/csqls">) {
         title={t.csqlPlural}
         meta={`${openCount} open · accepted signals routed to sellers, with the CSM's note and the evidence`}
         actions={
-          <div role="group" aria-label="Layout" className="inline-flex rounded-control border border-field bg-surface p-0.5">
+          <div role="group" aria-label="Layout" className="inline-flex rounded-control bg-sunken p-0.5">
             {(["board", "list"] as const).map((l) => (
-              <Link key={l} href={link({ layout: l === "board" ? undefined : "list" })} aria-current={layout === l ? "true" : undefined} className={cx("rounded-[4px] px-3 py-1 text-table capitalize", layout === l ? "bg-ink text-on-ink" : "text-muted hover:text-text")}>
+              <Link key={l} href={link({ layout: l === "board" ? undefined : "list" })} aria-current={layout === l ? "true" : undefined} className={cx("rounded-[6px] px-3 py-1 text-table capitalize", layout === l ? "bg-surface font-medium text-text shadow-card" : "text-muted hover:text-text")}>
                 {l}
               </Link>
             ))}
@@ -111,7 +110,7 @@ export default async function CsqlsPage({ searchParams }: PageProps<"/csqls">) {
             const items = shown.filter((r) => col.statuses.includes(r.csql.status));
             const total = items.reduce((n, r) => n + (value(r.csql) ?? 0), 0);
             return (
-              <section key={col.key} aria-labelledby={`c-${col.key}`} className="flex min-w-0 flex-col rounded-panel bg-sunken/70 p-2">
+              <section key={col.key} aria-labelledby={`c-${col.key}`} className="flex min-w-0 flex-col rounded-panel bg-sunken p-2">
                 <header className="flex items-baseline justify-between px-2 pt-1 pb-2">
                   <h2 id={`c-${col.key}`} className="text-body font-semibold">
                     {col.title} <span className="num font-normal text-muted">{items.length}</span>
@@ -152,7 +151,7 @@ export default async function CsqlsPage({ searchParams }: PageProps<"/csqls">) {
                         {csqlLabel(t.csql, r.csql.number)}
                       </Link>
                     </td>
-                    <td className="px-2 py-2 font-medium">{r.account.name}</td>
+                    <td className="px-2 py-2 font-medium"><span className="flex items-center gap-2"><CompanyLogo name={r.account.name} size={24} />{r.account.name}</span></td>
                     <td className="px-2 py-2 capitalize">{r.csql.status.toLowerCase().replace(/_/g, " ")}</td>
                     <td className="px-2 py-2 text-right">
                       <MoneyShort minor={value(r.csql)} currency={ctx.actor.currency} empty="—" />

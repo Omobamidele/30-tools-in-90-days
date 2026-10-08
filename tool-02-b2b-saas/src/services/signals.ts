@@ -49,6 +49,7 @@ export async function listSignals(ctx: ServiceCtx, f: SignalFilters = {}) {
       account: { id: accounts.id, name: accounts.name, segment: accounts.segment, csmId: accounts.csmId, ownerId: accounts.ownerId },
       triagerId: triager,
       triagerName: sql<string | null>`(select name from users u where u.id = coalesce(${signals.assigneeId}, ${accounts.csmId}))`,
+      ownerName: sql<string | null>`(select name from users u where u.id = ${accounts.ownerId})`,
       ruleName: signalRules.name,
     })
     .from(signals)
@@ -68,6 +69,22 @@ export async function listSignals(ctx: ServiceCtx, f: SignalFilters = {}) {
     )
     .orderBy(desc(signals.priority), asc(signals.triageDueAt))
     .limit(f.limit ?? 500);
+}
+
+/** Signals waiting for this person's triage (the sidebar badge). Leaders see everything open. */
+export async function countWaiting(ctx: ServiceCtx) {
+  const [r] = await ctx.db
+    .select({ n: sql<number>`count(*)::int` })
+    .from(signals)
+    .innerJoin(accounts, eq(accounts.id, signals.accountId))
+    .where(
+      and(
+        eq(signals.orgId, ctx.actor.orgId),
+        eq(signals.status, "NEW"),
+        ctx.actor.role === "CSM" ? sql`${triager} = ${ctx.actor.userId}` : ctx.actor.role === "SELLER" ? sql`false` : undefined,
+      ),
+    );
+  return r.n;
 }
 
 export async function getSignal(ctx: ServiceCtx, id: string) {

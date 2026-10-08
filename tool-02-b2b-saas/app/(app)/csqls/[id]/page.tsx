@@ -6,7 +6,7 @@ import { getCsql, listSellers, type Opportunity } from "@/services/csqls";
 import { calendarOf } from "@/services/org";
 import { isNotFound } from "@/services/errors";
 import { Attributes, PageHeader, Panel } from "@/ui/page";
-import { Money, MoneyShort, RuleTag, Status } from "@/ui/bits";
+import { CompanyLogo, Money, MoneyShort, RuleTag, Status } from "@/ui/bits";
 import { deadlineText, formatDate, formatDateTime } from "@/ui/format";
 import { CsqlActions } from "./csql-actions";
 
@@ -43,7 +43,8 @@ export default async function CsqlPage({ params }: PageProps<"/csqls/[id]">) {
       <PageHeader
         crumbs={[{ href: "/csqls", label: ctx.actor.config.terminology.csqlPlural }, { label: d.label }]}
         title={
-          <span className="flex flex-wrap items-baseline gap-x-3">
+          <span className="flex flex-wrap items-center gap-x-3">
+            <CompanyLogo name={d.account.name} size={36} />
             <span className="text-section font-medium text-muted">{d.label}</span>
             <Link href={`/accounts/${d.account.id}`} className="hover:underline">
               {d.account.name}
@@ -61,7 +62,7 @@ export default async function CsqlPage({ params }: PageProps<"/csqls/[id]">) {
         }
       />
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex min-w-0 flex-col gap-4">
           <Panel title="Handoff note" id="note">
             <blockquote className="px-4 py-3 text-body whitespace-pre-line">{c.handoffNote}</blockquote>

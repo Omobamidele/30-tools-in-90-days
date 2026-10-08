@@ -123,3 +123,32 @@ The user's review of the first build: the metrics looked like a trading terminal
 | Priority as a number with "+35 … = 55" | "High / Medium / Low priority", with the reasons as plain sentences ("Worth about $14,400 a year.") | People act on reasons, not scores |
 
 Chartreuse now appears only on the dark top bar (active tab, notification badge, product mark).
+
+---
+
+# Revision 2, 2026-10-08: "Modern CRM workspace" (supersedes everything above)
+
+**Why it changed:** after revision 1 the user still said the sign-in page and the interface "look like a trader's site" and don't feel like something people would pay real money for. They then chose **Modern CRM workspace** from three directions (CRM workspace, enterprise suite, calm and warm workspace). The structural changes matter more than colour.
+
+| Area | Before | Now |
+|---|---|---|
+| Frame | Dark ink top bar with a chartreuse underline | **Light left sidebar** (#F7F7F5): workspace name, search, notifications, navigation with a "to review" count badge, an Admin group, and the user card at the bottom. Phones get a slim white top bar and a bottom navigation bar |
+| Sign-in | Split screen with a dark marketing panel | **One centred card** on a soft background, with the logo, "Sign in to Fernway" and a quiet demo hint |
+| Records | Text-only rows | **Company logo tile** beside every account (a stable colour per company; initials, since demo companies have no real logos) and **coloured avatars** for people, including "Priya → Tomás" handoffs |
+| Signals | A four-column board | **Tabs** (To review, Snoozed, Accepted, Dismissed) over a roomy record list: logo, name, plain-language signal type, the sentence, handoff, value "a year", due date |
+| Status | Coloured dot plus a word | **Soft pills** (tinted background plus text): "Due Thu", "2 days late", "High priority" |
+| Deadlines | "Due in 2 business days" | **"Due Thu", "Due tomorrow", "2 days late"** |
+| Type | Space Grotesk / JetBrains Mono | **Geist** throughout; Geist Mono only for API keys and code |
+| Surfaces | Flat panels, 8px radius | White cards, 12px radius, hairline border, a very soft shadow |
+| Home | Revenue headline sentence | "**5 customers look ready to grow.**", a one-card stat row (to review, with sellers, pipeline, won), "Ready to review" and "Recent wins" lists with logos |
+
+**Palette (all text pairs AA):**
+- text #18181B (17.7:1)
+- muted #5C5F66 (6.4:1, 5.8:1 on sunken)
+- faint #6B6E76 (5.1:1)
+- field #8E8E96 (3.25:1)
+- brand #0D6B6B (white on brand 6.3:1; brand on its tint 5.5:1)
+- pills: risk 6.0:1, watch 5.4:1, won 5.6:1, neutral 7.4:1
+- eight logo tile colours, each ≥5:1 with white text
+
+Chartreuse is retired.

@@ -4,7 +4,7 @@ export default function Loading() {
   return (
     <div aria-busy="true" aria-label="Loading" className="animate-pulse">
       <div className="mb-6 h-7 w-56 rounded-control bg-sunken" />
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-3">
         {Array.from({ length: 6 }, (_, i) => (
           <div key={i} className="panel p-4">
             <div className="h-4 w-40 rounded bg-sunken" />
