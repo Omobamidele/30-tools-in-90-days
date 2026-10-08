@@ -1,0 +1,14 @@
+# Each tool has its own .gitignore for its dependencies, builds and secrets.
+# These apply across the whole workspace as a safety net.
+node_modules/
+.next/
+.env
+.env.*
+!.env.example
+.demo/
+storage/
+test-results/
+playwright-report/
+*.log
+.DS_Store
+Thumbs.db
