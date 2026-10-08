@@ -833,6 +833,7 @@ These rules govern the folder structure of this workspace.
    - Separate API / worker (only if needed): `40NN`
    - Local database / other service (only if needed): `54NN`
    - Never use port `3000`. Pin the port in the dev script itself with strict-port behaviour (e.g. `next dev -p 3007`, `vite --port 3007 --strictPort`) so a tool never silently drifts to another port.
-3. **Fully independent projects.** Each tool has its own dependencies, `.env`, database and git repository (initialised when the build starts). No shared code between tools; if a pattern is worth reusing, copy it deliberately and document it.
+3. **Fully independent projects, one repository.** Each tool has its own dependencies, `.env`, database and ports, and runs on its own. All tools live in one public git repository (https://github.com/Omobamidele/30-tools-in-90-days), one folder per tool. No shared code between tools; if a pattern is worth reusing, copy it deliberately and document it.
 4. **Phase gates are mandatory.** Research → Opportunity Discovery (user selects) → Spec → UX → Architecture → Build. Each phase's output is written to the tool's `docs/` folder.
 5. **Keep the tracker current.** Update the status table in [README.md](README.md) whenever a tool changes phase.
+6. **Commit and push every change.** After each meaningful change, commit it and push `main` to GitHub. The repository is public: before every push, check that no `.env` files, keys, tokens or other secrets are staged.

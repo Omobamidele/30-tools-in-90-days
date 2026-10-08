@@ -6,6 +6,8 @@ Each tool is an independent project that goes from industry research to a workin
 
 - **Operating brief:** [CLAUDE.md](CLAUDE.md)
 - **Port registry:** [PORTS.md](PORTS.md)
+- **Running a tool:** each folder is a separate app with its own README. In a tool folder: `docker compose up -d`, `npm install`, copy `.env.example` to `.env`, then `npm run db:migrate && npm run db:seed && npm run demo`.
+- **Demo data:** every company, person and number in the demos is fictional. Usage and activity are simulated and labelled as such.
 - **Location:** `C:\dev\30-tools`. The workspace moved out of OneDrive on 2026-09-25, because sync locks slowed builds and page loads. The old OneDrive copy is a backup only.
 - **Recording a tool:** run `npm run demo` in its folder. That serves the production build on its fixed port, with no dev-mode "Rendering / Compiling" indicators.
 
