@@ -1,0 +1,59 @@
+{
+  "name": "Northbeam Events (demo)",
+  "slug": "northbeam-demo",
+  "baseCurrency": "USD",
+  "timezone": "America/New_York",
+  "config": {
+    "demo": true,
+    "brand": {
+      "productName": "Exposure Register",
+      "logoFileId": null,
+      "primaryColor": "#8A5D12",
+      "accentColor": "#C8912E",
+      "defaultWallpaper": "ballroom"
+    },
+    "terminology": {
+      "event": { "singular": "Event", "plural": "Events" },
+      "client": { "singular": "Client", "plural": "Clients" },
+      "supplier": { "singular": "Supplier", "plural": "Suppliers" },
+      "changeRequest": { "singular": "Change request", "plural": "Change requests" }
+    },
+    "workflow": {
+      "eventTypes": ["Sales kickoff", "User conference", "Incentive trip", "Product launch", "Customer event", "Board / leadership offsite"]
+    },
+    "clauseDefaults": {
+      "attritionCommitmentPct": 80,
+      "attritionDamagesPct": 100,
+      "fbShortfallSurchargePct": 22
+    },
+    "rules": {
+      "reminderOffsetsDays": [30, 14, 7, 1],
+      "overdueEscalationHours": 24,
+      "exposureThresholdMinor": 5000000,
+      "tierStepWarningDays": 14,
+      "cutoffWarningDays": 21,
+      "approvalLimitMinor": 2500000,
+      "marginFloorPct": 14,
+      "approvalLinkExpiryDays": 14,
+      "escalateTo": ["OPS_DIRECTOR"],
+      "internalApproverRoles": ["MD", "OPS_DIRECTOR"]
+    },
+    "pricing": {
+      "defaultMarkupPct": 15,
+      "markupByCategoryPct": { "Food & beverage": 15, "Accommodation": 10, "AV & production": 20, "Transport": 12 },
+      "managementFeePct": 0
+    },
+    "roles": {
+      "labels": {
+        "ADMIN": "Admin",
+        "OPS_DIRECTOR": "Operations director",
+        "EVENT_MANAGER": "Event manager",
+        "FINANCE": "Finance",
+        "MD": "Managing director"
+      }
+    },
+    "finance": { "enabledCurrencies": ["USD", "EUR", "GBP"] },
+    "email": { "senderName": "Northbeam Events", "replyTo": null },
+    "extraction": { "enabled": true, "effort": "high" }
+  }
+}

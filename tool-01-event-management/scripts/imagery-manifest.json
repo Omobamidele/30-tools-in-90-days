@@ -1,0 +1,185 @@
+{
+  "licence": "Unsplash License (https://unsplash.com/license): free for commercial use, no attribution required; unaltered copies may not be sold.",
+  "wallpapers": [
+    {
+      "key": "ballroom",
+      "id": "FKLXn1mw3Bg",
+      "label": "Grand ballroom",
+      "photographer": "Sergei Kondalov",
+      "description": "Grand ballroom with chandeliers and rows of chairs",
+      "focal": "50% 72%"
+    },
+    {
+      "key": "gala",
+      "id": "T5v5i67QYGk",
+      "label": "Gala hall",
+      "photographer": "Lucas T Photography",
+      "description": "Elegant ballroom with long tables, chandeliers and tall columns",
+      "focal": "50% 60%"
+    },
+    {
+      "key": "stage",
+      "id": "bWRX_obQAl8",
+      "label": "Conference stage",
+      "photographer": "Wesley Tingey",
+      "description": "A podium with a microphone on an empty stage",
+      "focal": "50% 45%"
+    },
+    {
+      "key": "banquet",
+      "id": "EJQnHC6GEe8",
+      "label": "Banquet",
+      "photographer": "Filip Rankovic Grobgaard",
+      "description": "Event space set with round tables for dining",
+      "focal": "50% 55%"
+    },
+    {
+      "key": "skyline",
+      "id": "zpS-yPj1qjU",
+      "label": "City at night",
+      "photographer": "Raf Winterpacht",
+      "description": "A view of a city at night from across the water",
+      "focal": "50% 62%"
+    }
+  ],
+  "covers": [
+    {
+      "key": "lisbon",
+      "id": "xoUrDP3glkU",
+      "label": "Lisbon",
+      "photographer": "imren tutuncu",
+      "description": "Lisbon with the bridge in the background",
+      "focal": "50% 45%"
+    },
+    {
+      "key": "chicago",
+      "id": "xOj6_Ha1_R8",
+      "label": "Chicago",
+      "photographer": "Jeff Brown",
+      "description": "Chicago skyline across Lake Michigan",
+      "focal": "50% 50%"
+    },
+    {
+      "key": "london",
+      "id": "7ojyp-IXW7w",
+      "label": "London",
+      "photographer": "Alev Takil",
+      "description": "London skyline and the Thames at low sun",
+      "focal": "50% 50%"
+    },
+    {
+      "key": "san-francisco",
+      "id": "aL4PfTXz8S8",
+      "label": "San Francisco",
+      "photographer": "Jack Nagz",
+      "description": "The Bay Bridge illuminated at night",
+      "focal": "50% 50%"
+    },
+    {
+      "key": "barcelona",
+      "id": "PAKlGZNVUQM",
+      "label": "Barcelona",
+      "photographer": "Carlos Ibáñez",
+      "description": "Panoramic view of Barcelona with the Sagrada Família",
+      "focal": "50% 62%"
+    },
+    {
+      "key": "napa",
+      "id": "MF2KORFe1OE",
+      "label": "Vineyard",
+      "photographer": "Daniel Salgado",
+      "description": "A vineyard with rows of vines and mountains",
+      "focal": "50% 55%"
+    },
+    {
+      "key": "resort",
+      "id": "t6Le7895iuk",
+      "label": "Resort pool",
+      "photographer": "Ahmad Ajmi",
+      "description": "Lounge chairs and an umbrella near a swimming pool",
+      "focal": "50% 50%"
+    },
+    {
+      "key": "podium",
+      "id": "bWRX_obQAl8",
+      "label": "Podium stage",
+      "photographer": "Wesley Tingey",
+      "description": "A podium with a microphone on a stage",
+      "focal": "50% 45%"
+    },
+    {
+      "key": "theatre-seats",
+      "id": "zWNyOzsWqDc",
+      "label": "Auditorium",
+      "photographer": "Declan Sun",
+      "description": "Empty red seats in a modern auditorium",
+      "focal": "50% 50%"
+    },
+    {
+      "key": "theatre-stage",
+      "id": "kTT8mJ5pPpc",
+      "label": "Theatre",
+      "photographer": "ARTO SURAJ",
+      "description": "Empty theatre auditorium with stage and seating",
+      "focal": "50% 50%"
+    },
+    {
+      "key": "round-tables",
+      "id": "EJQnHC6GEe8",
+      "label": "Banquet rounds",
+      "photographer": "Filip Rankovic Grobgaard",
+      "description": "Event space set with round tables for dining",
+      "focal": "50% 50%"
+    },
+    {
+      "key": "banquet-rounds",
+      "id": "cQxEJoQZ_-E",
+      "label": "Gala dinner",
+      "photographer": "Matt Benson",
+      "description": "Banquet hall set for an event with round tables",
+      "focal": "50% 50%"
+    },
+    {
+      "key": "long-table",
+      "id": "26kcgxYv3LA",
+      "label": "Private dining",
+      "photographer": "SOHAM BANERJEE",
+      "description": "Ornate dining hall with a long table and chandeliers",
+      "focal": "50% 50%"
+    },
+    {
+      "key": "ballroom-tables",
+      "id": "qePRtRzOUf0",
+      "label": "Ballroom dinner",
+      "photographer": "Manya Sivanandam",
+      "description": "Ballroom with tables prepared for a formal event",
+      "focal": "50% 50%"
+    },
+    {
+      "key": "grand-ballroom",
+      "id": "krAQD5gGBSM",
+      "label": "Ballroom",
+      "photographer": "mana5280",
+      "description": "Grand ballroom with ornate chandeliers and polished floor",
+      "focal": "50% 50%"
+    },
+    {
+      "key": "ballroom-stage",
+      "id": "n0Qne2MZWZM",
+      "label": "Theatre ballroom",
+      "photographer": "Michael D Beckwith",
+      "description": "Ornate ballroom with a stage and balconies",
+      "focal": "50% 50%"
+    },
+    {
+      "key": "hotel-lobby",
+      "id": "mPuv7limVSM",
+      "label": "Hotel lobby",
+      "photographer": "Haripriya K",
+      "description": "Lobby of a luxury hotel with pendant lights",
+      "focal": "50% 40%",
+      "note": "Cropped to the top 62% to remove a projected hotel-brand logo on the floor."
+    }
+  ],
+  "review": "Every photo was reviewed by eye. Rejected: faces as focal point, visible real brands or event logos on screens and signage, monochrome, saturated purple lighting, overexposed shots."
+}

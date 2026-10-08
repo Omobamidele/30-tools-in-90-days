@@ -1,0 +1,250 @@
+@import "tailwindcss";
+
+/* Design tokens. The source of truth is docs/09-design-system.md (milestone 12): midnight
+   chrome, warm ivory and white surfaces, deep gold brand (white-labelled: primaryColor),
+   stage gold accent on dark (white-labelled: accentColor). Colour otherwise carries meaning only. */
+:root {
+  /* Chrome */
+  --midnight: #0e1726;
+  --midnight-raised: #172236;
+  --on-midnight: #ffffff;
+  --on-midnight-muted: #b4bccb; /* 9.6:1 on midnight */
+
+  /* Surfaces and text */
+  --canvas: #f6f4ef;
+  --surface: #ffffff;
+  --surface-sunken: #efece5;
+  --ink: #141b2b;
+  --ink-muted: #4a5468;
+  --ink-faint: #5e6779; /* ≥4.5:1 on surface, canvas and sunken (WCAG AA text) */
+  --rule: #e6e1d6;
+  --rule-strong: #d3ccbd;
+
+  /* Brand (buttons, links, focus) and accent (on midnight / photos). Both set per org on the shell. */
+  --brand: #8a5d12;
+  --brand-tint: color-mix(in srgb, var(--brand) 9%, white);
+  --brand-strong: color-mix(in srgb, var(--brand) 80%, black);
+  --accent: #c8912e;
+
+  /* Meaning colours: used as dots and text, with pale backgrounds only where needed */
+  --risk-high: #b42318;
+  --risk-high-bg: #fef3f2;
+  --risk-watch: #b54708;
+  --risk-watch-bg: #fffaeb;
+  --settled: #067647;
+  --settled-bg: #ecfdf3;
+
+  /* Who carries the money */
+  --bearer-agency: #6d4ad8;
+  --bearer-client: #0b7a6a;
+  --bearer-unassigned: #9aa1ae;
+
+  /* Charts (projected vs actual: navy vs gold, distinguishable without colour vision) */
+  --chart-projected: #34507f;
+  --chart-actual: #b27a1c;
+  --chart-grid: #ece8df;
+
+  /* Photo scrims (docs/09 § Photography): white text stays ≥4.5:1 on the lightest crop */
+  --scrim-page: linear-gradient(180deg, rgb(14 23 38 / 0.8) 0%, rgb(14 23 38 / 0.84) 40%, rgb(14 23 38 / 0.9) 100%);
+  --scrim-banner: linear-gradient(90deg, rgb(14 23 38 / 0.88) 0%, rgb(14 23 38 / 0.7) 55%, rgb(14 23 38 / 0.45) 100%);
+  /* Text that sits directly on the page canvas (headers, tabs, board columns). Dark on ivory;
+     light on a wallpaper. Panels reset these, so anything inside a panel stays dark. */
+  --on-canvas: var(--ink);
+  --on-canvas-muted: var(--ink-muted);
+  --on-canvas-faint: var(--ink-faint);
+  --on-canvas-rule: var(--rule);
+  --on-canvas-mark: var(--brand);
+  --column-bg: var(--surface-sunken);
+
+  --scrim-feature: linear-gradient(180deg, rgb(14 23 38 / 0.72) 0%, rgb(14 23 38 / 0.78) 45%, rgb(14 23 38 / 0.92) 100%);
+  --scrim-brand: linear-gradient(180deg, rgb(14 23 38 / 0.8) 0%, rgb(14 23 38 / 0.6) 38%, rgb(14 23 38 / 0.62) 50%, rgb(14 23 38 / 0.8) 58%, rgb(14 23 38 / 0.88) 100%);
+  --scrim-card: linear-gradient(180deg, rgb(14 23 38 / 0.08) 0%, rgb(14 23 38 / 0.72) 100%);
+}
+
+/* Worst case for text over the wallpaper: a pure-white patch under the 0.80 scrim blends to
+   about #3E4551, where --on-canvas-faint (#B4BCCB) still reaches 5.0:1. */
+[data-canvas="photo"] {
+  --on-canvas: #ffffff;
+  --on-canvas-muted: #d5dae3;
+  --on-canvas-faint: #b4bccb;
+  --on-canvas-rule: rgb(255 255 255 / 0.18);
+  --on-canvas-mark: var(--accent);
+  /* Board columns on a wallpaper: a faint tint, no blur (not a glass effect). */
+  --column-bg: rgb(255 255 255 / 0.07);
+}
+.panel,
+[data-surface] {
+  --on-canvas: var(--ink);
+  --on-canvas-muted: var(--ink-muted);
+  --on-canvas-faint: var(--ink-faint);
+  --on-canvas-rule: var(--rule);
+  --on-canvas-mark: var(--brand);
+}
+
+@theme inline {
+  --color-on-canvas: var(--on-canvas);
+  --color-on-canvas-muted: var(--on-canvas-muted);
+  --color-on-canvas-faint: var(--on-canvas-faint);
+  --color-on-canvas-rule: var(--on-canvas-rule);
+  --color-on-canvas-mark: var(--on-canvas-mark);
+  --color-midnight: var(--midnight);
+  --color-midnight-raised: var(--midnight-raised);
+  --color-on-midnight: var(--on-midnight);
+  --color-on-midnight-muted: var(--on-midnight-muted);
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-sunken: var(--surface-sunken);
+  --color-ink: var(--ink);
+  --color-muted: var(--ink-muted);
+  --color-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-brand: var(--brand);
+  --color-brand-tint: var(--brand-tint);
+  --color-brand-strong: var(--brand-strong);
+  --color-accent: var(--accent);
+  --color-risk: var(--risk-high);
+  --color-risk-bg: var(--risk-high-bg);
+  --color-watch: var(--risk-watch);
+  --color-watch-bg: var(--risk-watch-bg);
+  --color-settled: var(--settled);
+  --color-settled-bg: var(--settled-bg);
+  --color-agency: var(--bearer-agency);
+  --color-client: var(--bearer-client);
+  --color-unassigned: var(--bearer-unassigned);
+  --color-projected: var(--chart-projected);
+  --color-actual: var(--chart-actual);
+
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+
+  /* Type scale (size / line-height) */
+  --text-meta: 12px;
+  --text-meta--line-height: 16px;
+  --text-table: 13px;
+  --text-table--line-height: 20px;
+  --text-body: 14px;
+  --text-body--line-height: 20px;
+  --text-section: 15px;
+  --text-section--line-height: 22px;
+  --text-title: 28px;
+  --text-title--line-height: 34px;
+  --text-figure: 28px;
+  --text-figure--line-height: 34px;
+  --text-hero: 34px;
+  --text-hero--line-height: 40px;
+
+  --radius-control: 6px;
+  --radius-panel: 10px;
+  --shadow-pop: 0 12px 32px -8px rgb(14 23 38 / 0.22), 0 2px 6px rgb(14 23 38 / 0.08);
+  --shadow-photo: 0 1px 2px rgb(14 23 38 / 0.08), 0 8px 24px -12px rgb(14 23 38 / 0.35);
+}
+
+html,
+body {
+  background: var(--canvas);
+  color: var(--ink);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums; /* every figure aligns */
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Display serif: names and figures only (docs/09 § Type). Optical sizing on, a touch of softness. */
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 30;
+  letter-spacing: -0.01em;
+}
+
+/* Panels: the one surface style used everywhere. Border only; no shadow. */
+.panel {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+}
+
+/* Cards that carry a photo lift slightly on hover (docs/09 § Motion). */
+.photo-card {
+  box-shadow: var(--shadow-photo);
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+.photo-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-pop);
+}
+
+/* Photos fade in once decoded (next/image sets data-loaded via onLoad in <Photo>). */
+.photo-img {
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.photo-img[data-loaded="true"] {
+  opacity: 1;
+}
+
+/* Brand links are always underlined: deep gold is 2.98:1 against body ink, under the 3:1
+   needed to tell a link apart by colour alone (WCAG 1.4.1). The underline is the cue. */
+a.text-brand {
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in srgb, var(--brand) 40%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+a.text-brand:hover {
+  text-decoration-color: currentColor;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.on-midnight :focus-visible,
+.on-photo :focus-visible {
+  outline-color: var(--accent);
+}
+
+/* Hatching marks "not determined" (unassigned bearer, incomplete data). */
+.hatch {
+  background-image: repeating-linear-gradient(45deg, var(--bearer-unassigned) 0 2px, transparent 2px 5px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+  .photo-card:hover {
+    transform: none;
+  }
+}
+
+/* Sheet and overlay entrances (disabled by the reduced-motion rule above). */
+@keyframes sheet-in {
+  from {
+    transform: translateX(16px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
