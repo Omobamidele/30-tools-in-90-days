@@ -135,7 +135,7 @@ export function Chips({ items }: { items: Array<{ href: string; label: string; c
           )}
         >
           {c.label}
-          {c.count !== undefined ? <span className={cx("num font-mono text-meta", c.active ? "text-on-ink-muted" : "text-faint")}>{c.count}</span> : null}
+          {c.count !== undefined ? <span className={cx("num text-meta", c.active ? "text-on-ink-muted" : "text-faint")}>{c.count}</span> : null}
         </Link>
       ))}
     </div>

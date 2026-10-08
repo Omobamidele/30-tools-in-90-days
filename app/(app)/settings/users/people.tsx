@@ -101,7 +101,7 @@ export function People({ me, admin, roles, people }: { me: string; admin: boolea
           ) : null}
           {temp ? (
             <p role="status" className="rounded-control bg-won-bg px-3 py-2 text-table text-won">
-              Added. Temporary password (shown once): <span className="font-mono">{temp}</span>
+              Added. Temporary password (shown once): <span>{temp}</span>
             </p>
           ) : null}
           <div className="grid gap-3 sm:grid-cols-3">

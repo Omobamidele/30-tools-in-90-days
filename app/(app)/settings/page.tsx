@@ -13,7 +13,7 @@ export default async function WorkspaceSettings() {
     <div className="flex flex-col gap-4">
       <Panel title="Where these come from" id="source">
         <p className="px-4 py-3 text-table text-muted">
-          Branding, wording, the price book, deadlines and reasons are part of this workspace&apos;s client configuration (<span className="font-mono">config/clients/&lt;name&gt;.json</span>), validated on load. A
+          Branding, wording, the price book, deadlines and reasons are part of this workspace&apos;s client configuration (<span>config/clients/&lt;name&gt;.json</span>), validated on load. A
           consultant setting up a new company changes them there; editing them in the app is on the roadmap.
         </p>
       </Panel>
@@ -25,7 +25,7 @@ export default async function WorkspaceSettings() {
               {
                 label: "Colours",
                 value: (
-                  <span className="flex items-center gap-2 font-mono">
+                  <span className="flex items-center gap-2">
                     <span aria-hidden className="size-4 rounded-[3px]" style={{ background: c.brand.primaryColor }} /> {c.brand.primaryColor}
                     <span aria-hidden className="ml-2 size-4 rounded-[3px] ring-1 ring-rule-strong" style={{ background: c.brand.accentColor }} /> {c.brand.accentColor}
                   </span>
@@ -42,7 +42,7 @@ export default async function WorkspaceSettings() {
             items={[
               { label: "Seat price", value: `${money(c.priceBook.seatPriceMinor)} a year` },
               { label: "Seat proposals", value: `At least ${c.priceBook.minSeatAddOn}, with ${c.priceBook.seatHeadroomPct}% headroom` },
-              { label: "Usage tiers", value: <span className="flex flex-col">{c.priceBook.creditTiers.map((t) => <span key={t.committed} className="font-mono">{t.committed.toLocaleString("en-US")} → {money(t.priceMinor)}</span>)}</span> },
+              { label: "Usage tiers", value: <span className="flex flex-col">{c.priceBook.creditTiers.map((t) => <span key={t.committed}>{t.committed.toLocaleString("en-US")} → {money(t.priceMinor)}</span>)}</span> },
               { label: "Overage", value: `${money(c.priceBook.overagePer1000Minor)} per 1,000 ${c.terminology.usageUnit}` },
               { label: "Add-ons", value: <span className="flex flex-col">{c.priceBook.addons.map((a) => <span key={a.key}>{a.name}: {money(a.priceMinor)}</span>)}</span> },
             ]}

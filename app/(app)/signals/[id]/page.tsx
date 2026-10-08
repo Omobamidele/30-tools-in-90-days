@@ -13,7 +13,7 @@ import { csqlLabel } from "@/services/csqls";
 import { Attributes, PageHeader, Panel } from "@/ui/page";
 import { Money, MoneyShort, RuleTag, SimulatedTag, Status } from "@/ui/bits";
 import { SignalTrace } from "@/ui/trace";
-import { ago, deadlineText, formatDateTime } from "@/ui/format";
+import { ago, deadlineText, formatDateTime, priorityReason, priorityWord } from "@/ui/format";
 import { TriageActions } from "./triage-actions";
 
 export const metadata: Metadata = { title: "Signal" };
@@ -55,9 +55,7 @@ export default async function SignalPage({ params }: PageProps<"/signals/[id]">)
             {s.status === "ACCEPTED" ? <Status tone="won">Accepted{data.triagedByName ? ` by ${data.triagedByName}` : ""}</Status> : null}
             {s.status === "DISMISSED" ? <Status tone="neutral">Dismissed{data.triagedByName ? ` by ${data.triagedByName}` : ""}</Status> : null}
             {s.status === "EXPIRED" ? <Status tone="neutral">Expired</Status> : null}
-            <span>
-              Priority <span className="num font-mono text-text">{s.priority}</span>
-            </span>
+            <Status tone={priorityWord(s.priority, ctx.actor.config.detection.highPriorityScore).tone}>{priorityWord(s.priority, ctx.actor.config.detection.highPriorityScore).text}</Status>
           </span>
         }
       />
@@ -87,17 +85,17 @@ export default async function SignalPage({ params }: PageProps<"/signals/[id]">)
               <Money minor={s.estValueMinor} currency={currency} className="text-figure font-medium" />
               <span className="text-meta text-muted">a year, from the price book</span>
             </div>
-            <p className="border-t border-rule px-4 py-3 font-mono text-table">{s.valueWorking}</p>
+            <p className="border-t border-rule px-4 py-3 text-table">{s.valueWorking}</p>
           </Panel>
 
-          <Panel title="Why it's this high in the queue" id="priority" description="Priority is a plain sum. RevOps sets the weights.">
-            <ul className="divide-y divide-rule font-mono text-table">
-              {(s.priorityLines as string[]).map((l) => (
-                <li key={l} className="px-4 py-2">
-                  {l}
-                </li>
-              ))}
-              <li className="px-4 py-2 font-semibold">= {s.priority}</li>
+          <Panel title="Why it's worth a look" id="priority" description="What puts this signal where it is in your queue.">
+            <ul className="list-disc space-y-1 py-3 pr-4 pl-9 text-table">
+              {(s.priorityLines as string[])
+                .map(priorityReason)
+                .filter((r): r is string => r !== null)
+                .map((r) => (
+                  <li key={r}>{r}</li>
+                ))}
             </ul>
           </Panel>
 
@@ -145,7 +143,7 @@ export default async function SignalPage({ params }: PageProps<"/signals/[id]">)
               items={[
                 { label: "Plan", value: sub ? `${sub.plan}` : null },
                 { label: "ARR", value: sub ? <MoneyShort minor={sub.arrMinor} currency={currency} /> : null },
-                { label: terms.seats, value: sub ? <span className="num font-mono">{data.latestUsage?.activeSeats ?? "–"} active of {sub.seatsPurchased}</span> : null },
+                { label: terms.seats, value: sub ? <span className="num">{data.latestUsage?.activeSeats ?? "–"} active of {sub.seatsPurchased}</span> : null },
                 {
                   label: "Renewal",
                   value: sub ? (

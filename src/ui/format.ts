@@ -34,3 +34,20 @@ export function deadlineText(startedAt: Date, dueAt: Date, now: Date, cal: Busin
   const text = days <= 0 ? "Due today" : days === 1 ? "Due tomorrow" : `Due in ${days} business days`;
   return { text, tone: state === "DUE_SOON" ? "watch" : "neutral" };
 }
+
+/** Priority as a word, not a score (a number like "55" reads like a trading screen). */
+export function priorityWord(score: number, high: number): { text: string; tone: Tone } {
+  if (score >= high) return { text: "High priority", tone: "brand" };
+  if (score >= 45) return { text: "Medium priority", tone: "neutral" };
+  return { text: "Low priority", tone: "neutral" };
+}
+
+/** Turns a stored priority line ("+35 estimated $6,000 a year") into a plain reason, or null. */
+export function priorityReason(line: string): string | null {
+  const text = line.replace(/^[+−-]\d+\s+/, "");
+  if (text === "rule weight") return null;
+  if (text === "value not estimated") return "There's no value estimate for this kind of signal.";
+  const est = text.match(/^estimated (.+) a year$/);
+  if (est) return `Worth about ${est[1]} a year.`;
+  return `${text.charAt(0).toUpperCase()}${text.slice(1)}.`;
+}

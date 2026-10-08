@@ -8,14 +8,12 @@ import { calendarOf } from "@/services/org";
 import { requireActor } from "@/auth/session";
 import { formatMoneyShort } from "@/core/money";
 import { deadlineState } from "@/core/business-time";
-import type { Trace } from "@/core/rules/types";
 import type { Opportunity } from "@/services/csqls";
 import { getDb } from "@/db/client";
 import { usageSnapshots } from "@/db/schema";
 import { and, eq, sql } from "drizzle-orm";
 import { ButtonLink, EmptyState, Panel } from "@/ui/page";
 import { MoneyShort, RuleTag, Status } from "@/ui/bits";
-import { SignalTrace } from "@/ui/trace";
 import { ago, deadlineText, formatDateTime } from "@/ui/format";
 
 export const metadata: Metadata = { title: "Overview" };
@@ -112,7 +110,7 @@ export default async function OverviewPage() {
                   const due = deadlineText(new Date(s.triageDueAt.getTime() - 2 * 86_400_000), s.triageDueAt, now, cal);
                   return (
                     <li key={s.id}>
-                      <Link href={`/signals/${s.id}`} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 hover:bg-sunken/60 sm:grid-cols-[minmax(0,1fr)_120px_auto]">
+                      <Link href={`/signals/${s.id}`} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 hover:bg-sunken/60 ">
                         <span className="min-w-0">
                           <span className="flex flex-wrap items-center gap-2">
                             <span className="font-semibold">{account.name}</span>
@@ -120,12 +118,9 @@ export default async function OverviewPage() {
                           </span>
                           <span className="mt-0.5 block truncate text-table text-muted">{s.explanation}</span>
                         </span>
-                        <span className="hidden sm:block">
-                          <SignalTrace trace={s.trace as Trace | null} width={120} height={30} />
-                        </span>
                         <span className="flex flex-col items-end gap-0.5">
                           <MoneyShort minor={s.estValueMinor} currency={currency} className="font-medium" empty="—" />
-                          <Status tone={due.tone} className="text-meta">
+                          <Status tone={due.tone} className="text-meta whitespace-nowrap">
                             {due.text}
                           </Status>
                           {role !== "CSM" ? <span className="text-meta text-muted">{triagerName ?? "No CSM"}</span> : null}
@@ -151,7 +146,7 @@ export default async function OverviewPage() {
                     <li key={c.id}>
                       <Link href={`/csqls/${c.id}`} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 hover:bg-sunken/60">
                         <span>
-                          <span className="font-mono text-meta text-muted">{csqlLabel(t.csql, c.number)}</span>
+                          <span className="text-meta text-muted">{csqlLabel(t.csql, c.number)}</span>
                           <span className="block font-semibold">{account.name}</span>
                           <span className="text-meta text-muted">From {sourcedByName}</span>
                         </span>
@@ -226,7 +221,7 @@ export default async function OverviewPage() {
 }
 
 function Strong({ children }: { children: React.ReactNode }) {
-  return <span className="num font-mono font-semibold text-brand">{children}</span>;
+  return <span className="num font-semibold">{children}</span>;
 }
 
 function Figure({ label, value, extra, href }: { label: string; value: string; extra?: string; href: string }) {
@@ -235,7 +230,7 @@ function Figure({ label, value, extra, href }: { label: string; value: string; e
       <dt className="text-meta text-muted">{label}</dt>
       <dd>
         <Link href={href} className="hover:underline">
-          <span className="num font-mono text-figure font-medium">{value}</span>
+          <span className="num text-figure font-medium">{value}</span>
           {extra ? <span className="ml-2 text-table text-muted">{extra}</span> : null}
         </Link>
       </dd>

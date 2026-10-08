@@ -47,7 +47,7 @@ export default async function SignInPage() {
                   {i < STEPS.length - 1 ? <span aria-hidden className="w-px flex-1 bg-white/20" /> : null}
                 </div>
                 <div className="pb-6">
-                  <p className="font-mono text-tag tracking-[0.08em] text-on-ink-muted uppercase">Step {i + 1}</p>
+                  <p className="text-tag tracking-[0.08em] text-on-ink-muted uppercase">Step {i + 1}</p>
                   <p className="text-section font-semibold">{s.title}</p>
                   <p className="mt-0.5 text-table text-on-ink-muted">{s.body}</p>
                 </div>
@@ -69,10 +69,10 @@ export default async function SignInPage() {
             <div className="mt-4 rounded-panel border border-dashed border-field bg-surface px-4 py-3 text-meta text-muted">
               <p className="font-medium text-text">Demo workspace (fictional company, simulated usage)</p>
               <p className="mt-1">
-                CSM <span className="font-mono">priya@fernway.test</span> · seller <span className="font-mono">tomas@fernway.test</span> · RevOps <span className="font-mono">revops@fernway.test</span>
+                CSM <span>priya@fernway.test</span> · seller <span>tomas@fernway.test</span> · RevOps <span>revops@fernway.test</span>
               </p>
               <p className="mt-0.5">
-                Password <span className="font-mono">fernway-demo-2026</span>
+                Password <span>fernway-demo-2026</span>
               </p>
             </div>
           ) : null}

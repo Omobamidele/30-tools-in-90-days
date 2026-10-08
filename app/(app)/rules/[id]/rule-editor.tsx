@@ -161,10 +161,10 @@ export function RuleEditor({ rule, segments, currency, current }: { rule: Rule; 
           {preview ? (
             <div className="mt-2" aria-live="polite">
               <p className="text-table">
-                With these settings, <span className="num font-mono font-semibold">{preview.count}</span> account{preview.count === 1 ? "" : "s"} would have a signal today
+                With these settings, <span className="num font-semibold">{preview.count}</span> account{preview.count === 1 ? "" : "s"} would have a signal today
                 {preview.totalMinor ? (
                   <>
-                    , about <span className="font-mono">{formatMoney(preview.totalMinor, currency)}</span> a year estimated
+                    , about <span>{formatMoney(preview.totalMinor, currency)}</span> a year estimated
                   </>
                 ) : null}
                 . Nothing is saved or raised by previewing.
@@ -176,7 +176,7 @@ export function RuleEditor({ rule, segments, currency, current }: { rule: Rule; 
                       <span>
                         <span className="font-medium">{s.account}</span> <span className="text-muted">{s.explanation}</span>
                       </span>
-                      <span className="font-mono">{s.valueMinor === null ? "—" : formatMoney(s.valueMinor, currency)}</span>
+                      <span>{s.valueMinor === null ? "—" : formatMoney(s.valueMinor, currency)}</span>
                     </li>
                   ))}
                 </ul>

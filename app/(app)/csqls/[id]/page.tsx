@@ -5,10 +5,8 @@ import { appCtx } from "@/services/app-ctx";
 import { getCsql, listSellers, type Opportunity } from "@/services/csqls";
 import { calendarOf } from "@/services/org";
 import { isNotFound } from "@/services/errors";
-import type { Trace } from "@/core/rules/types";
 import { Attributes, PageHeader, Panel } from "@/ui/page";
 import { Money, MoneyShort, RuleTag, Status } from "@/ui/bits";
-import { SignalTrace } from "@/ui/trace";
 import { deadlineText, formatDate, formatDateTime } from "@/ui/format";
 import { CsqlActions } from "./csql-actions";
 
@@ -46,7 +44,7 @@ export default async function CsqlPage({ params }: PageProps<"/csqls/[id]">) {
         crumbs={[{ href: "/csqls", label: ctx.actor.config.terminology.csqlPlural }, { label: d.label }]}
         title={
           <span className="flex flex-wrap items-baseline gap-x-3">
-            <span className="font-mono text-section font-medium text-muted">{d.label}</span>
+            <span className="text-section font-medium text-muted">{d.label}</span>
             <Link href={`/accounts/${d.account.id}`} className="hover:underline">
               {d.account.name}
             </Link>
@@ -94,9 +92,8 @@ export default async function CsqlPage({ params }: PageProps<"/csqls/[id]">) {
                     <Link href={`/signals/${s.id}`} className="mt-1 block text-table hover:underline">
                       {s.explanation}
                     </Link>
-                    <span className="block font-mono text-meta text-muted">{s.valueWorking}</span>
+                    <span className="block text-meta text-muted">{s.valueWorking}</span>
                   </span>
-                  <SignalTrace trace={s.trace as Trace | null} width={140} height={34} />
                 </li>
               ))}
             </ul>
@@ -132,7 +129,7 @@ export default async function CsqlPage({ params }: PageProps<"/csqls/[id]">) {
                 { label: "Rule estimate", value: <Money minor={c.estValueMinor} currency={currency} /> },
                 ...(c.adjustedValueMinor !== null ? [{ label: "CSM's estimate", value: <Money minor={c.adjustedValueMinor} currency={currency} /> }] : []),
                 { label: "Opportunity", value: opp ? <Money minor={opp.amountMinor} currency={currency} /> : <span className="text-faint">Not recorded yet</span> },
-                ...(opp?.crmRef ? [{ label: "CRM reference", value: <span className="font-mono">{opp.crmRef}</span> }] : []),
+                ...(opp?.crmRef ? [{ label: "CRM reference", value: <span>{opp.crmRef}</span> }] : []),
                 ...(opp?.expectedClose ? [{ label: "Expected close", value: opp.expectedClose }] : []),
                 ...(c.status === "WON" ? [{ label: "Won", value: <MoneyShort minor={c.outcomeAmountMinor} currency={currency} className="font-semibold text-won" /> }] : []),
                 ...(c.outcomeReason ? [{ label: c.status === "LOST" ? "Lost because" : "Reason", value: c.outcomeReason }] : []),

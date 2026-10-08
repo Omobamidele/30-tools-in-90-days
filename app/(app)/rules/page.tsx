@@ -40,17 +40,17 @@ export default async function RulesPage() {
                   </Link>
                   <span className="mt-1 flex items-center gap-2">
                     <RuleTag type={r.type} />
-                    <span className="font-mono text-meta text-muted">v{r.version}</span>
+                    <span className="text-meta text-muted">v{r.version}</span>
                   </span>
                 </td>
                 <td className="px-2 py-2.5 text-muted">{describeRule(r.type, r.params as Record<string, unknown>, ctx.actor.config.terminology)}</td>
-                <td className="num px-2 py-2.5 text-right font-mono">{f.raised}</td>
-                <td className="num px-2 py-2.5 text-right font-mono">
+                <td className="num px-2 py-2.5 text-right">{f.raised}</td>
+                <td className="num px-2 py-2.5 text-right">
                   {f.accepted}
                   {f.raised ? <span className="ml-1 text-meta text-muted">{Math.round((f.accepted / f.raised) * 100)}%</span> : null}
                 </td>
-                <td className="num px-2 py-2.5 text-right font-mono">{f.dismissed}</td>
-                <td className="num px-2 py-2.5 text-right font-mono">{f.won}</td>
+                <td className="num px-2 py-2.5 text-right">{f.dismissed}</td>
+                <td className="num px-2 py-2.5 text-right">{f.won}</td>
                 <td className="px-4 py-2.5">{r.enabled ? <Status tone="live">On</Status> : <Status tone="neutral">Off</Status>}</td>
               </tr>
             ))}

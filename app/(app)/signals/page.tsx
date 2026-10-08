@@ -5,12 +5,10 @@ import { listSignals } from "@/services/signals";
 import { calendarOf } from "@/services/org";
 import { RULE_TYPES, type RuleType } from "@/config/schema";
 import type { SignalStatus } from "@/core/workflow";
-import type { Trace } from "@/core/rules/types";
 import { formatMoneyShort } from "@/core/money";
 import { Chips, EmptyState, PageHeader, Panel } from "@/ui/page";
 import { Avatar, MoneyShort, RULE_META, RuleTag, Status } from "@/ui/bits";
-import { SignalTrace } from "@/ui/trace";
-import { ago, deadlineText } from "@/ui/format";
+import { ago, deadlineText, priorityWord } from "@/ui/format";
 import { cx } from "@/ui/cx";
 
 export const metadata: Metadata = { title: "Signals" };
@@ -96,7 +94,7 @@ export default async function SignalsPage({ searchParams }: PageProps<"/signals"
               <section key={col.status} aria-labelledby={`col-${col.status}`} className="flex min-w-0 flex-col rounded-panel bg-sunken/70 p-2">
                 <header className="flex items-baseline justify-between px-2 pt-1 pb-2">
                   <h2 id={`col-${col.status}`} className="text-body font-semibold">
-                    {col.title} <span className="num font-mono font-normal text-muted">{items.length}</span>
+                    {col.title} <span className="num font-normal text-muted">{items.length}</span>
                   </h2>
                   <span className="text-meta text-muted">{items.length ? formatMoneyShort(value, currency) : col.hint}</span>
                 </header>
@@ -114,14 +112,11 @@ export default async function SignalsPage({ searchParams }: PageProps<"/signals"
                             <MoneyShort minor={s.estValueMinor} currency={currency} className="shrink-0 text-body font-medium" empty="—" />
                           </div>
                           <p className="mt-2 text-table text-muted">{s.explanation}</p>
-                          <div className="mt-2 flex items-end justify-between gap-2">
-                            <SignalTrace trace={s.trace as Trace | null} width={112} height={28} />
-                            <span className="flex flex-col items-end gap-1">
-                              {s.status === "NEW" ? <Status tone={due.tone}>{due.text}</Status> : s.status === "SNOOZED" ? <span className="text-meta text-muted">Until {s.snoozeUntil}</span> : <span className="text-meta text-muted">{ago(s.triagedAt ?? s.lastEvaluatedAt, now)}</span>}
-                              <span className="flex items-center gap-1 text-meta text-muted">
-                                <Avatar name={triagerName} size={16} />
-                                {triagerName ?? "No CSM"}
-                              </span>
+                          <div className="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                            {s.status === "NEW" ? <Status tone={due.tone}>{due.text}</Status> : s.status === "SNOOZED" ? <span className="text-meta text-muted">Until {s.snoozeUntil}</span> : <span className="text-meta text-muted">{ago(s.triagedAt ?? s.lastEvaluatedAt, now)}</span>}
+                            <span className="flex items-center gap-1 text-meta text-muted">
+                              <Avatar name={triagerName} size={16} />
+                              {triagerName ?? "No CSM"}
                             </span>
                           </div>
                         </Link>
@@ -145,7 +140,6 @@ export default async function SignalsPage({ searchParams }: PageProps<"/signals"
                   <th className="px-2 py-2 font-medium">Account</th>
                   <th className="px-2 py-2 font-medium">Signal</th>
                   <th className="px-2 py-2 text-right font-medium">Est. a year</th>
-                  <th className="px-2 py-2 font-medium">Last 30 days</th>
                   <th className="px-2 py-2 font-medium">Status</th>
                   <th className="px-4 py-2 font-medium">CSM</th>
                 </tr>
@@ -155,7 +149,7 @@ export default async function SignalsPage({ searchParams }: PageProps<"/signals"
                   const due = deadlineText(new Date(s.triageDueAt.getTime() - ctx.actor.config.deadlines.triageBusinessDays * 86_400_000), s.triageDueAt, now, cal);
                   return (
                     <tr key={s.id} className="hover:bg-sunken/50">
-                      <td className="px-4 py-2 font-mono num">{s.priority}</td>
+                      <td className="px-4 py-2 text-muted">{priorityWord(s.priority, ctx.actor.config.detection.highPriorityScore).text.replace(" priority", "")}</td>
                       <td className="px-2 py-2">
                         <Link href={`/signals/${s.id}`} className="font-medium hover:underline">
                           {account.name}
@@ -167,9 +161,6 @@ export default async function SignalsPage({ searchParams }: PageProps<"/signals"
                       </td>
                       <td className="px-2 py-2 text-right">
                         <MoneyShort minor={s.estValueMinor} currency={currency} empty="—" />
-                      </td>
-                      <td className="px-2 py-2">
-                        <SignalTrace trace={s.trace as Trace | null} width={100} height={26} />
                       </td>
                       <td className="px-2 py-2">{s.status === "NEW" ? <Status tone={due.tone}>{due.text}</Status> : <span className="text-muted capitalize">{s.status.toLowerCase()}</span>}</td>
                       <td className="px-4 py-2 text-muted">{triagerName ?? "No CSM"}</td>

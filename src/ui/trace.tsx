@@ -46,7 +46,7 @@ export function SignalTrace({ trace, width = 120, height = 32, axes = false, flu
         </clipPath>
       </defs>
       {axes ? (
-        <g className="fill-faint font-mono" fontSize={10}>
+        <g className="fill-faint" fontSize={10}>
           {Math.abs(y(hi) - ty) > 10 ? (
             <text x={pad.l - 6} y={y(hi) + 3} textAnchor="end">
               {fmt(hi)}
@@ -67,15 +67,15 @@ export function SignalTrace({ trace, width = 120, height = 32, axes = false, flu
       ) : null}
       <line x1={pad.l} x2={width - pad.r} y1={ty} y2={ty} stroke="var(--muted)" strokeWidth={1} strokeDasharray="3 3" />
       {axes ? (
-        <text x={width - pad.r} y={ty - 4} textAnchor="end" className="fill-muted font-mono" fontSize={10}>
+        <text x={width - pad.r} y={ty - 4} textAnchor="end" className="fill-muted" fontSize={10}>
           threshold {fmt(trace.threshold)}
         </text>
       ) : null}
-      <path d={path} fill="none" stroke="var(--text)" strokeWidth={1.5} strokeLinejoin="round" strokeLinecap="round" />
-      <path d={path} fill="none" stroke="var(--signal-ink)" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" clipPath={`url(#${id})`} />
+      <path d={path} fill="none" stroke="var(--faint)" strokeWidth={1.5} strokeLinejoin="round" strokeLinecap="round" />
+      <path d={path} fill="none" stroke="var(--brand)" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" clipPath={`url(#${id})`} />
       {over ? (
         <>
-          <circle cx={x(last)} cy={y(values[last])} r={axes ? 5 : 3.5} fill="var(--accent)" stroke="var(--signal-ink)" strokeWidth={1.5} />
+          <circle cx={x(last)} cy={y(values[last])} r={axes ? 4 : 3} fill="var(--brand)" />
         </>
       ) : (
         <circle cx={x(last)} cy={y(values[last])} r={2.5} fill="var(--text)" />

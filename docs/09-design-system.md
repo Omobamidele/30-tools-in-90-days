@@ -107,3 +107,19 @@ Contrast was computed with the WCAG relative-luminance formula (script in the bu
 
 ## Simulated data marker
 Any record whose usage came from the simulator carries a `Simulated usage` tag (dashed outline, `--muted`). The account page's data-freshness line says "Usage source: simulator". The overview footer says "Demo workspace — usage is simulated" while any simulated rows exist.
+
+## Revision, 2026-10-08: "it looks like a forex trader platform"
+
+The user's review of the first build: the metrics looked like a trading terminal. This is the same lesson as Tool 01 (see the memory note "UI must be demo-worthy": money in plain words, not a trading dashboard). What changed:
+
+| Before | After | Why |
+|---|---|---|
+| JetBrains Mono for every figure, count and ID | The interface sans with tabular numbers; mono only for API keys and code samples in Settings | Monospace figures are the strongest "ticker" cue |
+| A sparkline on every card, list row and overview item | No sparklines in lists; the sentence carries it ("65 of 60 seats active for 16 days"). One chart remains, on the signal and account pages | Rows of mini-charts read as a market watchlist |
+| Chart in black and chartreuse, with a neon dot | Grey line, brand teal above the threshold, small teal dot | Calmer; colour still marks the crossing |
+| ALL-CAPS mono tag `SEAT PRESSURE` | Quiet "Seat pressure" label with an icon | Looked like a ticker symbol |
+| Faint 24px grid behind everything | Plain canvas | Graph paper added to the terminal feel |
+| Headline numbers in teal mono | Bold, in the text colour | Calmer sentence |
+| Priority as a number with "+35 … = 55" | "High / Medium / Low priority", with the reasons as plain sentences ("Worth about $14,400 a year.") | People act on reasons, not scores |
+
+Chartreuse now appears only on the dark top bar (active tab, notification badge, product mark).

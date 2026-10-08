@@ -61,8 +61,8 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
         <h2 id="answer" className="max-w-4xl text-[24px] leading-8 font-medium tracking-[-0.01em]">
           {f.pipelineMinor || f.wonMinor ? (
             <>
-              In {r.label}, signals created <span className="num font-mono font-semibold text-brand">{formatMoneyShort(f.pipelineMinor, c)}</span> of pipeline and{" "}
-              <span className="num font-mono font-semibold text-brand">{formatMoneyShort(f.wonMinor, c)}</span> of won expansion revenue.
+              In {r.label}, signals created <span className="num font-semibold">{formatMoneyShort(f.pipelineMinor, c)}</span> of pipeline and{" "}
+              <span className="num font-semibold">{formatMoneyShort(f.wonMinor, c)}</span> of won expansion revenue.
             </>
           ) : (
             <>Nothing recorded in {r.label} yet. Opportunities and wins appear here when sellers record them.</>
@@ -78,7 +78,7 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
                 <p className="text-meta text-muted">
                   {i + 1}. {s.label}
                 </p>
-                <p className="num mt-1 font-mono text-figure font-medium">{s.n}</p>
+                <p className="num mt-1 text-figure font-medium">{s.n}</p>
                 <div aria-hidden className="mt-2 h-1.5 rounded-full bg-sunken">
                   <div className={cx("h-full rounded-full", i === steps.length - 1 ? "bg-won" : "bg-brand")} style={{ width: `${(s.n / max) * 100}%` }} />
                 </div>
@@ -107,10 +107,10 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
                   {r.byType.map((x) => (
                     <tr key={x.type}>
                       <td className="px-4 py-2 font-medium">{RULE_META[x.type].label}</td>
-                      <td className="num px-2 py-2 text-right font-mono">{x.raised}</td>
-                      <td className="num px-2 py-2 text-right font-mono">{x.accepted}</td>
-                      <td className="num px-2 py-2 text-right font-mono">{x.dismissed}</td>
-                      <td className="num px-2 py-2 text-right font-mono">{x.opportunities}</td>
+                      <td className="num px-2 py-2 text-right">{x.raised}</td>
+                      <td className="num px-2 py-2 text-right">{x.accepted}</td>
+                      <td className="num px-2 py-2 text-right">{x.dismissed}</td>
+                      <td className="num px-2 py-2 text-right">{x.opportunities}</td>
                       <td className="px-2 py-2 text-right">
                         <MoneyShort minor={x.pipelineMinor} currency={c} />
                       </td>
@@ -147,7 +147,7 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
                     {g.rows.map((p) => (
                       <tr key={p.name}>
                         <td className={cx("px-4 py-2 font-medium", g.color)}>{p.name}</td>
-                        <td className="num px-2 py-2 text-right font-mono">{p.routed}</td>
+                        <td className="num px-2 py-2 text-right">{p.routed}</td>
                         <td className="px-2 py-2 text-right">
                           <MoneyShort minor={p.pipelineMinor} currency={c} />
                         </td>
@@ -172,7 +172,7 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
                 {r.dismissReasons.map((d) => (
                   <li key={d.reason} className="flex justify-between gap-3 px-4 py-2 text-table">
                     <span>{d.reason}</span>
-                    <span className="num font-mono">{d.n}</span>
+                    <span className="num">{d.n}</span>
                   </li>
                 ))}
               </ul>
@@ -184,15 +184,15 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
             <dl className="divide-y divide-rule">
               <div className="flex justify-between gap-3 px-4 py-2.5 text-table">
                 <dt>Median time from signal to triage</dt>
-                <dd className="num font-mono">{hours(r.responsiveness.medianTriageHours)}</dd>
+                <dd className="num">{hours(r.responsiveness.medianTriageHours)}</dd>
               </div>
               <div className="flex justify-between gap-3 px-4 py-2.5 text-table">
                 <dt>Signals triaged before their deadline</dt>
-                <dd className="num font-mono">{r.responsiveness.triageOnTimePct === null ? "—" : `${r.responsiveness.triageOnTimePct}%`}</dd>
+                <dd className="num">{r.responsiveness.triageOnTimePct === null ? "—" : `${r.responsiveness.triageOnTimePct}%`}</dd>
               </div>
               <div className="flex justify-between gap-3 px-4 py-2.5 text-table">
                 <dt>Median time for a seller to accept</dt>
-                <dd className="num font-mono">{hours(r.responsiveness.medianSellerHours)}</dd>
+                <dd className="num">{hours(r.responsiveness.medianSellerHours)}</dd>
               </div>
             </dl>
           </Panel>

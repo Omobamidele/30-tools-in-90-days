@@ -10,7 +10,7 @@ import { cx } from "./cx";
 
 export function ProductMark({ text, size = 32 }: { text: string; size?: number }) {
   return (
-    <span aria-hidden className="relative inline-flex shrink-0 items-center justify-center rounded-[7px] bg-ink-2 font-mono font-semibold text-on-ink ring-1 ring-white/15" style={{ width: size, height: size, fontSize: size * 0.36 }}>
+    <span aria-hidden className="relative inline-flex shrink-0 items-center justify-center rounded-[7px] bg-ink-2 font-semibold text-on-ink ring-1 ring-white/15" style={{ width: size, height: size, fontSize: size * 0.36 }}>
       {text}
       <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-signal ring-2 ring-ink" />
     </span>
@@ -101,14 +101,14 @@ export function TopBar({
             <Link href="/notifications" className="relative rounded-control p-2 text-on-ink-muted hover:bg-ink-2 hover:text-on-ink" aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"}>
               <Bell size={20} aria-hidden />
               {unread ? (
-                <span aria-hidden className="absolute top-1 right-1 min-w-4 rounded-full bg-signal px-1 font-mono text-[10px] leading-4 font-semibold text-ink">
+                <span aria-hidden className="absolute top-1 right-1 min-w-4 rounded-full bg-signal px-1 text-[10px] leading-4 font-semibold text-ink">
                   {unread > 99 ? "99+" : unread}
                 </span>
               ) : null}
             </Link>
             <M.Root>
               <M.Trigger className="flex items-center gap-2 rounded-control p-1.5 hover:bg-ink-2" aria-label={`Account menu for ${user.name}`}>
-                <span className="inline-flex size-7 items-center justify-center rounded-full bg-brand font-mono text-meta font-semibold text-white">
+                <span className="inline-flex size-7 items-center justify-center rounded-full bg-brand text-meta font-semibold text-white">
                   {user.name
                     .split(/\s+/)
                     .map((p) => p[0])

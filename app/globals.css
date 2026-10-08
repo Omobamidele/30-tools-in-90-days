@@ -98,11 +98,6 @@ html {
 }
 body {
   background-color: var(--canvas);
-  /* Faint 24px grid (docs/09): structure, not decoration. Panels are opaque on top of it. */
-  background-image:
-    linear-gradient(to right, rgb(15 43 46 / 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(15 43 46 / 0.04) 1px, transparent 1px);
-  background-size: 24px 24px;
   color: var(--text);
   font-family: var(--font-sans);
   font-size: 14px;

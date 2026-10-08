@@ -39,7 +39,7 @@ export default async function RulePage({ params }: PageProps<"/rules/[id]">) {
                 {d.reasons.map((x) => (
                   <li key={x.reason ?? "none"} className="flex justify-between gap-3 px-4 py-2 text-table">
                     <span>{x.reason ?? "No reason"}</span>
-                    <span className="num font-mono">{x.n}</span>
+                    <span className="num">{x.n}</span>
                   </li>
                 ))}
               </ul>
@@ -63,7 +63,7 @@ export default async function RulePage({ params }: PageProps<"/rules/[id]">) {
             <ol className="divide-y divide-rule">
               {d.versions.map((v) => (
                 <li key={v.id} className="px-4 py-2 text-table">
-                  <span className="font-mono">v{v.version}</span> · {v.note}
+                  <span>v{v.version}</span> · {v.note}
                   <span className="block text-meta text-muted">{formatDateTime(v.changedAt, ctx.actor.timezone)}</span>
                 </li>
               ))}

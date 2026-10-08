@@ -45,7 +45,7 @@ export default async function CsqlsPage({ searchParams }: PageProps<"/csqls">) {
       <Link href={`/csqls/${c.id}`} className="block rounded-panel border border-rule bg-surface p-3 hover:border-field">
         <div className="flex items-start justify-between gap-2">
           <span className="min-w-0">
-            <span className="font-mono text-meta text-muted">{csqlLabel(t.csql, c.number)}</span>
+            <span className="text-meta text-muted">{csqlLabel(t.csql, c.number)}</span>
             <span className="block truncate text-body font-semibold">{r.account.name}</span>
           </span>
           <MoneyShort minor={value(c)} currency={ctx.actor.currency} className="shrink-0 font-medium" empty="—" />
@@ -114,7 +114,7 @@ export default async function CsqlsPage({ searchParams }: PageProps<"/csqls">) {
               <section key={col.key} aria-labelledby={`c-${col.key}`} className="flex min-w-0 flex-col rounded-panel bg-sunken/70 p-2">
                 <header className="flex items-baseline justify-between px-2 pt-1 pb-2">
                   <h2 id={`c-${col.key}`} className="text-body font-semibold">
-                    {col.title} <span className="num font-mono font-normal text-muted">{items.length}</span>
+                    {col.title} <span className="num font-normal text-muted">{items.length}</span>
                   </h2>
                   <span className="truncate pl-2 text-meta text-muted">{items.length && total ? formatMoneyShort(total, ctx.actor.currency) : col.hint}</span>
                 </header>
@@ -147,7 +147,7 @@ export default async function CsqlsPage({ searchParams }: PageProps<"/csqls">) {
               <tbody className="divide-y divide-rule">
                 {rows.map((r) => (
                   <tr key={r.csql.id} className="hover:bg-sunken/50">
-                    <td className="px-4 py-2 font-mono">
+                    <td className="px-4 py-2">
                       <Link href={`/csqls/${r.csql.id}`} className="hover:underline">
                         {csqlLabel(t.csql, r.csql.number)}
                       </Link>

@@ -50,7 +50,7 @@ export default async function AccountPage({ params }: PageProps<"/accounts/[id]"
           <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <span>{cfg.segments.find((s) => s.key === a.segment)?.name ?? "No segment"}</span>
             <span>{a.industry}</span>
-            <span className="font-mono">{a.crmId}</span>
+            <span>{a.crmId}</span>
             {stale ? <Status tone="watch">{d.dataAgeDays === null ? "No usage received yet" : `Usage is ${d.dataAgeDays} days old; no new signals until it updates`}</Status> : <span>Usage updated {latest?.date}</span>}
             {latest?.source === "SIMULATED" ? <SimulatedTag /> : null}
           </span>
@@ -63,7 +63,7 @@ export default async function AccountPage({ params }: PageProps<"/accounts/[id]"
               {seatTrace ? (
                 <figure>
                   <figcaption className="mb-1 text-table">
-                    <span className="font-medium">{t.seats}:</span> <span className="num font-mono">{latest?.activeSeats}</span> active of <span className="num font-mono">{sub!.seatsPurchased}</span>
+                    <span className="font-medium">{t.seats}:</span> <span className="num">{latest?.activeSeats}</span> active of <span className="num">{sub!.seatsPurchased}</span>
                   </figcaption>
                   <SignalTrace trace={seatTrace} width={480} height={150} axes fluid />
                 </figure>
@@ -71,8 +71,8 @@ export default async function AccountPage({ params }: PageProps<"/accounts/[id]"
               {paceTrace && paceTrace.points.length > 1 ? (
                 <figure>
                   <figcaption className="mb-1 text-table">
-                    <span className="font-medium">{t.usageMetric}:</span> <span className="num font-mono">{latest?.creditsUsedTerm.toLocaleString("en-US")}</span> of{" "}
-                    <span className="num font-mono">{sub!.creditsCommitted.toLocaleString("en-US")}</span> used this term
+                    <span className="font-medium">{t.usageMetric}:</span> <span className="num">{latest?.creditsUsedTerm.toLocaleString("en-US")}</span> of{" "}
+                    <span className="num">{sub!.creditsCommitted.toLocaleString("en-US")}</span> used this term
                   </figcaption>
                   <SignalTrace trace={paceTrace} width={480} height={150} axes fluid />
                 </figure>
@@ -85,7 +85,7 @@ export default async function AccountPage({ params }: PageProps<"/accounts/[id]"
                 <ul className="flex flex-wrap gap-2">
                   {workspaces.map((w) => (
                     <li key={w.id} className="rounded-control border border-rule px-2.5 py-1.5 text-table">
-                      {w.name} · <span className="num font-mono">{w.activeUsers}</span> active <span className="text-meta text-muted">since {w.createdOn}</span>
+                      {w.name} · <span className="num">{w.activeUsers}</span> active <span className="text-meta text-muted">since {w.createdOn}</span>
                     </li>
                   ))}
                 </ul>
@@ -110,7 +110,7 @@ export default async function AccountPage({ params }: PageProps<"/accounts/[id]"
                       <span className="text-right text-table">
                         <span className="block capitalize">{s.status.toLowerCase()}</span>
                         {c ? (
-                          <Link href={`/csqls/${c.id}`} className="link font-mono text-meta">
+                          <Link href={`/csqls/${c.id}`} className="link text-meta">
                             {csqlLabel(t.csql, c.number)} · {c.status.toLowerCase().replace(/_/g, " ")}
                           </Link>
                         ) : s.dismissReason ? (
@@ -150,8 +150,8 @@ export default async function AccountPage({ params }: PageProps<"/accounts/[id]"
                       { label: "Plan", value: sub.plan },
                       { label: "ARR", value: <MoneyShort minor={sub.arrMinor} currency={currency} /> },
                       { label: "Term", value: `${sub.termStart} to ${sub.termEnd}` },
-                      { label: t.seats, value: <span className="num font-mono">{sub.seatsPurchased}</span> },
-                      { label: `${t.usageMetric} committed`, value: <span className="num font-mono">{sub.creditsCommitted.toLocaleString("en-US")}</span> },
+                      { label: t.seats, value: <span className="num">{sub.seatsPurchased}</span> },
+                      { label: `${t.usageMetric} committed`, value: <span className="num">{sub.creditsCommitted.toLocaleString("en-US")}</span> },
                       {
                         label: "Add-ons",
                         value: (

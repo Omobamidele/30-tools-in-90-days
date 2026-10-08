@@ -11,7 +11,7 @@ export function MoneyShort({ minor, currency, className, empty = "Not estimated"
   if (minor === null || minor === undefined) return <span className={cx("text-faint", className)}>{empty}</span>;
   const exact = formatMoney(minor, currency);
   return (
-    <span className={cx("num font-mono", className)} title={exact}>
+    <span className={cx("num", className)} title={exact}>
       <span aria-hidden>{formatMoneyShort(minor, currency)}</span>
       <span className="sr-only">{exact}</span>
     </span>
@@ -20,7 +20,7 @@ export function MoneyShort({ minor, currency, className, empty = "Not estimated"
 
 export function Money({ minor, currency, className }: { minor: number | null | undefined; currency: string; className?: string }) {
   if (minor === null || minor === undefined) return <span className={cx("text-faint", className)}>Not estimated</span>;
-  return <span className={cx("num font-mono", className)}>{formatMoney(minor, currency)}</span>;
+  return <span className={cx("num", className)}>{formatMoney(minor, currency)}</span>;
 }
 
 export const RULE_META: Record<RuleType, { label: string; icon: IconType; short: string }> = {
@@ -31,13 +31,13 @@ export const RULE_META: Record<RuleType, { label: string; icon: IconType; short:
   NEW_EXECUTIVE: { label: "New executive", short: "Executive", icon: IdentificationBadge },
 };
 
-/** The rule-type tag: the one all-caps label in the product, read as a code (docs/09). */
+/** The signal type as a quiet label with its icon (not a ticker-style code). */
 export function RuleTag({ type, className }: { type: RuleType; className?: string }) {
   const m = RULE_META[type];
   const Icon = m.icon;
   return (
-    <span className={cx("inline-flex items-center gap-1 rounded-[4px] border border-rule-strong bg-surface px-1.5 py-0.5 font-mono text-tag font-medium tracking-[0.06em] text-muted uppercase", className)}>
-      <Icon size={12} aria-hidden />
+    <span className={cx("inline-flex items-center gap-1 text-meta font-medium text-muted", className)}>
+      <Icon size={14} aria-hidden />
       {m.label}
     </span>
   );
@@ -75,7 +75,7 @@ export function Avatar({ name, size = 24, className }: { name: string | null | u
   return (
     <span
       aria-hidden
-      className={cx("inline-flex shrink-0 items-center justify-center rounded-full bg-ink-2 font-mono font-medium text-on-ink", className)}
+      className={cx("inline-flex shrink-0 items-center justify-center rounded-full bg-ink-2 font-medium text-on-ink", className)}
       style={{ width: size, height: size, fontSize: Math.round(size * 0.4) }}
     >
       {initials}

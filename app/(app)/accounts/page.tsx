@@ -82,7 +82,7 @@ export default async function AccountsPage({ searchParams }: PageProps<"/account
                           <span aria-hidden className="h-1.5 w-16 overflow-hidden rounded-full bg-sunken">
                             <span className={cx("block h-full rounded-full", pct >= 90 ? "bg-signal-ink" : "bg-muted")} style={{ width: `${Math.min(100, pct)}%` }} />
                           </span>
-                          <span className="num font-mono">
+                          <span className="num">
                             {r.activeSeats}/{r.sub!.seatsPurchased}
                           </span>
                         </span>
@@ -90,7 +90,7 @@ export default async function AccountsPage({ searchParams }: PageProps<"/account
                         "—"
                       )}
                     </td>
-                    <td className={cx("px-2 py-2 text-right font-mono num", r.usagePacePct !== null && r.usagePacePct >= 110 ? "font-semibold text-signal-ink" : "")}>{r.usagePacePct !== null ? `${r.usagePacePct}%` : "—"}</td>
+                    <td className={cx("px-2 py-2 text-right num", r.usagePacePct !== null && r.usagePacePct >= 110 ? "font-semibold text-signal-ink" : "")}>{r.usagePacePct !== null ? `${r.usagePacePct}%` : "—"}</td>
                     <td className="px-2 py-2">{r.renewalInDays !== null ? <span className={r.renewalInDays <= 60 ? "text-watch" : ""}>{r.renewalInDays} days</span> : "—"}</td>
                     <td className="px-2 py-2">{r.csmName ?? <span className="text-faint">None</span>}</td>
                     <td className="px-2 py-2">{r.ownerName ?? <span className="text-faint">Queue</span>}</td>
@@ -99,7 +99,7 @@ export default async function AccountsPage({ searchParams }: PageProps<"/account
                         <Status tone="watch">{r.dataAgeDays === null ? "No usage yet" : `Usage ${r.dataAgeDays} days old`}</Status>
                       ) : r.openSignals ? (
                         <span>
-                          <span className="num font-mono font-semibold">{r.openSignals}</span> <MoneyShort minor={r.openSignalValue} currency={ctx.actor.currency} className="text-muted" />
+                          <span className="num font-semibold">{r.openSignals}</span> <MoneyShort minor={r.openSignalValue} currency={ctx.actor.currency} className="text-muted" />
                         </span>
                       ) : (
                         <span className="text-faint">None</span>

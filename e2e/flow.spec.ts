@@ -67,7 +67,7 @@ test("dismissing needs a reason and teaches the rule", async ({ page }) => {
   await signIn(page, "lena@fernway.test");
   await page.goto("/signals");
   await page.getByRole("link", { name: /Tallgrass Agritech/ }).first().click();
-  await expect(page.getByText(/open support escalation: talk to support first/)).toBeVisible();
+  await expect(page.getByText(/open support escalation: talk to support first/i)).toBeVisible();
   await page.getByRole("tab", { name: "Dismiss" }).click();
   await page.getByRole("button", { name: "Dismiss signal" }).click();
   await expect(page.getByText("Some fields need attention.")).toBeVisible();
