@@ -103,13 +103,14 @@ Usage feed (warehouse/product → API) ─► daily snapshot ─► rules ─►
   - routing queues
   - people and roles
 - Notifications (in-app plus email), a Monday digest, an opt-out under Your account, password change.
-- Designed as a Close-style CRM workspace (revision 4, [docs/09](docs/09-design-system.md)):
-  - white sidebar with grouped navigation and saved views, top bar with a wide search field
-  - white page header bands with pill tabs and a filter toolbar, white panels on a light grey canvas
-  - Signals is an inbox with a reading pane; each signal reads as a sentence, with a picture of the evidence
+- Designed as a HubSpot-style CRM (revision 5, [docs/09](docs/09-design-system.md)):
+  - green top navigation bar; white pages with no boxed cards
+  - index pages with saved-view tabs, quick-filter dropdowns and calm tables (stacked lists on phones)
+  - three-column record pages: key details, Overview and Activity, related records
+  - each signal reads as a sentence, with a picture of the evidence on its record page
   - money is a quiet line, never the headline; no stat strips, no line charts
-  - Inter throughout, one white-labelled brand colour (green in the demo)
-  - WCAG AA throughout (axe: zero violations on 23 screens)
+  - Lexend Deca throughout, one white-labelled brand colour (green in the demo)
+  - WCAG AA throughout (axe: zero violations on every signed-in screen)
   - responsive down to 390 px
 
 ## Architecture

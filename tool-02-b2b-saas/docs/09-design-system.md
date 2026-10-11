@@ -1,6 +1,6 @@
 # 09 — Design system (DESIGN.md)
 
-> **Current: Revision 4, "Close-style workspace" (2026-10-11), at the end of this file.** Earlier revisions are kept as history.
+> **Current: Revision 5, "HubSpot-style CRM" (2026-10-11), at the end of this file.** Earlier revisions are kept as history.
 
 Chosen by the user on 2026-10-07, from three directions: **Signal room** (selected), workplace photography, and editorial/financial paper. Written **before any screen**. If a screen needs something this file doesn't cover, add it here first.
 
@@ -262,3 +262,40 @@ All main screens were reviewed at 1440 and 390 px against this question: Home (C
 | muted on white / on canvas | 6.05 / 5.65 |
 | faint on white / on canvas | 5.05 / 4.71 |
 | field border on white (non-text) | 3.21 |
+
+
+# Revision 5, 2026-10-11: "HubSpot-style CRM" (supersedes revision 4)
+
+**Feedback:** "It looks ugly … you only changed the colour." Revisions 2 to 4 kept the same skeleton (left sidebar, rows of tiles and cards) and only re-skinned it. The user was asked to choose a structure and picked **top navigation (HubSpot)**. They named four dislikes: too crowded, initials tiles look cheap, grey background and boxes, and fonts and sizes.
+
+## What changed structurally
+- **Navigation:** a green top bar replaces the sidebar. It holds Home, Signals (with the waiting count), CSQLs, Accounts, Results, an Admin menu (Signal rules, Settings) for RevOps and admins, search, notifications and the account menu. Pages use the full width.
+- **Index pages** (Signals, Accounts, CSQLs) follow HubSpot's index pages ([view and filter records](https://knowledge.hubspot.com/records/view-and-filter-records), [quick filters](https://knowledge.hubspot.com/records/customize-quick-filters)):
+  - saved-view tabs underlined in green
+  - quick-filter dropdowns (`FilterMenu`) instead of rows of chips
+  - a white table with a soft header row and the record name as a green link
+  - one calm line per record
+  - on phones, a stacked list instead of a sideways-scrolling table
+- **Record pages** (signal, account, CSQL) follow HubSpot's three-column record ([record page layout](https://knowledge.hubspot.com/records/work-with-records)):
+  - left: name, status, and properties with the label above the value
+  - middle: Overview and Activity tabs, with the work itself (the story, evidence, decision form, handoff note)
+  - right: associated records (account, people, contacts, CSQLs)
+  - columns are separated by hairlines, not boxes
+- **The Signals reading pane is gone.** A row opens the record page, as in HubSpot. "Review the next one" jumps to the oldest waiting signal.
+
+## Answers to the four dislikes
+- **Too crowded:**
+  - Lists show a name, one sentence and a due date.
+  - Value, kind tags and avatars left the list rows; value lives on the record page.
+  - Filters collapse into three dropdowns.
+- **Initials tiles:** removed. Companies and people appear as names. `CompanyLogo` and `Avatar` are kept as no-ops, so a deployment with real logos can switch them back on in one place.
+- **Grey background and boxes:** pages are white. Panels are sections with a heading over a hairline. The only tinted surface is the table header row.
+- **Fonts and sizes:**
+  - Lexend Deca, the typeface HubSpot uses across its CRM, is used throughout
+  - body text 15/24, page titles 28/36 semibold, record names 22/30
+  - controls 40px tall
+
+## Tokens
+- **Brand:** green #0B7A55 (white text 5.34:1). The top bar uses `brand-strong` (white text 7.8:1; inactive nav text #D9EFE5 at 6.5:1).
+- **Neutrals:** surfaces #FFFFFF; table header and sunken #F5F7F6; text #1F2A24 (14.8:1); muted #56605A (6.5:1, 6.1:1 on sunken); faint #66706A (5.1:1, 4.8:1 on sunken); rules #E3E8E5 and #CFD6D2; field border #88918C (3.2:1).
+- **Shape:** control radius 4px, panel radius 6px. There are no shadows except on menus.

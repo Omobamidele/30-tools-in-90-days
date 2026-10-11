@@ -23,13 +23,12 @@ test("signed-in screens have no WCAG A/AA violations", async ({ page }) => {
   test.setTimeout(420_000);
   const failures: string[] = [];
   await signIn(page, "priya@fernway.test");
-  const inboxItem = await first(page, "/signals", 'a[href*="open="]');
-  const signal = `/signals/${new URL(inboxItem, "http://x").searchParams.get("open")}`;
-  const account = await first(page, "/accounts", 'a[href^="/accounts/"]');
-  for (const r of ["/", "/signals", inboxItem, signal, "/accounts", account, "/csqls", "/results", "/notifications", "/account", "/search?q=bright"]) failures.push(...(await scan(page, r)));
+  const signal = await first(page, "/signals", 'table a[href^="/signals/"]');
+  const account = await first(page, "/accounts", 'table a[href^="/accounts/"]');
+  for (const r of ["/", "/signals", signal, `${signal}?view=activity`, "/accounts", account, "/csqls", "/results", "/notifications", "/account", "/search?q=bright"]) failures.push(...(await scan(page, r)));
   await signIn(page, "aisha@fernway.test");
-  const csql = await first(page, "/csqls", 'a[href^="/csqls/"]');
-  for (const r of ["/", csql, "/csqls?layout=list"]) failures.push(...(await scan(page, r)));
+  const csql = await first(page, "/csqls", 'table a[href^="/csqls/"]');
+  for (const r of ["/", csql, "/csqls?layout=board"]) failures.push(...(await scan(page, r)));
   await signIn(page, "revops@fernway.test");
   const rule = await first(page, "/rules", 'a[href^="/rules/"]');
   for (const r of ["/rules", rule, "/settings", "/settings/data", "/settings/crm", "/settings/imports", "/settings/routing", "/settings/users"]) failures.push(...(await scan(page, r)));

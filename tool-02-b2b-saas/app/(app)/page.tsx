@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { and, eq, sql } from "drizzle-orm";
 import { appCtx } from "@/services/app-ctx";
 import { listSignals } from "@/services/signals";
-import { csqlLabel, listCsqls, type Opportunity } from "@/services/csqls";
+import { listCsqls, type Opportunity } from "@/services/csqls";
 import { calendarOf } from "@/services/org";
 import { requireActor } from "@/auth/session";
 import { formatMoneyShort } from "@/core/money";
@@ -11,7 +11,7 @@ import { deadlineState } from "@/core/business-time";
 import { getDb } from "@/db/client";
 import { usageSnapshots } from "@/db/schema";
 import { ButtonLink, EmptyState, PageHeader, Panel } from "@/ui/page";
-import { Avatar, CompanyLogo, RuleTag, Status } from "@/ui/bits";
+import { Status } from "@/ui/bits";
 import { Kanban, Target } from "@/ui/icons";
 import { storyHeadline, worthText } from "@/ui/story";
 import { ago, deadlineText } from "@/ui/format";
@@ -55,7 +55,6 @@ export default async function HomePage() {
     .slice(0, 4);
   const first = actor.name.split(" ")[0];
   const short = (m: number | null | undefined) => (m === null || m === undefined ? null : formatMoneyShort(m, currency));
-  const high = ctx.actor.config.detection.highPriorityScore;
   const lastWin = wins[0];
 
   const headline = isSeller
@@ -86,72 +85,58 @@ export default async function HomePage() {
             <ButtonLink href="/csqls" variant="primary">
               Open your {t.csqlPlural}
             </ButtonLink>
-          ) : (
-            <ButtonLink href="/signals" variant="primary">
-              Review signals
+          ) : open[0] ? (
+            <ButtonLink href={`/signals/${open[0].signal.id}`} variant="primary">
+              Review the next one
             </ButtonLink>
-          )
+          ) : null
         }
       />
 
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-x-16 gap-y-12 xl:grid-cols-[minmax(0,1fr)_360px]">
         {isSeller ? (
-          <Panel title="Handed to you by customer success" id="mine" description="Each one comes with the CSM's note and the usage behind it." actions={<ButtonLink href="/csqls" size="sm">View all</ButtonLink>}>
+          <Panel title="Handed to you by customer success" id="mine" actions={<Link href="/csqls" className="text-table font-medium text-brand hover:underline">See all</Link>}>
             {mine.length ? (
               <ul className="divide-y divide-rule">
                 {mine.map(({ csql: c, account, sourcedByName }) => {
                   const due = c.status === "ROUTED" && c.dueAt && c.clockStartedAt ? deadlineText(c.clockStartedAt, c.dueAt, now, cal) : null;
                   return (
-                    <li key={c.id}>
-                      <Link href={`/csqls/${c.id}`} className="flex items-start gap-4 px-6 py-4 hover:bg-hover/60">
-                        <CompanyLogo name={account.name} size={36} />
-                        <span className="min-w-0 flex-1">
-                          <span className="flex flex-wrap items-center gap-x-2">
-                            <span className="font-semibold">{account.name}</span>
-                            <span className="text-meta text-muted">{csqlLabel(t.csql, c.number)}</span>
-                          </span>
-                          <span className="mt-1 line-clamp-2 block text-table text-text">“{c.handoffNote}”</span>
-                          <span className="mt-1.5 flex items-center gap-1.5 text-meta text-muted">
-                            <Avatar name={sourcedByName} size={18} className="ring-0" />
-                            From {sourcedByName}, {worthText(short((c.opportunity as Opportunity | null)?.amountMinor ?? c.adjustedValueMinor ?? c.estValueMinor)).toLowerCase()}
-                          </span>
-                        </span>
-                        {due ? <Status tone={due.tone}>{due.text}</Status> : <Status tone="neutral">{c.status === "OPPORTUNITY" ? "In the CRM" : "You're on it"}</Status>}
-                      </Link>
+                    <li key={c.id} className="flex items-start gap-6 py-5">
+                      <div className="min-w-0 flex-1">
+                        <Link href={`/csqls/${c.id}`} className="text-section font-semibold text-brand hover:underline">
+                          {account.name}
+                        </Link>
+                        <p className="mt-1 line-clamp-2 text-body">“{c.handoffNote}”</p>
+                        <p className="mt-1 text-meta text-muted">
+                          From {sourcedByName}. {worthText(short((c.opportunity as Opportunity | null)?.amountMinor ?? c.adjustedValueMinor ?? c.estValueMinor))}.
+                        </p>
+                      </div>
+                      {due ? <Status tone={due.tone}>{due.text}</Status> : <Status tone="neutral">{c.status === "OPPORTUNITY" ? "In the CRM" : "You're on it"}</Status>}
                     </li>
                   );
                 })}
               </ul>
             ) : (
-              <EmptyState icon={Kanban} title="No open deals for you" actions={<ButtonLink href="/csqls">See all {t.csqlPlural}</ButtonLink>}>
+              <EmptyState icon={Kanban} title="No open deals for you">
                 When a CSM accepts a signal on one of your accounts, it arrives here with their note and the evidence.
               </EmptyState>
             )}
           </Panel>
         ) : (
-          <Panel title="Ready for you to review" id="review" description="Customers whose usage crossed one of your rules. Accept to hand one to a seller, or dismiss it with a reason." actions={<ButtonLink href="/signals" size="sm">View all</ButtonLink>}>
+          <Panel title="Ready for you to review" id="review" actions={<Link href="/signals" className="text-table font-medium text-brand hover:underline">See all {open.length}</Link>}>
             {open.length ? (
               <ul className="divide-y divide-rule">
-                {open.slice(0, 8).map(({ signal: s, account, ownerName }) => {
+                {open.slice(0, 6).map(({ signal: s, account }) => {
                   const due = deadlineText(triageStart(s.triageDueAt), s.triageDueAt, now, cal);
                   return (
-                    <li key={s.id}>
-                      <Link href={`/signals?open=${s.id}`} className="flex items-start gap-4 px-6 py-4 hover:bg-hover/60">
-                        <CompanyLogo name={account.name} size={36} />
-                        <span className="min-w-0 flex-1">
-                          <span className="flex flex-wrap items-center gap-2">
-                            <span className="font-semibold">{account.name}</span>
-                            <RuleTag type={s.type} />
-                            {s.priority >= high ? <Status tone="brand">High priority</Status> : null}
-                          </span>
-                          <span className="mt-1 block text-table text-text">{storyHeadline(s.type, s.evidence, t)}</span>
-                          <span className="mt-1 block text-meta text-muted">
-                            {worthText(short(s.estValueMinor))}
-                            {ownerName ? `, goes to ${ownerName}` : ", goes to the seller queue"}
-                          </span>
-                        </span>
-                        <Status tone={due.tone}>{due.text}</Status>
-                      </Link>
+                    <li key={s.id} className="flex items-start gap-6 py-5">
+                      <div className="min-w-0 flex-1">
+                        <Link href={`/signals/${s.id}`} className="text-section font-semibold text-brand hover:underline">
+                          {account.name}
+                        </Link>
+                        <p className="mt-1 text-body">{storyHeadline(s.type, s.evidence, t)}</p>
+                      </div>
+                      <Status tone={due.tone}>{due.text}</Status>
                     </li>
                   );
                 })}
@@ -161,22 +146,15 @@ export default async function HomePage() {
                 New signals appear when a customer&apos;s usage crosses one of your rules. Detection runs every morning and after each usage upload.
               </EmptyState>
             )}
-            {open.length > 8 ? (
-              <div className="border-t border-rule px-6 py-3 text-table">
-                <Link href="/signals" className="font-medium text-brand hover:underline">
-                  {open.length - 8} more to review
-                </Link>
-              </div>
-            ) : null}
           </Panel>
         )}
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-12">
           {leader && stuck.length ? (
             <Panel title="Needs a new owner" id="stuck" description="More than two business days late.">
               <ul className="divide-y divide-rule">
                 {stuck.map((e) => (
-                  <RailItem key={e.href} href={e.href} account={e.account} line={`${e.what}, with ${e.who}`} right={<Status tone="risk">Late</Status>} />
+                  <SideItem key={e.href} href={e.href} title={e.account} line={`${e.what}, with ${e.who}`} />
                 ))}
               </ul>
             </Panel>
@@ -186,7 +164,7 @@ export default async function HomePage() {
             <Panel title="Sent back to you" id="returned">
               <ul className="divide-y divide-rule">
                 {returned.map(({ csql: c, account, ownerName }) => (
-                  <RailItem key={c.id} href={`/csqls/${c.id}`} account={account.name} line={`${ownerName?.split(" ")[0] ?? "The seller"}: ${c.returnReason ?? "sent back"}`} />
+                  <SideItem key={c.id} href={`/csqls/${c.id}`} title={account.name} line={`${ownerName ?? "The seller"}: ${c.returnReason ?? "sent back"}`} />
                 ))}
               </ul>
             </Panel>
@@ -197,55 +175,45 @@ export default async function HomePage() {
               <ul className="divide-y divide-rule">
                 {waitingSellers.slice(0, 5).map(({ csql: c, account, ownerName }) => {
                   const due = c.dueAt && c.clockStartedAt ? deadlineText(c.clockStartedAt, c.dueAt, now, cal) : null;
-                  return <RailItem key={c.id} href={`/csqls/${c.id}`} account={account.name} line={`With ${ownerName ?? "the seller queue"}`} right={due ? <Status tone={due.tone}>{due.text}</Status> : null} />;
+                  return <SideItem key={c.id} href={`/csqls/${c.id}`} title={account.name} line={`With ${ownerName ?? "the seller queue"}${due ? `, ${due.text.toLowerCase()}` : ""}`} />;
                 })}
               </ul>
             </Panel>
           ) : null}
 
-          <Panel title="Recent wins" id="wins" actions={<ButtonLink href="/results" size="sm">Results</ButtonLink>}>
+          <Panel title="Recent wins" id="wins" actions={<Link href="/results" className="text-table font-medium text-brand hover:underline">Results</Link>}>
             {wins.length ? (
               <ul className="divide-y divide-rule">
                 {wins.map(({ csql: c, account, ownerName, sourcedByName }) => (
-                  <li key={c.id}>
-                    <Link href={`/csqls/${c.id}`} className="block px-6 py-4 hover:bg-hover/60">
-                      <span className="flex items-center gap-3">
-                        <CompanyLogo name={account.name} size={28} />
-                        <span className="min-w-0 flex-1 font-semibold">{account.name}</span>
-                      </span>
-                      <span className="mt-1.5 line-clamp-2 block text-table text-muted">“{c.handoffNote}”</span>
-                      <span className="mt-1.5 block text-meta text-muted">
-                        Spotted by {sourcedByName?.split(" ")[0]}, won by {ownerName?.split(" ")[0]} {c.closedAt ? ago(c.closedAt, now) : ""}
-                      </span>
-                    </Link>
-                  </li>
+                  <SideItem
+                    key={c.id}
+                    href={`/csqls/${c.id}`}
+                    title={account.name}
+                    line={`Spotted by ${sourcedByName?.split(" ")[0]}, won by ${ownerName?.split(" ")[0]} ${c.closedAt ? ago(c.closedAt, now) : ""}`}
+                  />
                 ))}
               </ul>
             ) : (
-              <EmptyState title="No wins yet">Won deals appear here when sellers record them.</EmptyState>
+              <p className="py-4 text-body text-muted">Won deals appear here when sellers record them.</p>
             )}
           </Panel>
         </div>
       </div>
 
       {freshness[0]?.simulated ? (
-        <p className="mt-6 text-meta text-muted">Demo workspace: Fernway and its customers are fictional, and usage is simulated. Usage last received for {freshness[0].latest}.</p>
+        <p className="mt-12 text-meta text-muted">Demo workspace: Fernway and its customers are fictional, and usage is simulated. Usage last received for {freshness[0].latest}.</p>
       ) : null}
     </>
   );
 }
 
-function RailItem({ href, account, line, right }: { href: string; account: string; line: string; right?: React.ReactNode }) {
+function SideItem({ href, title, line }: { href: string; title: string; line: string }) {
   return (
-    <li>
-      <Link href={href} className="flex items-center gap-3 px-6 py-3 hover:bg-hover/60">
-        <CompanyLogo name={account} size={30} />
-        <span className="min-w-0 flex-1">
-          <span className="block truncate font-medium">{account}</span>
-          <span className="block truncate text-meta text-muted">{line}</span>
-        </span>
-        {right}
+    <li className="py-4">
+      <Link href={href} className="font-semibold text-brand hover:underline">
+        {title}
       </Link>
+      <p className="text-meta text-muted">{line}</p>
     </li>
   );
 }

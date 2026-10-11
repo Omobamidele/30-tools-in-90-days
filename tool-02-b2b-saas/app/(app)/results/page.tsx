@@ -5,7 +5,7 @@ import { getResults, periodRange, type Period } from "@/services/results";
 import { listCsqls } from "@/services/csqls";
 import { formatMoneyShort } from "@/core/money";
 import { EmptyState, PageHeader, Panel } from "@/ui/page";
-import { Avatar, CompanyLogo, RULE_META, TypeBadge } from "@/ui/bits";
+import { Avatar, CompanyLogo, RULE_META } from "@/ui/bits";
 import { ago } from "@/ui/format";
 import { cx } from "@/ui/cx";
 
@@ -67,16 +67,16 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
         }
       />
 
-      <section aria-labelledby="answer" className="panel mb-6 p-6">
-        <h2 id="answer" className="max-w-3xl text-title font-semibold text-balance">
+      <section aria-labelledby="answer" className="mb-10">
+        <h2 id="answer" className="max-w-3xl text-title font-normal text-balance">
           {f.raised
             ? `In ${r.label}, customer success spotted ${f.raised} ${f.raised === 1 ? "customer" : "customers"} ready for more. Sellers won ${f.won} of them${f.won ? `, worth ${money(f.wonMinor)} a year` : ""}${f.pipelineMinor ? `, and ${money(f.pipelineMinor)} is still in play` : ""}.`
             : `Nothing was spotted in ${r.label}. Signals appear here once detection raises them.`}
         </h2>
       </section>
 
-      <div className="flex flex-col gap-6">
-        <section aria-labelledby="journey" className="panel p-6">
+      <div className="flex flex-col gap-12">
+        <section aria-labelledby="journey" className="border-t border-rule pt-6">
           <h2 id="journey" className="text-section font-semibold">
             From a signal to a win
           </h2>
@@ -92,27 +92,22 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
           <p className="mt-4 text-meta text-muted">{f.dismissed} dismissed with a reason, which tunes the rules. Each step only counts what someone recorded.</p>
         </section>
 
-        <section aria-labelledby="wins" className="panel p-6">
+        <section aria-labelledby="wins" className="border-t border-rule pt-6">
           <h2 id="wins" className="text-section font-semibold">
             Wins
           </h2>
           {wins.length ? (
-            <ul className="mt-3 grid gap-3 lg:grid-cols-2">
+            <ul className="mt-2 divide-y divide-rule">
               {wins.map(({ csql: w, account, ownerName, sourcedByName }) => (
                 <li key={w.id}>
-                  <Link href={`/csqls/${w.id}`} className="block h-full rounded-panel border border-rule p-5 hover:border-rule-strong hover:bg-hover/40">
+                  <Link href={`/csqls/${w.id}`} className="block py-4 hover:bg-hover/40">
                     <span className="flex items-center gap-3">
                       <CompanyLogo name={account.name} size={32} />
-                      <span className="min-w-0 flex-1 font-medium">{account.name}</span>
-                      <span className="text-meta text-muted">{w.outcomeAmountMinor ? `${money(w.outcomeAmountMinor)} a year` : null}</span>
+                      <span className="min-w-0 flex-1 font-semibold text-brand">{account.name}</span>
                     </span>
-                    <span className="mt-3 block line-clamp-3 text-body">“{w.handoffNote}”</span>
-                    <span className="mt-3 flex items-center gap-2 text-meta text-muted">
-                      <span className="flex -space-x-1">
-                        <Avatar name={sourcedByName} size={20} />
-                        <Avatar name={ownerName} size={20} />
-                      </span>
-                      {sourcedByName?.split(" ")[0]} spotted it, {ownerName?.split(" ")[0]} won it {w.closedAt ? ago(w.closedAt, now) : ""}
+                    <span className="mt-1 block line-clamp-3 text-body">“{w.handoffNote}”</span>
+                    <span className="mt-2 block text-meta text-muted">
+                      {sourcedByName?.split(" ")[0]} spotted it, {ownerName?.split(" ")[0]} won it {w.closedAt ? ago(w.closedAt, now) : ""}{w.outcomeAmountMinor ? `, worth ${money(w.outcomeAmountMinor)} a year` : ""}
                     </span>
                   </Link>
                 </li>
@@ -123,16 +118,15 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
           )}
         </section>
 
-        <section aria-labelledby="types" className="panel p-6">
+        <section aria-labelledby="types" className="border-t border-rule pt-6">
           <h2 id="types" className="text-section font-semibold">
             Which signals lead somewhere
           </h2>
           <p className="mt-1 text-meta text-muted">A {t.csql} with two kinds of signal counts under both.</p>
           {r.byType.length ? (
-            <ul className="mt-3 divide-y divide-rule rounded-panel border border-rule">
+            <ul className="mt-2 divide-y divide-rule">
               {r.byType.map((x) => (
-                <li key={x.type} className="flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3">
-                  <TypeBadge type={x.type} size={30} />
+                <li key={x.type} className="flex flex-wrap items-center gap-x-4 gap-y-1 py-4">
                   <span className="min-w-40 flex-1 font-medium">{RULE_META[x.type].plain}</span>
                   <span className="text-table text-muted">
                     {x.raised} spotted, {x.accepted} accepted, {x.dismissed} dismissed, {x.opportunities} {x.opportunities === 1 ? "opportunity" : "opportunities"}
@@ -146,12 +140,12 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
           )}
         </section>
 
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-2">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-12 lg:grid-cols-2">
           {[
             { key: "csm", title: "Who spotted them", rows: r.byCsm, verb: "handed over" },
             { key: "seller", title: "Who worked them", rows: r.bySeller, verb: "worked" },
           ].map((g) => (
-            <section key={g.key} aria-labelledby={`by-${g.key}`} className="panel p-6">
+            <section key={g.key} aria-labelledby={`by-${g.key}`} className="border-t border-rule pt-6">
               <h2 id={`by-${g.key}`} className="text-section font-semibold">
                 {g.title}
               </h2>

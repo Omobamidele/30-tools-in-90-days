@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
-/* Revision 4 (docs/09): mirrors the Close CRM workspace the user chose as the reference.
-   White sidebar, light grey canvas, white bordered panels, neutral text, one green accent from
-   client config. Contrast is computed in docs/09; every text pair is AA. */
+/* Revision 5 (docs/09): HubSpot-style CRM, chosen by the user. A green top navigation bar,
+   white pages with no grey canvas and no boxed cards, three-column record pages, roomy tables,
+   and Lexend Deca (HubSpot's own UI typeface) throughout. Contrast is computed in docs/09. */
 :root {
   --sidebar: #ffffff;
-  --canvas: #f7f7f8;
+  --canvas: #ffffff;
   --surface: #ffffff;
-  --sunken: #f2f2f3;
-  --hover: #f0f0f1;
-  --text: #1d1f24;
-  --muted: #5f6368;
-  --faint: #6b6f76;
-  --rule: #e6e6e8;
-  --rule-strong: #d6d6da;
-  --field: #8c9097; /* form borders, 3.2:1 */
+  --sunken: #f5f7f6;
+  --hover: #f2f5f3;
+  --text: #1f2a24;
+  --muted: #56605a;
+  --faint: #66706a;
+  --rule: #e3e8e5;
+  --rule-strong: #cfd6d2;
+  --field: #88918c; /* form borders, 3.2:1 */
 
   --brand: #0b7a55; /* white-labelled: primaryColor */
   --brand-strong: color-mix(in srgb, var(--brand) 82%, black);
@@ -98,38 +98,38 @@
   --color-t-exec: var(--t-exec);
   --color-t-exec-bg: var(--t-exec-bg);
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-lexend), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-lexend), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-  --text-hero: 30px;
-  --text-hero--line-height: 36px;
+  --text-hero: 32px;
+  --text-hero--line-height: 40px;
   --text-hero--letter-spacing: -0.02em;
   --text-display: 28px;
-  --text-display--line-height: 34px;
-  --text-display--letter-spacing: -0.02em;
-  --text-story: 17px;
-  --text-story--line-height: 24px;
-  --text-story--letter-spacing: -0.01em;
-  --text-title: 20px;
-  --text-title--line-height: 26px;
+  --text-display--line-height: 36px;
+  --text-display--letter-spacing: -0.01em;
+  --text-story: 18px;
+  --text-story--line-height: 28px;
+  --text-story--letter-spacing: 0;
+  --text-title: 22px;
+  --text-title--line-height: 30px;
   --text-title--letter-spacing: -0.015em;
-  --text-section: 16px;
-  --text-section--line-height: 24px;
+  --text-section: 17px;
+  --text-section--line-height: 26px;
   --text-body: 15px;
-  --text-body--line-height: 22px;
-  --text-table: 14px;
-  --text-table--line-height: 20px;
+  --text-body--line-height: 24px;
+  --text-table: 15px;
+  --text-table--line-height: 22px;
   --text-meta: 13px;
-  --text-meta--line-height: 18px;
+  --text-meta--line-height: 20px;
   --text-tag: 11px;
   --text-tag--line-height: 14px;
   --text-figure: 26px;
   --text-figure--line-height: 32px;
   --text-figure--letter-spacing: -0.02em;
 
-  --radius-control: 6px;
-  --radius-panel: 8px;
+  --radius-control: 4px;
+  --radius-panel: 6px;
   --shadow-card: var(--shadow-card);
   --shadow-lift: var(--shadow-lift);
   --shadow-pop: var(--shadow-pop);
@@ -143,7 +143,7 @@ body {
   color: var(--text);
   font-family: var(--font-sans);
   font-size: 15px;
-  line-height: 22px;
+  line-height: 24px;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -157,9 +157,6 @@ h3,
 
 .panel {
   background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-panel);
-  box-shadow: var(--shadow-card);
 }
 
 .num {

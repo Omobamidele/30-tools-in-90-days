@@ -81,63 +81,28 @@ export function Status({ tone, children, className }: { tone: Tone; children: Re
   return <span className={cx("inline-flex items-center whitespace-nowrap rounded-full px-2 py-0.5 text-meta font-medium", PILL[tone], className)}>{children}</span>;
 }
 
-// Eight tile colours: dark ink on its own light tint, each ≥ 5:1 (contrast computed in docs/09).
-const TILE = ["#1f5f86", "#6a3f99", "#8f4a14", "#2f6b2c", "#a12f52", "#3a4aa8", "#735a0c", "#0f655e"];
-const tint = (c: string) => `color-mix(in srgb, ${c} 13%, white)`;
-function hue(s: string) {
-  let h = 0;
-  for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0;
-  return TILE[h % TILE.length];
-}
-const initialsOf = (name: string, n = 2) =>
-  name
-    .replace(/&/g, " ")
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((p) => p[0])
-    .slice(0, n)
-    .join("")
-    .toUpperCase();
-
-/** A company's logo tile: a stable colour per company with its initials (no real logos in a demo). */
-export function CompanyLogo({ name, size = 32, className }: { name: string; size?: number; className?: string }) {
-  return (
-    <span
-      aria-hidden
-      className={cx("inline-flex shrink-0 items-center justify-center font-semibold", className)}
-      style={{ width: size, height: size, borderRadius: Math.round(size * 0.28), background: tint(hue(name)), color: hue(name), boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${hue(name)} 18%, transparent)`, fontSize: Math.round(size * 0.38), letterSpacing: "-0.01em" }}
-    >
-      {initialsOf(name)}
-    </span>
-  );
+/**
+ * Company and people marks were initials tiles until rev. 5. The user found them cheap, and a
+ * demo has no real logos or photos, so names stand on their own (docs/09 rev. 5). The
+ * components stay as no-ops so a white-label deployment with real logos can bring them back in
+ * one place.
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function CompanyLogo(_props: { name: string; size?: number; className?: string }) {
+  return null;
 }
 
-/** A person's avatar: initials on a stable colour. */
-export function Avatar({ name, size = 24, className }: { name: string | null | undefined; size?: number; className?: string }) {
-  const n = name ?? "?";
-  return (
-    <span
-      aria-hidden
-      className={cx("inline-flex shrink-0 items-center justify-center rounded-full font-semibold ring-2 ring-white", className)}
-      style={{ width: size, height: size, fontSize: Math.round(size * 0.38), background: name ? tint(hue(`p:${n}`)) : "#f0f0f1", color: name ? hue(`p:${n}`) : "#5f6368", boxShadow: `inset 0 0 0 1px ${name ? `color-mix(in srgb, ${hue(`p:${n}`)} 22%, transparent)` : "#e6e6e8"}` }}
-    >
-      {initialsOf(n)}
-    </span>
-  );
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function Avatar(_props: { name: string | null | undefined; size?: number; className?: string }) {
+  return null;
 }
 
-/** Who → who, as overlapping avatars with a label (CSM hands to seller). */
+/** Who hands to whom, in words: "Priya Nair to Tomás Rivera". */
 export function Handoff({ from, to }: { from: string | null; to: string | null }) {
   return (
-    <span className="inline-flex items-center gap-1.5 text-meta text-muted">
-      <span className="flex shrink-0 -space-x-1">
-        <Avatar name={from} size={20} />
-        {to ? <Avatar name={to} size={20} /> : null}
-      </span>
-      <span>
-        {from ?? "No CSM"}
-        {to ? ` → ${to.split(" ")[0]}` : ""}
-      </span>
+    <span className="text-meta text-muted">
+      {from ?? "No CSM"}
+      {to ? ` to ${to}` : ""}
     </span>
   );
 }

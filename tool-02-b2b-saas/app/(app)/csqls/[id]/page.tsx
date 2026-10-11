@@ -5,8 +5,9 @@ import { appCtx } from "@/services/app-ctx";
 import { getCsql, listSellers, type Opportunity } from "@/services/csqls";
 import { calendarOf } from "@/services/org";
 import { isNotFound } from "@/services/errors";
-import { Attributes, PageHeader, Panel } from "@/ui/page";
-import { Avatar, CompanyLogo, Money, MoneyShort, Status, TypeBadge } from "@/ui/bits";
+import { Attributes, RecordLayout, RecordSection, RecordTabs } from "@/ui/page";
+import { Money, MoneyShort, Status } from "@/ui/bits";
+import { ArrowLeft } from "@/ui/icons";
 import { Evidence } from "@/ui/evidence";
 import { storyHeadline } from "@/ui/story";
 import { deadlineText, formatDate, formatDateTime } from "@/ui/format";
@@ -24,8 +25,9 @@ const STAGE: Record<string, { label: string; tone: "risk" | "watch" | "won" | "n
   CLOSED_NO_OPP: { label: "Closed, no opportunity", tone: "neutral" },
 };
 
-export default async function CsqlPage({ params }: PageProps<"/csqls/[id]">) {
+export default async function CsqlPage({ params, searchParams }: PageProps<"/csqls/[id]">) {
   const { id } = await params;
+  const { view } = (await searchParams) as { view?: string };
   const ctx = await appCtx();
   const d = await getCsql(ctx, id).catch((e) => {
     if (isNotFound(e)) notFound();
@@ -41,39 +43,73 @@ export default async function CsqlPage({ params }: PageProps<"/csqls/[id]">) {
   const stage = STAGE[c.status];
 
   const t = ctx.actor.config.terminology;
+  const activity = view === "activity";
 
-  return (
+  const left = (
     <>
-      <PageHeader
-        crumbs={[{ href: "/csqls", label: t.csqlPlural }, { label: d.label }]}
-        leading={<CompanyLogo name={d.account.name} size={48} />}
-        title={
-          <Link href={`/accounts/${d.account.id}`} className="hover:underline">
-            {d.account.name}
-          </Link>
-        }
-        meta={`${d.label}, handed from ${d.sourcedBy} to ${d.owner ?? "the seller queue"}`}
-        toolbar={
-          <>
-            <Status tone={stage.tone}>{stage.label}</Status>
-            {due ? <Status tone={due.tone}>{due.text}</Status> : null}
-          </>
-        }
-      />
+      <Link href="/csqls" className="inline-flex items-center gap-1.5 text-meta font-medium text-brand hover:underline">
+        <ArrowLeft size={14} aria-hidden /> {t.csqlPlural}
+      </Link>
+      <h1 className="mt-4 text-title font-semibold">
+        <Link href={`/accounts/${d.account.id}`} className="hover:underline">
+          {d.account.name}
+        </Link>
+      </h1>
+      <p className="mt-1 text-body text-muted">{d.label}</p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <Status tone={stage.tone}>{stage.label}</Status>
+        {due ? <Status tone={due.tone}>{due.text}</Status> : null}
+      </div>
+      <RecordSection title={`About this ${t.csql}`}>
+        <Attributes
+          items={[
+            { label: "Seller", value: d.owner ?? "Seller queue" },
+            { label: "From customer success", value: d.sourcedBy },
+            { label: "Created", value: formatDateTime(c.createdAt, ctx.actor.timezone) },
+            { label: "Rule estimate", value: <Money minor={c.estValueMinor} currency={currency} /> },
+            ...(c.adjustedValueMinor !== null ? [{ label: "CSM's estimate", value: <Money minor={c.adjustedValueMinor} currency={currency} /> }] : []),
+            { label: "Opportunity", value: opp ? <Money minor={opp.amountMinor} currency={currency} /> : <span className="text-faint">Not recorded yet</span> },
+            ...(opp?.crmRef ? [{ label: "CRM reference", value: <span>{opp.crmRef}</span> }] : []),
+            ...(opp?.expectedClose ? [{ label: "Expected close", value: opp.expectedClose }] : []),
+            ...(c.status === "WON" ? [{ label: "Won", value: <MoneyShort minor={c.outcomeAmountMinor} currency={currency} /> }] : []),
+            ...(c.outcomeReason ? [{ label: c.status === "LOST" ? "Lost because" : "Reason", value: c.outcomeReason }] : []),
+            ...(c.closedAt ? [{ label: "Closed", value: formatDate(c.closedAt, ctx.actor.timezone) }] : []),
+          ]}
+        />
+        <p className="text-meta text-muted">Only the seller&apos;s recorded amounts count in Results. Estimates never do.</p>
+      </RecordSection>
+    </>
+  );
 
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
-        <div className="flex min-w-0 flex-col gap-8">
-          <figure className="panel p-6">
-            <figcaption className="flex items-center gap-2.5 text-table text-muted">
-              <Avatar name={d.sourcedBy} size={30} className="ring-0" />
-              <span>
-                <span className="font-medium text-text">{d.sourcedBy}</span> wrote, {formatDateTime(c.createdAt, ctx.actor.timezone)}
-              </span>
+  const middle = (
+    <>
+      <RecordTabs
+        items={[
+          { href: `/csqls/${c.id}`, label: "Overview", active: !activity },
+          { href: `/csqls/${c.id}?view=activity`, label: "Activity", active: activity, count: d.history.length },
+        ]}
+      />
+      {activity ? (
+        <ol className="mt-6 border-l border-rule-strong pl-5">
+          {d.history.map((h) => (
+            <li key={h.id} className="relative pb-5">
+              <span aria-hidden className="absolute top-2 -left-[25px] size-2.5 rounded-full border-2 border-surface bg-brand" />
+              <p className="text-body">
+                <span className="font-medium">{h.actorLabel}</span> <span className="text-muted">{h.summary}</span>
+              </p>
+              <p className="text-meta text-faint">{formatDateTime(h.at, ctx.actor.timezone)}</p>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <div className="flex flex-col gap-10 pt-6">
+          <figure>
+            <figcaption className="text-meta text-muted">
+              {d.sourcedBy} wrote, {formatDateTime(c.createdAt, ctx.actor.timezone)}
             </figcaption>
-            <blockquote className="mt-4 text-story font-medium whitespace-pre-line text-balance">“{c.handoffNote}”</blockquote>
+            <blockquote className="mt-2 border-l-[3px] border-brand pl-4 text-story whitespace-pre-line text-balance">{c.handoffNote}</blockquote>
             {d.contact ? (
-              <p className="mt-4 flex items-center gap-2 text-table text-muted">
-                <Avatar name={d.contact.name} size={22} className="ring-0" />
+              <p className="mt-3 text-body text-muted">
                 Best contact: <span className="text-text">{d.contact.name}</span>
                 {d.contact.title ? `, ${d.contact.title}` : ""}
               </p>
@@ -81,7 +117,7 @@ export default async function CsqlPage({ params }: PageProps<"/csqls/[id]">) {
           </figure>
 
           {c.status === "RETURNED" && c.returnReason ? (
-            <section aria-labelledby="returned" className="rounded-panel border border-watch/30 bg-watch-bg p-5">
+            <section aria-labelledby="returned" className="rounded-panel bg-watch-bg px-5 py-4">
               <h2 id="returned" className="text-section font-semibold text-watch">
                 Why it came back
               </h2>
@@ -89,42 +125,6 @@ export default async function CsqlPage({ params }: PageProps<"/csqls/[id]">) {
             </section>
           ) : null}
 
-          <section aria-labelledby="evidence" className="panel p-6">
-            <h2 id="evidence" className="text-section font-semibold">
-              What customer success saw
-            </h2>
-            <ul className="mt-3 flex flex-col gap-3">
-              {d.evidence.map((s) => (
-                <li key={s.id} className="rounded-panel border border-rule p-4">
-                  <div className="flex items-start gap-3">
-                    <TypeBadge type={s.type} size={32} />
-                    <Link href={`/signals/${s.id}`} className="min-w-0 font-medium hover:underline">
-                      {storyHeadline(s.type, s.evidence, t)}
-                    </Link>
-                  </div>
-                  <Evidence type={s.type} evidence={s.evidence} terms={t} size="compact" className="mt-3" />
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <section aria-labelledby="history" className="panel p-6">
-            <h2 id="history" className="text-section font-semibold">
-              What happened
-            </h2>
-            <ol className="mt-3 border-l border-rule-strong pl-4">
-              {d.history.map((h) => (
-                <li key={h.id} className="relative pb-3 text-table">
-                  <span aria-hidden className="absolute top-1.5 -left-[21px] size-2.5 rounded-full border-2 border-surface bg-rule-strong" />
-                  <span className="font-medium">{h.actorLabel}</span> <span className="text-muted">{h.summary}</span>
-                  <span className="block text-meta text-faint">{formatDateTime(h.at, ctx.actor.timezone)}</span>
-                </li>
-              ))}
-            </ol>
-          </section>
-        </div>
-
-        <div className="flex flex-col gap-4">
           <CsqlActions
             csql={{ id: c.id, lockVersion: c.lockVersion, status: c.status, estimateMinor: c.adjustedValueMinor ?? c.estValueMinor, oppAmountMinor: opp?.amountMinor ?? null }}
             actions={d.actions}
@@ -134,26 +134,41 @@ export default async function CsqlPage({ params }: PageProps<"/csqls/[id]">) {
             currency={currency}
             csqlTerm={ctx.actor.config.terminology.csql}
           />
-          <Panel title="Value" id="value">
-            <Attributes
-              items={[
-                { label: "Rule estimate", value: <Money minor={c.estValueMinor} currency={currency} /> },
-                ...(c.adjustedValueMinor !== null ? [{ label: "CSM's estimate", value: <Money minor={c.adjustedValueMinor} currency={currency} /> }] : []),
-                { label: "Opportunity", value: opp ? <Money minor={opp.amountMinor} currency={currency} /> : <span className="text-faint">Not recorded yet</span> },
-                ...(opp?.crmRef ? [{ label: "CRM reference", value: <span>{opp.crmRef}</span> }] : []),
-                ...(opp?.expectedClose ? [{ label: "Expected close", value: opp.expectedClose }] : []),
-                ...(c.status === "WON" ? [{ label: "Won", value: <MoneyShort minor={c.outcomeAmountMinor} currency={currency} className="font-semibold" /> }] : []),
-                ...(c.outcomeReason ? [{ label: c.status === "LOST" ? "Lost because" : "Reason", value: c.outcomeReason }] : []),
-                ...(c.closedAt ? [{ label: "Closed", value: formatDate(c.closedAt, ctx.actor.timezone) }] : []),
-              ]}
-            />
-            <p className="border-t border-rule px-4 py-2 text-meta text-muted">Only the seller&apos;s recorded amounts count in Results. Estimates never do.</p>
-          </Panel>
-          <Panel title="Routing" id="routing">
-            <p className="px-4 py-3 text-table">{c.routedReason}</p>
-          </Panel>
+
+          <section aria-labelledby="evidence">
+            <h2 id="evidence" className="text-section font-semibold">
+              What customer success saw
+            </h2>
+            <ul className="mt-2 divide-y divide-rule">
+              {d.evidence.map((s) => (
+                <li key={s.id} className="py-5">
+                  <Link href={`/signals/${s.id}`} className="font-semibold text-brand hover:underline">
+                    {storyHeadline(s.type, s.evidence, t)}
+                  </Link>
+                  <Evidence type={s.type} evidence={s.evidence} terms={t} size="compact" className="mt-3" />
+                </li>
+              ))}
+            </ul>
+          </section>
         </div>
-      </div>
+      )}
     </>
   );
+
+  const right = (
+    <>
+      <RecordSection title="Account" first>
+        <p className="py-4">
+          <Link href={`/accounts/${d.account.id}`} className="font-semibold text-brand hover:underline">
+            {d.account.name}
+          </Link>
+        </p>
+      </RecordSection>
+      <RecordSection title="How it was routed">
+        <p className="py-4 text-body">{c.routedReason}</p>
+      </RecordSection>
+    </>
+  );
+
+  return <RecordLayout left={left} middle={middle} right={right} />;
 }

@@ -58,7 +58,7 @@ export function CsqlActions({
   if (!list.length) {
     const closed = ["WON", "LOST", "CLOSED_NO_OPP"].includes(csql.status);
     return (
-      <section className="panel px-4 py-3 text-table text-muted">
+      <section className="panel py-4 text-body text-muted">
         {closed ? `This ${csqlTerm} is closed.` : `Only the seller it's routed to, or a sales leader, can work this ${csqlTerm}.`}
       </section>
     );
@@ -80,7 +80,7 @@ export function CsqlActions({
 
   return (
     <section className="panel" aria-labelledby="work-title">
-      <div className="border-b border-rule px-4 pt-3">
+      <div className="border-b border-rule">
         <h2 id="work-title" className="text-section font-semibold">
           Next step
         </h2>
@@ -96,7 +96,7 @@ export function CsqlActions({
                 setError(null);
                 setFe({});
               }}
-              className={cx("-mb-px border-b-2 px-2.5 py-2 text-table", current === a ? "border-brand font-medium text-text" : "border-transparent text-muted hover:text-text")}
+              className={cx("-mb-px mr-5 border-b-[3px] pt-1 pb-2.5 text-body", current === a ? "border-brand font-medium text-text" : "border-transparent text-muted hover:text-text")}
             >
               {LABEL[a]}
             </button>
@@ -104,7 +104,7 @@ export function CsqlActions({
         </div>
       </div>
       <form
-        className="flex flex-col gap-3 p-4"
+        className="flex flex-col gap-4 py-5"
         onSubmit={(e) => {
           e.preventDefault();
           const f = Object.fromEntries(new FormData(e.currentTarget).entries());

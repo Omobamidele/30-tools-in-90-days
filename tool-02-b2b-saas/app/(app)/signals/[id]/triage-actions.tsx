@@ -40,7 +40,7 @@ export function TriageActions(p: Props) {
 
   if (!p.canTriage && !p.canReassign) {
     return (
-      <section className="panel p-4 text-table text-muted">
+      <section className="panel py-4 text-body text-muted">
         Only the account&apos;s CSM, the person it&apos;s assigned to, or a CS leader can triage this signal.
       </section>
     );
@@ -68,7 +68,7 @@ export function TriageActions(p: Props) {
 
   return (
     <section className="panel" aria-labelledby="triage-title">
-      <div className="border-b border-rule px-4 pt-3">
+      <div className="border-b border-rule">
         <h2 id="triage-title" className="text-section font-semibold">
           Triage
         </h2>
@@ -84,7 +84,7 @@ export function TriageActions(p: Props) {
                 setError(null);
                 setFields({});
               }}
-              className={cx("-mb-px border-b-2 px-3 py-2 text-table", current === m.key ? "border-brand font-medium text-text" : "border-transparent text-muted hover:text-text")}
+              className={cx("-mb-px mr-5 border-b-[3px] pt-1 pb-2.5 text-body", current === m.key ? "border-brand font-medium text-text" : "border-transparent text-muted hover:text-text")}
             >
               {m.label}
             </button>
@@ -93,14 +93,14 @@ export function TriageActions(p: Props) {
       </div>
 
       {error ? (
-        <p role="alert" className="mx-4 mt-3 rounded-control border border-risk/30 bg-risk-bg px-3 py-2 text-table text-risk">
+        <p role="alert" className="mt-4 rounded-control border border-risk/30 bg-risk-bg px-3 py-2 text-table text-risk">
           {error}
         </p>
       ) : null}
 
       {current === "accept" ? (
         <form
-          className="flex flex-col gap-3 p-4"
+          className="flex flex-col gap-4 py-5"
           onSubmit={(e) => {
             e.preventDefault();
             const f = new FormData(e.currentTarget);
@@ -177,7 +177,7 @@ export function TriageActions(p: Props) {
 
       {current === "dismiss" ? (
         <form
-          className="flex flex-col gap-3 p-4"
+          className="flex flex-col gap-4 py-5"
           onSubmit={(e) => {
             e.preventDefault();
             const f = new FormData(e.currentTarget);
@@ -211,7 +211,7 @@ export function TriageActions(p: Props) {
 
       {current === "snooze" ? (
         <form
-          className="flex flex-col gap-3 p-4"
+          className="flex flex-col gap-4 py-5"
           onSubmit={(e) => {
             e.preventDefault();
             const f = new FormData(e.currentTarget);
@@ -229,7 +229,7 @@ export function TriageActions(p: Props) {
 
       {current === "reassign" ? (
         <form
-          className="flex flex-col gap-3 p-4"
+          className="flex flex-col gap-4 py-5"
           onSubmit={(e) => {
             e.preventDefault();
             const f = new FormData(e.currentTarget);

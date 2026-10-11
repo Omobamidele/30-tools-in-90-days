@@ -7,6 +7,7 @@ export {
   CaretDown,
   CaretRight,
   ChartBar,
+  Check,
   CheckCircle,
   Clock,
   Copy,

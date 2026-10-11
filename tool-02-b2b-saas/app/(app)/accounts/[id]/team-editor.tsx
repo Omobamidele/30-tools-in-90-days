@@ -45,7 +45,7 @@ export function TeamEditor(p: {
         />
       ) : (
         <form
-          className="flex flex-col gap-3 p-4"
+          className="flex flex-col gap-4 py-5"
           onSubmit={(e) => {
             e.preventDefault();
             const f = new FormData(e.currentTarget);

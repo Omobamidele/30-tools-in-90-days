@@ -2,8 +2,9 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { appCtx } from "@/services/app-ctx";
 import { listAccounts } from "@/services/accounts";
-import { Chips, EmptyState, PageHeader, Panel } from "@/ui/page";
-import { Avatar, CompanyLogo, SimulatedTag, Status } from "@/ui/bits";
+import { DataTable, EmptyState, PageHeader, PhoneList, Tabs } from "@/ui/page";
+import { FilterMenu } from "@/ui/filter-menu";
+import { SimulatedTag, Status } from "@/ui/bits";
 
 export const metadata: Metadata = { title: "Accounts" };
 
@@ -24,96 +25,103 @@ export default async function AccountsPage({ searchParams }: PageProps<"/account
 
   return (
     <>
-      <PageHeader title="Accounts" meta={`${rows.length} customer${rows.length === 1 ? "" : "s"}${ctx.actor.role === "CSM" ? " in your book" : ""}`}>
-        <div className="mt-4 flex flex-col gap-2">
-          <form className="max-w-sm" role="search">
-            <label htmlFor="acct-q" className="sr-only">
-              Search accounts
-            </label>
-            <input id="acct-q" name="q" defaultValue={sp.q} placeholder="Search by name or domain" className="h-9 w-full rounded-control border border-field bg-surface px-3 text-body" />
-          </form>
-          <Chips
+      <PageHeader
+        title="Accounts"
+        meta={`${rows.length} customer${rows.length === 1 ? "" : "s"}${ctx.actor.role === "CSM" ? " in your book" : ""}`}
+        tabs={
+          <Tabs
+            label="Account views"
             items={[
-              { href: link({ segment: undefined, page: undefined }), label: "All segments", active: !sp.segment },
-              ...cfg.segments.map((s) => ({ href: link({ segment: s.key }), label: s.name, active: sp.segment === s.key })),
-              { href: link({ signals: sp.signals === "1" ? undefined : "1" }), label: "Has open signals", active: sp.signals === "1" },
-              { href: link({ stale: sp.stale === "1" ? undefined : "1" }), label: "Stale usage", active: sp.stale === "1" },
+              { href: link({ signals: undefined, stale: undefined, page: undefined }), label: "All accounts", active: !sp.signals && !sp.stale },
+              { href: link({ signals: "1", stale: undefined, page: undefined }), label: "With open signals", active: sp.signals === "1" },
+              { href: link({ stale: "1", signals: undefined, page: undefined }), label: "Stale usage", active: sp.stale === "1" },
             ]}
           />
-        </div>
-      </PageHeader>
-      <Panel bodyClassName="overflow-x-auto">
-        {rows.length ? (
-          <table className="w-full min-w-[760px] text-table">
-            <caption className="sr-only">Accounts</caption>
-            <thead className="text-left text-meta text-muted">
-              <tr>
-                <th className="px-5 pt-4 pb-2 font-medium">Customer</th>
-                <th className="px-3 pt-4 pb-2 font-medium">Looked after by</th>
-                <th className="px-3 pt-4 pb-2 font-medium">What&apos;s happening</th>
-                <th className="px-5 pt-4 pb-2 font-medium">Renews</th>
+        }
+        toolbar={
+          <>
+            <form role="search" className="w-full max-w-xs">
+              <label htmlFor="acct-q" className="sr-only">
+                Search accounts
+              </label>
+              <input id="acct-q" name="q" defaultValue={sp.q} placeholder="Search name or domain" className="h-9 w-full rounded-control border border-rule-strong bg-surface px-3 text-table placeholder:text-faint focus:border-brand focus:outline-none" />
+              {sp.signals ? <input type="hidden" name="signals" value={sp.signals} /> : null}
+              {sp.stale ? <input type="hidden" name="stale" value={sp.stale} /> : null}
+            </form>
+            <FilterMenu
+              label="Segment"
+              items={[{ href: link({ segment: undefined, page: undefined }), label: "All segments", active: !sp.segment }, ...cfg.segments.map((s) => ({ href: link({ segment: s.key, page: undefined }), label: s.name, active: sp.segment === s.key }))]}
+            />
+          </>
+        }
+      />
+      {rows.length ? (
+        <>
+        <PhoneList>
+          {shown.map((r) => (
+            <li key={r.account.id} className="py-4">
+              <Link href={`/accounts/${r.account.id}`} className="font-semibold text-brand hover:underline">
+                {r.account.name}
+              </Link>
+              <p className="text-meta text-muted">
+                {r.csmName ?? "No CSM"}
+                {r.ownerName ? ` and ${r.ownerName}` : ""}
+                {r.renewalInDays !== null ? `. Renews ${renewsIn(r.renewalInDays).toLowerCase()}` : ""}
+              </p>
+              {r.openSignals ? (
+                <Status tone="brand" className="mt-2">
+                  {r.openSignals} {r.openSignals === 1 ? "signal" : "signals"} to review
+                </Status>
+              ) : null}
+            </li>
+          ))}
+        </PhoneList>
+        <DataTable caption="Accounts" head={[{ label: "Account" }, { label: "Customer success" }, { label: "Account owner" }, { label: "What's happening" }, { label: "Renews", className: "pr-5" }]}>
+          {shown.map((r) => {
+            const pct = r.sub && r.activeSeats !== null && r.sub.seatsPurchased ? Math.round((r.activeSeats / r.sub.seatsPurchased) * 100) : null;
+            const stale = r.dataAgeDays === null || r.dataAgeDays > staleAfter;
+            return (
+              <tr key={r.account.id} className="hover:bg-hover/60">
+                <td className="py-4 pr-4 pl-5">
+                  <Link href={`/accounts/${r.account.id}`} className="font-semibold text-brand hover:underline">
+                    {r.account.name}
+                  </Link>
+                  <span className="block text-meta text-muted">
+                    {cfg.segments.find((s) => s.key === r.account.segment)?.name ?? "No segment"}, {r.account.industry ?? r.account.domain}
+                  </span>
+                </td>
+                <td className="px-4 py-4">{r.csmName ?? <span className="text-faint">No CSM</span>}</td>
+                <td className="px-4 py-4">{r.ownerName ?? <span className="text-faint">Seller queue</span>}</td>
+                <td className="px-4 py-4">
+                  {r.openSignals ? (
+                    <Status tone="brand">
+                      {r.openSignals} {r.openSignals === 1 ? "signal" : "signals"} to review
+                    </Status>
+                  ) : stale ? (
+                    <Status tone="watch">{r.dataAgeDays === null ? "No usage received yet" : `Usage ${r.dataAgeDays} days old`}</Status>
+                  ) : pct !== null && pct >= 90 ? (
+                    <span>
+                      Using {r.activeSeats} of {r.sub!.seatsPurchased} seats
+                    </span>
+                  ) : r.usagePacePct !== null && r.usagePacePct >= 110 ? (
+                    <span>Using more than planned</span>
+                  ) : (
+                    <span className="text-muted">Steady</span>
+                  )}
+                </td>
+                <td className="py-4 pr-5 pl-4">{r.renewalInDays !== null ? <span className={r.renewalInDays <= 60 ? "font-medium text-watch" : "text-muted"}>{renewsIn(r.renewalInDays)}</span> : <span className="text-faint">No term</span>}</td>
               </tr>
-            </thead>
-            <tbody>
-              {shown.map((r) => {
-                const pct = r.sub && r.activeSeats !== null && r.sub.seatsPurchased ? Math.round((r.activeSeats / r.sub.seatsPurchased) * 100) : null;
-                const stale = r.dataAgeDays === null || r.dataAgeDays > staleAfter;
-                return (
-                  <tr key={r.account.id} className="border-t border-rule hover:bg-sunken/50">
-                    <td className="px-5 py-3">
-                      <span className="flex items-center gap-3">
-                        <CompanyLogo name={r.account.name} size={34} />
-                        <span>
-                          <Link href={`/accounts/${r.account.id}`} className="font-medium hover:underline">
-                            {r.account.name}
-                          </Link>
-                          <span className="block text-meta text-muted">
-                            {cfg.segments.find((s) => s.key === r.account.segment)?.name ?? "No segment"}, {r.account.industry ?? r.account.domain}
-                          </span>
-                        </span>
-                      </span>
-                    </td>
-                    <td className="px-3 py-3">
-                      <span className="flex items-center gap-2">
-                        <span className="flex -space-x-1">
-                          <Avatar name={r.csmName} size={24} />
-                          {r.ownerName ? <Avatar name={r.ownerName} size={24} /> : null}
-                        </span>
-                        <span className="text-table">
-                          {r.csmName?.split(" ")[0] ?? "No CSM"}
-                          <span className="text-muted">{r.ownerName ? ` and ${r.ownerName.split(" ")[0]}` : ", no seller"}</span>
-                        </span>
-                      </span>
-                    </td>
-                    <td className="px-3 py-3">
-                      {r.openSignals ? (
-                        <Status tone="brand">
-                          {r.openSignals} {r.openSignals === 1 ? "signal" : "signals"} to review
-                        </Status>
-                      ) : stale ? (
-                        <Status tone="watch">{r.dataAgeDays === null ? "No usage received yet" : `Usage ${r.dataAgeDays} days old`}</Status>
-                      ) : pct !== null && pct >= 90 ? (
-                        <span>Using {r.activeSeats} of {r.sub!.seatsPurchased} seats</span>
-                      ) : r.usagePacePct !== null && r.usagePacePct >= 110 ? (
-                        <span>Using more than planned</span>
-                      ) : (
-                        <span className="text-muted">Steady</span>
-                      )}
-                    </td>
-                    <td className="px-5 py-3">{r.renewalInDays !== null ? <span className={r.renewalInDays <= 60 ? "font-medium text-watch" : "text-muted"}>{renewsIn(r.renewalInDays)}</span> : <span className="text-faint">No term</span>}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        ) : (
-          <EmptyState title="No accounts">
-            {sp.q || sp.segment || sp.signals || sp.stale ? "Nothing matches these filters." : "RevOps imports accounts from the CRM (Settings → Imports) and pushes usage through the ingest API."}
-          </EmptyState>
-        )}
-      </Panel>
+            );
+          })}
+        </DataTable>
+        </>
+      ) : (
+        <EmptyState title="No accounts">
+          {sp.q || sp.segment || sp.signals || sp.stale ? "Nothing matches these filters." : "RevOps imports accounts from the CRM (Settings, Imports) and pushes usage through the ingest API."}
+        </EmptyState>
+      )}
       {pages > 1 ? (
-        <nav aria-label="Pages" className="mt-3 flex items-center justify-between gap-3 text-table">
+        <nav aria-label="Pages" className="mt-4 flex items-center justify-between gap-3 text-table">
           <span className="text-muted">
             {(page - 1) * PAGE + 1}–{Math.min(page * PAGE, rows.length)} of {rows.length}
           </span>
@@ -132,7 +140,7 @@ export default async function AccountsPage({ searchParams }: PageProps<"/account
         </nav>
       ) : null}
       {rows.some((r) => r.source === "SIMULATED") ? (
-        <p className="mt-3 flex items-center gap-2 text-meta text-muted">
+        <p className="mt-6 flex items-center gap-2 text-meta text-muted">
           <SimulatedTag /> This demo workspace&apos;s usage comes from the simulator, through the same ingest API a real product would use.
         </p>
       ) : null}

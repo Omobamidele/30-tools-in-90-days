@@ -168,6 +168,20 @@ Changed:
 
 Verified: typecheck, lint, 44 Vitest, 7 Playwright (axe zero violations), and screenshots at 1440 and 390 px.
 
+### Design revision 5: HubSpot-style CRM (2026-10-11)
+Feedback: "it looks ugly, you only changed the colour." The user chose a HubSpot-style top-navigation structure. They named four problems: too crowded, cheap initials tiles, grey background with boxes, and weak fonts. Details are in [09](09-design-system.md), revision 5.
+
+Changed:
+- **Shell:** a green top navigation bar with an Admin menu; no sidebar.
+- **Index pages:** Signals, Accounts and CSQLs became tables with saved-view tabs, a `FilterMenu` quick-filter dropdown and a `PhoneList` for phones. CSQLs now default to the table, with the board as a second view.
+- **Record pages:** signals, accounts and CSQLs got a three-column layout (`RecordLayout`, `RecordSection`, `RecordTabs`) with Overview and Activity tabs. The Signals reading pane is removed.
+- **Home and Results:** plain sections and lists without boxes; amounts moved into sentences.
+- **Removed:** initials tiles and letter avatars (the components are now no-ops). Inter is replaced by Lexend Deca.
+- **Action forms:** box padding removed from the triage, CSQL and team forms, and their tabs aligned with page tabs.
+- **e2e:** the flow test now opens the record page; the accessibility sweep covers the Activity tab and the CSQL board.
+
+Verified: typecheck, lint, 44 Vitest, 7 Playwright (axe zero violations), and screenshots at 1440 and 390 px.
+
 ## Testing checklist (brief §14)
 - [x] **Happy paths:** e2e full loop; integration loop.
 - [x] **Incorrect inputs:** ingest per-row rejections; money parsing; rule parameter bounds; webhook URL validation.

@@ -8,11 +8,10 @@ test("CSM accepts a signal, the seller wins it, and Results counts it", async ({
   await signIn(page, "priya@fernway.test");
   await page.goto("/signals");
   await page.getByRole("link", { name: /Harbor Peak Foods/ }).first().click();
-  // The inbox opens the signal in the reading pane; wait for it before acting on the form.
-  await expect(page).toHaveURL(/open=/);
-  const pane = page.getByRole("region", { name: "Selected signal" });
-  await expect(pane.getByRole("link", { name: "Harbor Peak Foods" })).toBeVisible();
-  await expect(pane.getByText(/On pace to use \d+% of the documents they committed to/).first()).toBeVisible();
+  // Each row opens the signal's record page; wait for it before acting on the form.
+  await expect(page).toHaveURL(/\/signals\/[0-9a-f-]{36}/);
+  await expect(page.getByRole("heading", { level: 1, name: "Harbor Peak Foods" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /On pace to use \d+% of the documents they committed to/ })).toBeVisible();
 
   // A handoff note is required.
   await page.getByRole("button", { name: "Accept and route" }).click();
