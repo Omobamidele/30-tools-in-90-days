@@ -8,7 +8,7 @@ import { csqlLabel } from "@/services/csqls";
 import { termElapsed } from "@/core/rules/evaluate";
 import { daysBetween } from "@/core/dates";
 import { localDate } from "@/core/business-time";
-import { Attributes, Breadcrumbs, Panel } from "@/ui/page";
+import { Attributes, PageHeader, Panel } from "@/ui/page";
 import { Avatar, CompanyLogo, MoneyShort, SimulatedTag, Status, TypeBadge } from "@/ui/bits";
 import { CommitmentMeter, SeatMap } from "@/ui/evidence";
 import { User } from "@/ui/icons";
@@ -42,16 +42,18 @@ export default async function AccountPage({ params }: PageProps<"/accounts/[id]"
 
   return (
     <>
-      <Breadcrumbs items={[{ href: "/accounts", label: "Accounts" }, { label: a.name }]} />
-      <header className="mb-8 flex flex-wrap items-start gap-4">
-        <CompanyLogo name={a.name} size={56} />
-        <div className="min-w-0 flex-1">
-          <h1 className="text-display font-semibold">{a.name}</h1>
-          <p className="mt-1 max-w-2xl text-section text-muted">
+      <PageHeader
+        crumbs={[{ href: "/accounts", label: "Accounts" }, { label: a.name }]}
+        leading={<CompanyLogo name={a.name} size={48} />}
+        title={a.name}
+        meta={
+          <>
             {segment} {a.industry ? `${a.industry.toLowerCase()} ` : ""}customer
             {sub ? `, on the ${sub.plan} plan until ${sub.termEnd} (renews in ${daysBetween(today, sub.termEnd)} days)` : ""}.
-          </p>
-          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-table">
+          </>
+        }
+        toolbar={
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-table">
             <span className="flex items-center gap-2">
               <Avatar name={d.csmName} size={24} className="ring-0" />
               <span>
@@ -67,23 +69,23 @@ export default async function AccountPage({ params }: PageProps<"/accounts/[id]"
             {stale ? <Status tone="watch">{d.dataAgeDays === null ? "No usage received yet" : `Usage is ${d.dataAgeDays} days old`}</Status> : null}
             {latest?.source === "SIMULATED" ? <SimulatedTag /> : null}
           </div>
-        </div>
-      </header>
+        }
+      />
 
       <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="flex min-w-0 flex-col gap-8">
-          <section aria-labelledby="usage">
+          <section aria-labelledby="usage" className="panel p-6">
             <h2 id="usage" className="text-section font-semibold">
               How they use it today
             </h2>
             {sub && latest ? (
               <div className="mt-3 grid gap-4 xl:grid-cols-2">
-                <div className="rounded-panel border border-rule bg-sunken/60 p-5">
+                <div className="rounded-panel border border-rule p-5">
                   <p className="mb-3 text-table font-medium">{t.seats}</p>
                   <SeatMap active={latest.activeSeats} purchased={sub.seatsPurchased} streakDays={0} terms={t} size="compact" />
                 </div>
                 {sub.creditsCommitted > 0 && projected !== null ? (
-                  <div className="rounded-panel border border-rule bg-sunken/60 p-5">
+                  <div className="rounded-panel border border-rule p-5">
                     <p className="mb-3 text-table font-medium">{t.usageMetric} this term</p>
                     <CommitmentMeter used={latest.creditsUsedTerm} projected={projected} committed={sub.creditsCommitted} termEnd={sub.termEnd} unit={t.usageUnit} size="compact" />
                   </div>
@@ -111,7 +113,7 @@ export default async function AccountPage({ params }: PageProps<"/accounts/[id]"
             ) : null}
           </section>
 
-          <section aria-labelledby="spotted">
+          <section aria-labelledby="spotted" className="panel p-6">
             <h2 id="spotted" className="text-section font-semibold">
               What we&apos;ve spotted
             </h2>
@@ -141,7 +143,7 @@ export default async function AccountPage({ params }: PageProps<"/accounts/[id]"
             )}
           </section>
 
-          <section aria-labelledby="activity">
+          <section aria-labelledby="activity" className="panel p-6">
             <h2 id="activity" className="text-section font-semibold">
               What happened
             </h2>

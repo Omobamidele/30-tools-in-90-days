@@ -5,15 +5,15 @@ type Variant = "primary" | "secondary" | "ghost" | "danger";
 type Size = "sm" | "md";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-brand text-white hover:bg-brand-strong",
-  secondary: "bg-surface text-text border border-rule-strong shadow-card hover:bg-hover",
+  primary: "bg-brand font-semibold text-white hover:bg-brand-strong",
+  secondary: "bg-surface text-text border border-rule-strong hover:bg-hover",
   ghost: "text-text hover:bg-hover",
   danger: "bg-risk text-white hover:brightness-110",
 };
 
 const sizes: Record<Size, string> = {
-  sm: "h-7 px-2.5 text-table",
-  md: "h-8 px-3 text-body",
+  sm: "h-8 px-3 text-table",
+  md: "h-9 px-4 text-body",
 };
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; size?: Size };

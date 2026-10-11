@@ -60,23 +60,23 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
                 </Link>
               ))}
             </div>
-            <a href={`/api/reports/results?period=${period}`} download className="inline-flex h-8 items-center rounded-control border border-rule-strong bg-surface px-3 text-body font-medium shadow-card hover:bg-hover">
+            <a href={`/api/reports/results?period=${period}`} download className="inline-flex h-9 items-center rounded-control border border-rule-strong bg-surface px-4 text-body font-medium hover:bg-hover">
               Export CSV
             </a>
           </>
         }
       />
 
-      <section aria-labelledby="answer" className="mb-10 max-w-3xl">
-        <h2 id="answer" className="text-display font-medium text-balance">
+      <section aria-labelledby="answer" className="panel mb-6 p-6">
+        <h2 id="answer" className="max-w-3xl text-title font-semibold text-balance">
           {f.raised
             ? `In ${r.label}, customer success spotted ${f.raised} ${f.raised === 1 ? "customer" : "customers"} ready for more. Sellers won ${f.won} of them${f.won ? `, worth ${money(f.wonMinor)} a year` : ""}${f.pipelineMinor ? `, and ${money(f.pipelineMinor)} is still in play` : ""}.`
             : `Nothing was spotted in ${r.label}. Signals appear here once detection raises them.`}
         </h2>
       </section>
 
-      <div className="flex flex-col gap-10">
-        <section aria-labelledby="journey">
+      <div className="flex flex-col gap-6">
+        <section aria-labelledby="journey" className="panel p-6">
           <h2 id="journey" className="text-section font-semibold">
             From a signal to a win
           </h2>
@@ -84,7 +84,7 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
             {steps.map((s, i) => (
               <li key={s.label} className="relative">
                 {i > 0 ? <span aria-hidden className="absolute top-5 right-[calc(100%-4px)] hidden h-px w-[calc(100%-44px)] bg-rule-strong sm:block" /> : null}
-                <span className={cx("font-display relative inline-flex size-10 items-center justify-center rounded-full text-section font-semibold", i === steps.length - 1 ? "bg-brand text-white" : "bg-brand-tint text-brand")}>{s.n}</span>
+                <span className={cx("relative inline-flex size-10 items-center justify-center rounded-full text-section font-semibold", i === steps.length - 1 ? "bg-brand text-white" : "bg-brand-tint text-brand")}>{s.n}</span>
                 <span className="mt-2 block text-table">{s.label}</span>
               </li>
             ))}
@@ -92,7 +92,7 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
           <p className="mt-4 text-meta text-muted">{f.dismissed} dismissed with a reason, which tunes the rules. Each step only counts what someone recorded.</p>
         </section>
 
-        <section aria-labelledby="wins">
+        <section aria-labelledby="wins" className="panel p-6">
           <h2 id="wins" className="text-section font-semibold">
             Wins
           </h2>
@@ -100,7 +100,7 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
             <ul className="mt-3 grid gap-3 lg:grid-cols-2">
               {wins.map(({ csql: w, account, ownerName, sourcedByName }) => (
                 <li key={w.id}>
-                  <Link href={`/csqls/${w.id}`} className="block h-full rounded-panel border border-rule bg-surface p-5 shadow-card hover:border-rule-strong hover:shadow-lift">
+                  <Link href={`/csqls/${w.id}`} className="block h-full rounded-panel border border-rule p-5 hover:border-rule-strong hover:bg-hover/40">
                     <span className="flex items-center gap-3">
                       <CompanyLogo name={account.name} size={32} />
                       <span className="min-w-0 flex-1 font-medium">{account.name}</span>
@@ -123,7 +123,7 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
           )}
         </section>
 
-        <section aria-labelledby="types">
+        <section aria-labelledby="types" className="panel p-6">
           <h2 id="types" className="text-section font-semibold">
             Which signals lead somewhere
           </h2>
@@ -146,12 +146,12 @@ export default async function ResultsPage({ searchParams }: PageProps<"/results"
           )}
         </section>
 
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-2">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-2">
           {[
             { key: "csm", title: "Who spotted them", rows: r.byCsm, verb: "handed over" },
             { key: "seller", title: "Who worked them", rows: r.bySeller, verb: "worked" },
           ].map((g) => (
-            <section key={g.key} aria-labelledby={`by-${g.key}`}>
+            <section key={g.key} aria-labelledby={`by-${g.key}`} className="panel p-6">
               <h2 id={`by-${g.key}`} className="text-section font-semibold">
                 {g.title}
               </h2>

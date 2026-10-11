@@ -33,6 +33,7 @@ export {
   User,
   UserCircle,
   Users,
+  XCircle,
   UsersThree,
   Warning,
   WaveSine,

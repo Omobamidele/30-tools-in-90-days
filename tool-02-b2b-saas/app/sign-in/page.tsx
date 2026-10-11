@@ -18,7 +18,7 @@ export default async function SignInPage() {
   const config = org ? orgConfigSchema.parse(org.config) : null;
   const demo = org?.slug === "fernway";
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center bg-sidebar px-4 py-12" style={config ? ({ "--brand": config.brand.primaryColor } as CSSProperties) : undefined}>
+    <main className="flex min-h-dvh flex-col items-center justify-center bg-canvas px-4 py-12" style={config ? ({ "--brand": config.brand.primaryColor } as CSSProperties) : undefined}>
       <div className="w-full max-w-[400px]">
         <div className="mb-6 flex flex-col items-center text-center">
           <ProductMark text={config?.brand.logoText ?? "SD"} size={44} />

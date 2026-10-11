@@ -32,23 +32,23 @@ export const RULE_META: Record<RuleType, { label: string; icon: IconType; short:
   NEW_EXECUTIVE: { label: "New executive", short: "Executive", plain: "New senior contact", icon: IdentificationBadge },
 };
 
-/** Tailwind classes for each signal type's colour (tokens in globals.css, AA computed in docs/09). */
+/** Signal types share one neutral style (docs/09 rev. 4): colour is kept for status and the brand. */
+const NEUTRAL_TONE = { text: "text-text", bg: "bg-sunken", fill: "bg-brand", ring: "ring-rule-strong" };
 export const TYPE_TONE: Record<RuleType, { text: string; bg: string; fill: string; ring: string }> = {
-  SEAT_PRESSURE: { text: "text-t-seats", bg: "bg-t-seats-bg", fill: "bg-t-seats", ring: "ring-t-seats/30" },
-  USAGE_PACE: { text: "text-t-usage", bg: "bg-t-usage-bg", fill: "bg-t-usage", ring: "ring-t-usage/30" },
-  NEW_TEAM: { text: "text-t-team", bg: "bg-t-team-bg", fill: "bg-t-team", ring: "ring-t-team/30" },
-  FEATURE_INTENT: { text: "text-t-addon", bg: "bg-t-addon-bg", fill: "bg-t-addon", ring: "ring-t-addon/30" },
-  NEW_EXECUTIVE: { text: "text-t-exec", bg: "bg-t-exec-bg", fill: "bg-t-exec", ring: "ring-t-exec/30" },
+  SEAT_PRESSURE: NEUTRAL_TONE,
+  USAGE_PACE: NEUTRAL_TONE,
+  NEW_TEAM: NEUTRAL_TONE,
+  FEATURE_INTENT: NEUTRAL_TONE,
+  NEW_EXECUTIVE: NEUTRAL_TONE,
 };
 
 /** The signal type as a coloured pill with its icon and plain name. */
 export function RuleTag({ type, className }: { type: RuleType; className?: string }) {
   const m = RULE_META[type];
-  const t = TYPE_TONE[type];
   const Icon = m.icon;
   return (
-    <span className={cx("inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-meta font-medium", t.bg, t.text, className)}>
-      <Icon size={13} weight="bold" aria-hidden />
+    <span className={cx("inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-rule px-2 py-0.5 text-meta text-muted", className)}>
+      <Icon size={14} aria-hidden />
       {m.plain}
     </span>
   );
@@ -59,8 +59,8 @@ export function TypeBadge({ type, size = 36, className }: { type: RuleType; size
   const t = TYPE_TONE[type];
   const Icon = RULE_META[type].icon;
   return (
-    <span aria-hidden className={cx("inline-flex shrink-0 items-center justify-center", t.bg, t.text, className)} style={{ width: size, height: size, borderRadius: Math.round(size * 0.3) }}>
-      <Icon size={Math.round(size * 0.52)} weight="duotone" />
+    <span aria-hidden className={cx("inline-flex shrink-0 items-center justify-center rounded-full", t.bg, t.text, className)} style={{ width: size, height: size }}>
+      <Icon size={Math.round(size * 0.5)} />
     </span>
   );
 }
@@ -104,7 +104,7 @@ export function CompanyLogo({ name, size = 32, className }: { name: string; size
   return (
     <span
       aria-hidden
-      className={cx("font-display inline-flex shrink-0 items-center justify-center font-bold", className)}
+      className={cx("inline-flex shrink-0 items-center justify-center font-semibold", className)}
       style={{ width: size, height: size, borderRadius: Math.round(size * 0.28), background: tint(hue(name)), color: hue(name), boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${hue(name)} 18%, transparent)`, fontSize: Math.round(size * 0.38), letterSpacing: "-0.01em" }}
     >
       {initialsOf(name)}
@@ -118,8 +118,8 @@ export function Avatar({ name, size = 24, className }: { name: string | null | u
   return (
     <span
       aria-hidden
-      className={cx("inline-flex shrink-0 items-center justify-center rounded-full font-semibold text-white ring-2 ring-white", className)}
-      style={{ width: size, height: size, fontSize: Math.round(size * 0.4), background: name ? hue(`p:${n}`) : "#8e8e96" }}
+      className={cx("inline-flex shrink-0 items-center justify-center rounded-full font-semibold ring-2 ring-white", className)}
+      style={{ width: size, height: size, fontSize: Math.round(size * 0.38), background: name ? tint(hue(`p:${n}`)) : "#f0f0f1", color: name ? hue(`p:${n}`) : "#5f6368", boxShadow: `inset 0 0 0 1px ${name ? `color-mix(in srgb, ${hue(`p:${n}`)} 22%, transparent)` : "#e6e6e8"}` }}
     >
       {initialsOf(n)}
     </span>

@@ -5,7 +5,7 @@ import { appCtx } from "@/services/app-ctx";
 import { getCsql, listSellers, type Opportunity } from "@/services/csqls";
 import { calendarOf } from "@/services/org";
 import { isNotFound } from "@/services/errors";
-import { Attributes, Breadcrumbs, Panel } from "@/ui/page";
+import { Attributes, PageHeader, Panel } from "@/ui/page";
 import { Avatar, CompanyLogo, Money, MoneyShort, Status, TypeBadge } from "@/ui/bits";
 import { Evidence } from "@/ui/evidence";
 import { storyHeadline } from "@/ui/story";
@@ -44,35 +44,33 @@ export default async function CsqlPage({ params }: PageProps<"/csqls/[id]">) {
 
   return (
     <>
-      <Breadcrumbs items={[{ href: "/csqls", label: t.csqlPlural }, { label: d.label }]} />
-      <header className="mb-8 flex flex-wrap items-start gap-4">
-        <CompanyLogo name={d.account.name} size={56} />
-        <div className="min-w-0 flex-1">
-          <h1 className="text-display font-semibold">
-            <Link href={`/accounts/${d.account.id}`} className="hover:underline">
-              {d.account.name}
-            </Link>
-          </h1>
-          <p className="mt-1 text-section text-muted">
-            {d.label}, handed from {d.sourcedBy} to {d.owner ?? "the seller queue"}
-          </p>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
+      <PageHeader
+        crumbs={[{ href: "/csqls", label: t.csqlPlural }, { label: d.label }]}
+        leading={<CompanyLogo name={d.account.name} size={48} />}
+        title={
+          <Link href={`/accounts/${d.account.id}`} className="hover:underline">
+            {d.account.name}
+          </Link>
+        }
+        meta={`${d.label}, handed from ${d.sourcedBy} to ${d.owner ?? "the seller queue"}`}
+        toolbar={
+          <>
             <Status tone={stage.tone}>{stage.label}</Status>
             {due ? <Status tone={due.tone}>{due.text}</Status> : null}
-          </div>
-        </div>
-      </header>
+          </>
+        }
+      />
 
       <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex min-w-0 flex-col gap-8">
-          <figure className="rounded-panel border border-rule bg-surface p-6 shadow-card">
+          <figure className="panel p-6">
             <figcaption className="flex items-center gap-2.5 text-table text-muted">
               <Avatar name={d.sourcedBy} size={30} className="ring-0" />
               <span>
                 <span className="font-medium text-text">{d.sourcedBy}</span> wrote, {formatDateTime(c.createdAt, ctx.actor.timezone)}
               </span>
             </figcaption>
-            <blockquote className="font-display mt-4 text-story font-medium whitespace-pre-line text-balance">“{c.handoffNote}”</blockquote>
+            <blockquote className="mt-4 text-story font-medium whitespace-pre-line text-balance">“{c.handoffNote}”</blockquote>
             {d.contact ? (
               <p className="mt-4 flex items-center gap-2 text-table text-muted">
                 <Avatar name={d.contact.name} size={22} className="ring-0" />
@@ -91,13 +89,13 @@ export default async function CsqlPage({ params }: PageProps<"/csqls/[id]">) {
             </section>
           ) : null}
 
-          <section aria-labelledby="evidence">
+          <section aria-labelledby="evidence" className="panel p-6">
             <h2 id="evidence" className="text-section font-semibold">
               What customer success saw
             </h2>
             <ul className="mt-3 flex flex-col gap-3">
               {d.evidence.map((s) => (
-                <li key={s.id} className="rounded-panel border border-rule p-5">
+                <li key={s.id} className="rounded-panel border border-rule p-4">
                   <div className="flex items-start gap-3">
                     <TypeBadge type={s.type} size={32} />
                     <Link href={`/signals/${s.id}`} className="min-w-0 font-medium hover:underline">
@@ -110,7 +108,7 @@ export default async function CsqlPage({ params }: PageProps<"/csqls/[id]">) {
             </ul>
           </section>
 
-          <section aria-labelledby="history">
+          <section aria-labelledby="history" className="panel p-6">
             <h2 id="history" className="text-section font-semibold">
               What happened
             </h2>

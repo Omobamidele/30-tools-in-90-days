@@ -5,7 +5,7 @@
   "currency": "USD",
   "demo": true,
   "config": {
-    "brand": { "productName": "Signal Desk", "logoText": "FW", "primaryColor": "#3949C8", "accentColor": "#E8ECFF" },
+    "brand": { "productName": "Signal Desk", "logoText": "FW", "primaryColor": "#0B7A55", "accentColor": "#E6F4EE" },
     "terminology": {
       "csql": "CSQL",
       "csqlPlural": "CSQLs",

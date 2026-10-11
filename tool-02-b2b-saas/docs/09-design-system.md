@@ -1,6 +1,6 @@
 # 09 — Design system (DESIGN.md)
 
-> **Current: Revision 3, "Customer stories" (2026-10-11), at the end of this file.** Revisions 1 and 2 above it are kept as history.
+> **Current: Revision 4, "Close-style workspace" (2026-10-11), at the end of this file.** Earlier revisions are kept as history.
 
 Chosen by the user on 2026-10-07, from three directions: **Signal room** (selected), workplace photography, and editorial/financial paper. Written **before any screen**. If a screen needs something this file doesn't cover, add it here first.
 
@@ -216,3 +216,49 @@ That is the anatomy of a trading screen, whatever the palette.
 "Could this be mistaken for a trading app? Is it beautiful, not just tidy?"
 
 All main screens were reviewed at 1440 and 390 px against this question: Home (CSM and seller), the Signals inbox and its phone view, signal, CSQL board and detail, accounts list and detail, Results, and sign-in.
+
+
+# Revision 4, 2026-10-11: "Close-style workspace" (supersedes revision 3)
+
+**Feedback:** "I prefer the green colour but it still looks vibe coded." The user supplied screenshots of Close CRM (Getting started, Inbox, Leads, Workflows, Reports) as the reference to mirror. They are kept privately because they show the user's own account. Revision 3's custom display font, per-type rainbow colours and decorative story cards read as generated.
+
+## What we mirrored from Close, and how
+- **Sidebar:**
+  - white, with plain outline icons and dark medium-weight labels
+  - the active item is a soft grey pill
+  - groups are separated by hairlines (Home | Signals, CSQLs, Accounts | Results, Rules)
+  - the current section's sub-items are indented under a thin line (Signals: Snoozed, Accepted, Dismissed), as Close does for Inbox (Done, Future) and Reports
+  - a "Saved views" list of real filters (Close's Pinned smart views)
+  - Settings at the bottom
+- **Top bar:** a wide grey search field on the left, and notifications and the account menu on the right.
+- **Page header band:** white, with a bold 28px title, a one-line description and the actions on the right (one solid primary button).
+  - A row of pill tabs with icons and counts sits under the title (Close's Inbox: Primary, Emails, Calls…).
+  - A toolbar row of outlined filter buttons sits under a hairline (Close's "Add filter", "Sort", "Columns").
+- **Canvas:** light grey (#F7F7F8), holding white panels with a 1px border, 8px corners and no heavy shadow.
+- **Lists:** white rows separated by hairlines with a logo tile, a bold name and one or two lines of plain text. The selected inbox row has a green bar on its left edge.
+- **Empty states:** an icon in a soft tinted circle, a plain title, one muted line and the primary action (Close's Inbox, Leads and Workflows empty screens).
+- **Avatars:** initials in a dark hue on a light tint of it (Close's "KB" bubble).
+
+## What we deliberately did not copy
+- **Close's Reports grid of big blue numbers:** it breaks the locked rule (no KPI tiles). Results stays a sentence, a short signal-to-win path, wins and people.
+- **Close's AI promo block and trial banner:** they are Close's product marketing, not workflow.
+- **Close's blue:** the user prefers green.
+
+## Tokens
+- **Neutrals:** sidebar and panels #FFFFFF; canvas #F7F7F8; search, pills and sunken #F2F2F3; hover #F0F0F1; text #1D1F24; muted #5F6368; faint #6B6F76; rules #E6E6E8 and #D6D6DA.
+- **Brand (white-labelled `primaryColor`):** Fernway's demo is green #0B7A55. Signal types no longer have their own colours: icons are neutral, and evidence pictures draw in the brand. Red is kept only for "people without a seat".
+- **Type:**
+  - Inter for everything (page titles 28/34 bold, panel titles 16/24 semibold, body 15/22, table 14/20, meta 13/18)
+  - Geist Mono only for API keys
+- **Shape:** control radius 6px, panel radius 8px.
+
+## Contrast (computed, WCAG AA)
+| Pair | Ratio |
+|---|---|
+| white on brand #0B7A55 | 5.34 |
+| brand on canvas | 4.99 |
+| brand on brand tint | 4.78 |
+| text on white / on canvas | 16.49 / 15.40 |
+| muted on white / on canvas | 6.05 / 5.65 |
+| faint on white / on canvas | 5.05 / 4.71 |
+| field border on white (non-text) | 3.21 |

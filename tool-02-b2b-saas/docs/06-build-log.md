@@ -146,6 +146,28 @@ Fixed during review:
 
 Verified: typecheck, lint, 44 Vitest, 7 Playwright (axe zero violations), and screenshots at 1440 and 390 px.
 
+### Design revision 4: Close-style workspace (2026-10-11)
+Feedback: keep the green, but it still looked generated. The user supplied Close CRM screenshots to mirror. Details are in [09](09-design-system.md), revision 4.
+
+Changed:
+- **Shell:**
+  - a Close-style white sidebar (grouped nav, Signals sub-items, saved views, Settings at the bottom)
+  - a top bar with a wide search field
+  - `PageHeader` became a white band with optional `tabs`, `toolbar` and `leading` slots, bleeding to the canvas edges
+- **Pages:**
+  - Home: panels of plain rows; the stories moved into the inbox
+  - Signals: pill tabs with icons, outlined filter buttons, and a white list panel next to the reading pane
+  - account and CSQL pages: the header band with logo, people and status in the toolbar row
+  - Results: white panels
+- **Look:**
+  - Inter replaces Bricolage Grotesque and Instrument Sans
+  - neutral signal-type icons; the green brand #0B7A55 is restored
+  - softer tinted avatars
+  - empty states with an icon circle and a primary action
+- **Removed:** `src/ui/story-card.tsx`.
+
+Verified: typecheck, lint, 44 Vitest, 7 Playwright (axe zero violations), and screenshots at 1440 and 390 px.
+
 ## Testing checklist (brief §14)
 - [x] **Happy paths:** e2e full loop; integration loop.
 - [x] **Incorrect inputs:** ingest per-row rejections; money parsing; rule parameter bounds; webhook URL validation.

@@ -44,7 +44,7 @@ export async function SignalStory({ ctx, id, layout }: { ctx: ServiceCtx; id: st
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <CompanyLogo name={account.name} size={layout === "page" ? 44 : 40} />
         <span className="min-w-0">
-          <Link href={`/accounts/${account.id}`} className="font-display block text-title font-semibold hover:underline">
+          <Link href={`/accounts/${account.id}`} className="block text-title font-semibold hover:underline">
             {account.name}
           </Link>
           <span className="block text-meta text-muted">
@@ -64,9 +64,9 @@ export async function SignalStory({ ctx, id, layout }: { ctx: ServiceCtx; id: st
         <span className="text-meta text-faint">Spotted {ago(s.detectedAt, now)}</span>
       </div>
 
-      <Headline className="mt-3 text-display font-semibold text-balance">{storyHeadline(s.type, s.evidence, terms)}</Headline>
+      <Headline className="mt-3 text-title font-bold text-balance">{storyHeadline(s.type, s.evidence, terms)}</Headline>
 
-      <div className="mt-5 rounded-panel border border-rule bg-sunken/60 p-5">
+      <div className="mt-5 rounded-panel border border-rule bg-canvas p-5">
         <Evidence type={s.type} evidence={s.evidence} terms={terms} size="full" />
         {data.dataAgeDays !== null && data.dataAgeDays > ctx.actor.config.detection.staleAfterDays ? (
           <p className="mt-3 rounded-control bg-watch-bg px-3 py-2 text-table text-watch">Usage is {data.dataAgeDays} days old; no new signals until it updates.</p>

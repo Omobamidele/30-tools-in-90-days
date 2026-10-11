@@ -1,38 +1,37 @@
 @import "tailwindcss";
 
-/* Revision 3, "Customer stories" (docs/09). Leads with customers and people, never with
-   figures (CLAUDE.md, locked rule: never a trading interface). Cool paper sidebar, white canvas,
-   one brand colour from client config, and one colour per signal type. Contrast is computed in
-   docs/09; every text pair is AA. */
+/* Revision 4 (docs/09): mirrors the Close CRM workspace the user chose as the reference.
+   White sidebar, light grey canvas, white bordered panels, neutral text, one green accent from
+   client config. Contrast is computed in docs/09; every text pair is AA. */
 :root {
-  --sidebar: #f4f5f9;
-  --canvas: #ffffff;
+  --sidebar: #ffffff;
+  --canvas: #f7f7f8;
   --surface: #ffffff;
-  --sunken: #f4f5f9;
-  --hover: #eef0f6;
-  --text: #1a1c2b;
-  --muted: #575c6e;
-  --faint: #656a7c;
-  --rule: #e8eaf0;
-  --rule-strong: #d9dce5;
-  --field: #8a8fa0; /* form borders, 3.2:1 */
+  --sunken: #f2f2f3;
+  --hover: #f0f0f1;
+  --text: #1d1f24;
+  --muted: #5f6368;
+  --faint: #6b6f76;
+  --rule: #e6e6e8;
+  --rule-strong: #d6d6da;
+  --field: #8c9097; /* form borders, 3.2:1 */
 
-  --brand: #3949c8; /* white-labelled: primaryColor */
+  --brand: #0b7a55; /* white-labelled: primaryColor */
   --brand-strong: color-mix(in srgb, var(--brand) 82%, black);
   --brand-tint: color-mix(in srgb, var(--brand) 9%, white);
   --accent: var(--brand);
 
-  /* One colour per signal type: ink for text and marks, tint for backgrounds. */
-  --t-seats: #1c64a8;
-  --t-seats-bg: #e9f2fb;
-  --t-usage: #94560a;
-  --t-usage-bg: #fdf3e2;
-  --t-team: #1b7348;
-  --t-team-bg: #e7f5ed;
-  --t-addon: #6b3fbf;
-  --t-addon-bg: #f2ecfc;
-  --t-exec: #b0285b;
-  --t-exec-bg: #fcebf1;
+  /* Signal types share the brand colour (rev. 4); evidence pictures draw in it. */
+  --t-seats: var(--brand);
+  --t-seats-bg: var(--brand-tint);
+  --t-usage: var(--brand);
+  --t-usage-bg: var(--brand-tint);
+  --t-team: var(--brand);
+  --t-team-bg: var(--brand-tint);
+  --t-addon: var(--brand);
+  --t-addon-bg: var(--brand-tint);
+  --t-exec: #b42318;
+  --t-exec-bg: #fef1f0;
 
   /* Kept for components that still reference them. */
   --ink: #1a1c2b;
@@ -52,8 +51,8 @@
   --by-cs: #6b3fbf;
   --by-sales: #1c64a8;
 
-  --shadow-card: 0 1px 2px rgb(26 28 43 / 0.05), 0 0 0 1px rgb(26 28 43 / 0.02);
-  --shadow-lift: 0 6px 20px -6px rgb(26 28 43 / 0.14), 0 1px 3px rgb(26 28 43 / 0.06);
+  --shadow-card: 0 1px 2px rgb(29 31 36 / 0.04);
+  --shadow-lift: 0 4px 14px -4px rgb(29 31 36 / 0.12);
   --shadow-pop: 0 16px 40px -8px rgb(26 28 43 / 0.18), 0 2px 6px rgb(26 28 43 / 0.06);
 }
 
@@ -99,38 +98,38 @@
   --color-t-exec: var(--t-exec);
   --color-t-exec-bg: var(--t-exec-bg);
 
-  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-bricolage), var(--font-instrument), ui-sans-serif, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-  --text-hero: 32px;
-  --text-hero--line-height: 38px;
-  --text-hero--letter-spacing: -0.025em;
-  --text-display: 26px;
-  --text-display--line-height: 32px;
+  --text-hero: 30px;
+  --text-hero--line-height: 36px;
+  --text-hero--letter-spacing: -0.02em;
+  --text-display: 28px;
+  --text-display--line-height: 34px;
   --text-display--letter-spacing: -0.02em;
-  --text-story: 18px;
-  --text-story--line-height: 25px;
-  --text-story--letter-spacing: -0.012em;
-  --text-title: 22px;
-  --text-title--line-height: 28px;
+  --text-story: 17px;
+  --text-story--line-height: 24px;
+  --text-story--letter-spacing: -0.01em;
+  --text-title: 20px;
+  --text-title--line-height: 26px;
   --text-title--letter-spacing: -0.015em;
-  --text-section: 15px;
-  --text-section--line-height: 22px;
-  --text-body: 14px;
-  --text-body--line-height: 20px;
-  --text-table: 13.5px;
+  --text-section: 16px;
+  --text-section--line-height: 24px;
+  --text-body: 15px;
+  --text-body--line-height: 22px;
+  --text-table: 14px;
   --text-table--line-height: 20px;
-  --text-meta: 12.5px;
-  --text-meta--line-height: 16px;
+  --text-meta: 13px;
+  --text-meta--line-height: 18px;
   --text-tag: 11px;
   --text-tag--line-height: 14px;
   --text-figure: 26px;
   --text-figure--line-height: 32px;
   --text-figure--letter-spacing: -0.02em;
 
-  --radius-control: 8px;
-  --radius-panel: 12px;
+  --radius-control: 6px;
+  --radius-panel: 8px;
   --shadow-card: var(--shadow-card);
   --shadow-lift: var(--shadow-lift);
   --shadow-pop: var(--shadow-pop);
@@ -143,8 +142,8 @@ body {
   background-color: var(--canvas);
   color: var(--text);
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 15px;
+  line-height: 22px;
   -webkit-font-smoothing: antialiased;
 }
 
