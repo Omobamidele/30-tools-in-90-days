@@ -1,165 +1,79 @@
-# Phase 4 — UX / UI design: Expansion Signal Desk
+# Phase 4 — UX / UI design: True-up Desk
 
-The visual system is in [09-design-system.md](09-design-system.md) ("Signal room"). This document covers structure and behaviour.
+The visual system is in [09-design-system.md](09-design-system.md) (revision 6, shadcn/ui kit). This doc covers structure and behaviour.
 
 ## 1. Navigation
+**Collapsible left sidebar** (shadcn `Sidebar`; collapses to icons, becomes a drawer on phones):
+- **Header:** workspace (org logo mark, org name, product name).
+- **Work:** Overview, Exceptions (open count badge), Accounts, Invoices.
+- **Insight:** Ledger.
+- **Admin** (ADMIN/REVOPS only): Rules, Settings.
+- **Footer:** the user menu (name, role, Your account, Sign out).
 
-- **Top bar (ink):**
-  - product mark and org name
-  - modules: **Overview · Signals · CSQLs · Accounts · Results**, plus **More ▾** (Rules, Settings) for RevOps and Admin
-  - right side: search (Ctrl K), notifications, avatar
-- **Icon rail:** the same modules, for narrow screens and quick switching. Active item: a chartreuse bar plus Phosphor fill.
-- **Phone (<768px):** the rail becomes a bottom bar (Overview, Signals, CSQLs, Accounts, More). Sheets go full-screen.
-- **Breadcrumbs** on detail pages: `Accounts › Brightwater Logistics`, `CSQLs › CSQL-0142`.
-- **Terminology from config:** labels like "CSQL" come from the organisation config, so a tenant can say "Expansion lead".
+**Inset header bar:**
+- sidebar toggle, breadcrumbs
+- **⌘K command search** (jump to an account or exception, or run "Reconcile this month")
+- notifications
 
-## 2. Page hierarchy and primary screens
+## 2. Page hierarchy and primary workflows
+| Page | Purpose | Primary action |
+|---|---|---|
+| **Overview** | This month's close, plus what needs me | "Review exceptions" |
+| **Exceptions** | The work queue: a data table with filters | Open one (a sheet); bulk "Assign to me" |
+| **Exception** (`/exceptions/[id]`) | Contract vs usage vs invoice, then decide | Propose / Approve / Record / Send to CS / Dismiss |
+| **Accounts** | Every customer with a contract | Open account |
+| **Account** | Contract terms, month-by-month reconciliation, invoices, usage | Open a month's exception |
+| **Invoices** | What billing sent us, matched or not | Import CSV |
+| **Ledger** | Recorded recoveries and credits | Export CSV |
+| **Rules** | Tolerances and thresholds per exception type | Preview, then save a version |
+| **Settings** | Feeds and keys, imports, people, webhooks | — |
 
-### Overview (`/`)
-1. **Answer sentence** (display type):
-   > "This quarter, signals created **$412k** of expansion pipeline; **$138k** has been won."
+**Main flow:**
+1. Overview, then Exceptions (filtered to me, open).
+2. A row opens the **sheet**: summary, the gap, quick actions.
+3. "Open full record" for detail.
+4. **Propose adjustment** (a dialog: amount pre-filled with the gap, memo). It is auto-approved when within my limit.
+5. Later, **Record** (a dialog: invoice or credit-note reference). It appears in the Ledger.
 
-   With no data yet: "No signals have turned into pipeline yet this quarter."
-2. **Three figures in one line,** not tiles:
-   - **Waiting for triage:** 14 · $212k est.
-   - **Waiting for sellers:** 5
-   - **Won this quarter:** $138k
-3. **My work**, by role:
-   - **CSM:** my top signals, as cards with a trace and Accept/Dismiss
-   - **Seller:** CSQLs waiting for me, with their deadlines
-   - **Leaders:** a "Needs reassigning" panel (overdue + 2 business days)
-4. **Recent outcomes:** the last five CSQLs won or lost, each as a sentence.
-5. **Footer:** data freshness ("Usage updated 06:00 today · 212 accounts"), and the simulated-data notice when it applies.
+## 3. Tables (shadcn data table)
+- **Toolbar:**
+  - a search input
+  - faceted filter buttons (Type, Status, Owner, Month) showing their selected values as badges
+  - a "Reset" link
+  - a column-visibility menu
+- **Columns:** a select checkbox; Account (link); Type (badge); Gap (amount in words-aligned text, left-aligned, not a ticker column); Status (badge); Owner; Due.
+- Pagination at 25 rows, with "n of N selected".
+- Row click opens the sheet. Keyboard: Enter opens it, Esc closes it.
 
-### Signals (`/signals`)
-- **Board** (default for CSMs):
+## 4. Detail views
+**Exception record:**
+- **Header:** account name, type badge, status badge, due.
+- **Card "What we compared":** three columns (Contract, Usage, Invoiced), then a "Gap" row with the explanation sentence and the working lines.
+- **Card "Decide":** the actions allowed for my role and the state.
+- **Tabs:** Details, Activity (the timeline).
+- **Sidebar card:** account, CSM, billing owner, contract term.
 
-  | New | Snoozed | Accepted (7d) | Dismissed (7d) |
-  |---|---|---|---|
-  | count + estimated value | count + estimated value | count + estimated value | count + estimated value |
-- **List:** columns are priority, account, rule tag, explanation, est. value, trace, age, triage deadline, CSM.
-- **Filters** (chips with counts, kept in the URL): rule type, CSM (default "Mine"), value band, deadline (overdue / due soon), segment. Free-text search on account name.
-- **Bulk action:** dismiss selected with one reason, for noise such as a contractor-heavy account.
-- **Clicking a card opens the triage sheet.**
+## 5. Overview
+1. **"October close" card:**
+   - a checklist of steps with a progress bar: usage feed fresh, invoices received (34 of 36), reconciliation run (date), exceptions decided (18 of 24)
+   - button: "Run reconciliation" (RevOps, Admin)
+2. **"Needs you" card:** a compact table of my open exceptions.
+3. **"Recently recorded" card:** sentences ("Billed $2,400 of unbilled overage to Bluefin, recorded by Dana, 2 days ago").
 
-### Triage sheet (on Signals; also the full page `/signals/[id]`)
-- **Header:** account, rule tag, priority, and "Detected 2 days ago · due tomorrow".
-- **Explanation sentence**, plus a large trace with axes and a threshold label.
-- **Estimated value with its working** ("3 seats needed × $1,200 = $3,600 ARR"), or "Not estimated" with the reason.
-- **Priority breakdown:** value band + rule weight + modifiers, as plain-English lines.
-- **Account context:**
-  - plan, ARR, renewal date (and "renewal in 84 days" when that boosts priority)
-  - CSM and owner
-  - other open signals
-  - open CSQL (if any)
-  - support escalation flag
-- **Actions:**
-  - **Accept → CSQL:** handoff note (required), contact picker, adjusted value (optional), "Route to: Dana Reyes (account owner)" preview, and "Add to open CSQL-0139" when one exists.
-  - **Dismiss:** reason select (required) plus note. Shows "Won't fire again for 30 days unless the value grows 25%".
-  - **Snooze:** date picker, with presets of 2 weeks, next month and start of next quarter.
-- **Disabled actions explain themselves:** e.g. "Only the account's CSM or a CS leader can triage."
+There are no KPI tiles (CLAUDE.md locked rule).
 
-### CSQLs (`/csqls`)
-- **Board:**
+## 6. Forms
+- shadcn inputs and labels; native `<select>` for reason lists, for accessibility and testing.
+- Server-side validation shown inline, plus a summary alert.
+- Dialogs for decisions; a toast confirms ("Adjustment recorded").
 
-  | Routed | Accepted | Opportunity | Won | Lost / no opp |
-  |---|---|---|---|---|
-  | count + value | count + value | count + value | count + value | count |
-- **Cards:** number (mono), account, value, owner avatar, deadline dot.
-- **List** with the same filters (owner, CSM, rule type, stage, overdue).
-- **CSQL detail:**
-  - **left:** the handoff note (quoted, with the CSM's name), the evidence signals and their traces, a timeline
-  - **right:** state actions (Accept, Return, Record opportunity, Mark won/lost, Close no opp, Reassign), with the opportunity fields
-- **Actions follow the state machine,** so only valid next steps appear.
+## 7. States
+- **Empty:** an icon, a sentence and the next action (e.g. "No invoices yet. Connect the invoice feed or import a CSV").
+- **Loading:** skeletons with `role="status"` and `aria-busy`.
+- **Error:** an alert with a reference.
+- **Stale feed:** a warning badge on Overview and the account.
 
-### Accounts (`/accounts`, `/accounts/[id]`)
-- **List:**
-  - columns: account, segment, ARR, seats used/purchased (mini bar), credits pace, renewal date, CSM, owner, open signals
-  - filters: CSM, owner, segment, "has open signal", "stale data"
-- **Detail:**
-  - **header:** name, segment, plan, ARR, and the data-freshness line
-  - **usage panel:** seats, credits pace and workspaces, each with a 90-day trace and its threshold
-  - **subscription:** term, add-ons owned (and not owned)
-  - **contacts:** with seniority and first seen
-  - **signals and CSQLs** history
-  - **notes and timeline**
-
-### Results (`/results`)
-- **Period switch** (quarter / year / all time) and a CSV export.
-- **Answer sentence,** then:
-  - **funnel:** signals raised → accepted → CSQLs → opportunities → won, with counts and values, as a horizontal stepped bar (the only chart)
-  - **by rule type:** a table of conversion at each step and median value estimated vs recorded
-  - **by CSM** (sourced) and **by seller** (worked): counts and won ARR, using the CS and sales attribution colours
-  - **dismissal reasons:** a ranked list with counts
-  - **response times:** median time to triage and to seller acceptance; % on time
-- **Footnote:** "Only recorded outcomes count. Estimated values are shown separately and never added to won revenue."
-
-### Rules (`/rules`, RevOps)
-- **List:** name, type, on/off, version, and the 90-day funnel inline (raised · accepted · won).
-- **Editor:**
-  - parameters, with plain-English help ("Fire when active seats are at least **90%** of purchased for **14** days")
-  - minimum ARR, segments, cooldown, weight
-  - **live preview:** "With these settings, 12 accounts would have a signal today", listing the first ten
-  - **Save** asks for a change note and creates a new version
-- **History:** the list of versions with their notes.
-
-### Settings (`/settings/*`)
-Sections:
-- **Branding and terminology:** live preview of the top bar.
-- **Price book:** seats, credit tiers, overage, add-ons.
-- **Routing:** segments → team or person, round-robin members, fallback.
-- **Deadlines:** windows, business days, holidays.
-- **Dismissal reasons**
-- **Data feeds:**
-  - ingest keys (create shows the key once, rotate, revoke)
-  - last ingest, rows accepted or rejected, rejection reasons
-- **CRM:**
-  - inbound key
-  - webhook endpoints: add, test-send, delivery log with status codes and retry
-- **Imports:** CSV with column mapping and a preview.
-- **Users and roles**
-
-## 3. Forms and validation
-- Labels sit above fields. Required fields are marked "Required" in text, not just with `*`.
-- Errors appear inline under the field, plus a summary at the top on submit with links to each field.
-- **Money input:** accepts `7,200` or `7200.00`, and shows the formatted result.
-- **Destructive actions** (revoke key, delete rule) need typed confirmation. Turning a rule off needs a reason.
-
-## 4. Empty, loading and error states
-- **Empty states say what fills the screen and how:**
-  - **Signals:** "No new signals. Signals appear when usage crosses a rule's threshold. Usage last updated 06:00 today."
-  - **Accounts with no data:** "Import accounts from your CRM (CSV) or push usage to the ingest API." Links to both, for RevOps.
-  - **Results with no outcomes:** "Nothing recorded this quarter yet. Won and lost CSQLs appear here when sellers record the outcome."
-- **Loading:** skeletons shaped like the real content (card outlines with trace placeholders). No spinners on pages.
-- **Errors:**
-  - an error boundary with a short reference code
-  - action errors show the message near the button
-  - optimistic-lock conflicts name who changed what ("Dana accepted this at 10:14; refresh to see it")
-- **Stale data:** a watch-coloured line on the account and signal ("Usage is 4 days old; no new signals until it updates").
-
-## 5. Onboarding
-- **First sign-in for RevOps or Admin:** a setup checklist on the Overview.
-  1. Import accounts.
-  2. Create an ingest key.
-  3. Send usage (curl example).
-  4. Review rules.
-  5. Set routing.
-
-  Each step ticks itself off from real state.
-- **A CSM's first visit:** a one-line hint above the queue: "Accept sends it to a seller with your note. Dismiss teaches the rule what isn't worth it."
-
-## 6. Responsive behaviour
-- **≥1280px:** rail + content; the triage sheet docks right (480px).
-- **768–1279px:** the rail collapses to icons; the sheet overlays.
-- **<768px:**
-  - bottom navigation
-  - boards become swipeable columns with a column picker
-  - tables become stacked rows (account + value + deadline)
-  - sheets are full-screen
-
-  Triage must be completable one-handed: the accept and dismiss buttons sit at the bottom of the sheet.
-
-## 7. Keyboard
-- Ctrl K opens the command menu (accounts, signals, CSQLs, pages).
-- In the queue: J/K to move, **Enter** opens, **A** accept, **D** dismiss, **S** snooze (shown in a hint row; works only when focus is inside the queue).
-- Boards: cards are focusable. Stage moves happen only through explicit actions in the sheet, never by drag. A drag that skipped validation would break the state machine.
+## 8. Responsive
+- **Under 1024px:** the sidebar becomes an off-canvas drawer behind a header button.
+- **Tables under 768px:** become stacked rows (account, type, gap, status).
+- **Dialogs** become full-height sheets on phones.

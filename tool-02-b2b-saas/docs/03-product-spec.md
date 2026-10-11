@@ -1,360 +1,149 @@
-# Phase 3 — Product Specification: Expansion Signal Desk
+# Phase 3 — Product Specification: True-up Desk
 
-**Selected:** candidate 2 in [doc 02](02-opportunity-discovery.md).
-**Evidence labels:** as in [doc 01](01-industry-research.md).
-
----
+> Replaces the Expansion Signal Desk spec (2026-10-11; see [02 § Selected system (revised)](02-opportunity-discovery.md)). Evidence labels as in doc 01: **[V]** verified, **[A]** assumption.
 
 ## 1. Product brief
+A mid-market SaaS vendor sells contracts that mix a platform fee, seats and a usage commitment, with overage beyond it. Each month three systems should agree, and often don't:
+- **The contract:** what the customer committed to and the overage rules.
+- **The product:** what the customer actually used (seats, metered units).
+- **Billing:** what was actually invoiced.
 
-**One line:** the Expansion Signal Desk turns product usage and billing data into **expansion signals**, gets a customer success manager (CSM) to accept or dismiss each one with a reason, routes accepted ones to the right seller as a **CSQL** (customer-success-qualified lead) with a deadline, and records what each signal type eventually turns into.
+**[A]** Gaps leak money both ways:
+- overage nobody billed
+- seats above the contract nobody trued up
+- invoices that charge too much (a dispute waiting to happen)
+- a missing invoice
+- a customer using a fraction of their commitment (a renewal at risk that CS hasn't seen)
 
-**Why it exists**
-- **[V]** Opportunities sourced by customer success win about 52% of the time, more than any other source (ICONIQ 2026).
-- **[A]** The signals that create those opportunities sit in product analytics and billing. Nobody owns turning them into pipeline, and nobody measures the result.
+**[V]** True-ups are standard contract terms. Vendors reconcile used licences against contracted ones at an interval and invoice the gap ([GitLab: billing for seat overages](https://docs.gitlab.com/subscriptions/quarterly_reconciliation/); [DealHub: true-up billing](https://dealhub.io/glossary/true-up-billing/)).
 
-**What it is not**
-- Not a CS platform: no health scores, playbooks or QBR decks.
-- Not a CRM: opportunities still live in the vendor's CRM; we link to them.
-- Not a product analytics tool: we take in *aggregates*, not raw event streams.
+**True-up Desk** runs that reconciliation every month for every account. It raises **exceptions** with the arithmetic shown. A person decides each one: bill the gap, credit the customer, hand it to customer success, or dismiss it with a reason. **Only adjustments a person records count in the ledger.**
 
-**The sample tenant: "Fernway"**
-- A fictional mid-market SaaS vendor selling spend analytics to finance teams.
-- **Hybrid pricing:**
-  - platform tier
-  - analyst seats at $1,200 a year
-  - committed document credits, with overage per document
-  - two add-on modules: AP Automation and Forecasting
-- Fernway exists only in demo config and seed data. Nothing in the core refers to it ([§13](#13-white-label-architecture)).
-
----
+**What it is not:** a billing system. It doesn't meter, rate or send invoices. It reads usage and invoices from the systems that do, and writes back decisions (webhooks, CSV).
 
 ## 2. Personas
-
-| Persona | Role key | Uses it to | Frequency |
-|---|---|---|---|
-| **Customer success manager (CSM)** | `CSM` | Triage signals on their accounts, write the handoff note, follow up | Daily |
-| **Account manager or AE (seller)** | `SELLER` | Accept routed CSQLs, work them, record the opportunity and its outcome | Daily |
-| **CS leader** | `CS_LEAD` | See triage backlog and response times, reassign, review dismissals | Weekly |
-| **Sales leader** | `SALES_LEAD` | See routed CSQLs, seller response times, reassign | Weekly |
-| **RevOps** | `REVOPS` | Configure signal rules, price book, routing, deadlines; manage data feeds; tune rules | Weekly |
-| **Executive (CRO/CFO)** | `EXEC` | Read-only: pipeline and revenue from signals, conversion by signal type | Monthly |
-| **Admin** | `ADMIN` | Users, roles, branding, keys | Rarely |
-
----
+| Persona | Role key | Daily job in the tool |
+|---|---|---|
+| Billing ops ("Dana Cho") | `BILLING` | Works the exception queue, proposes adjustments, records them once invoiced or credited |
+| Finance lead ("Marcus Webb") | `FINANCE_LEAD` | Approves adjustments above the approval limit; owns the monthly close |
+| CSM ("Priya Nair") | `CSM` | Receives under-use exceptions on their accounts; records what they did |
+| CS lead | `CS_LEAD` | Sees all CS actions; reassigns |
+| RevOps ("Sam Okafor") | `REVOPS` | Configures pricing, tolerances and rules; manages feeds and keys |
+| Admin | `ADMIN` | Everything, plus people |
+| Executive | `EXEC` | Reads the ledger and the monthly close |
 
 ## 3. User stories (MVP)
-
-**CSM**
-1. Open one queue of new signals on my accounts, the most valuable first, each with evidence I can check.
-2. Accept a signal, add what I know, and know it reached the right seller with a deadline.
-3. Dismiss a signal with a reason (e.g. "Seats are contractors on a fixed project"), so the same signal doesn't return next week.
-4. Snooze a signal until a date ("budget cycle opens in January").
-5. See what happened to every CSQL I sent.
-
-**Seller**
-6. See CSQLs routed to me, with the CSM's note, the evidence and an estimated value.
-7. Accept a CSQL, or send it back to the CSM with a reason.
-8. Record the opportunity (amount, CRM link) and later the outcome (won or lost, with a reason).
-
-**Leaders**
-9. See signals waiting past their triage deadline and CSQLs waiting past the seller deadline, and reassign them.
-10. See pipeline created and revenue won from signals for a period, by signal type and by CSM. Only recorded facts count.
-
-**RevOps**
-11. Define signal rules without code: metric, threshold, window, minimum account size, cooldown, value formula.
-12. See each rule's precision: raised → accepted → converted → won. Tune thresholds from that.
-13. Load accounts, subscriptions and contacts from a CRM export (CSV), and push usage through an API.
-
-**Exec**
-14. One sentence and three numbers: "This quarter, signals created $412k of expansion pipeline; $138k was won."
-
----
+1. As billing ops, I see this month's exceptions, biggest gaps first, so I fix the money before invoices go out.
+2. As billing ops, I open an exception and see **contract vs usage vs invoice** side by side, with the arithmetic, so I can trust the number.
+3. As billing ops, I propose an adjustment (amount and memo). If it's within my approval limit I approve it myself; otherwise it goes to the finance lead.
+4. As finance lead, I approve or reject proposed adjustments with a reason.
+5. As billing ops, once the adjustment is invoiced or credited in the billing system, I record it with the invoice or credit-note reference. It then counts in the ledger.
+6. As billing ops, I dismiss an exception with a reason from a fixed list (e.g. "Contract amendment not in the system yet").
+7. As a CSM, I'm told when one of my customers is far under their commitment. I record what I did (a call booked, a plan agreed, nothing needed).
+8. As finance lead, I see the monthly close as a checklist: usage received, invoices received, reconciliation run, exceptions reviewed.
+9. As RevOps, I tune tolerances and thresholds, preview how many exceptions a change would raise, and save it as a new version with a note.
+10. As an executive, I read in one sentence what we recovered and credited this quarter, and can open every line.
 
 ## 4. Functional requirements
+**Data in:**
+- **FR-1:** Usage arrives per account per day through the existing ingest API or CSV, unchanged from the previous build.
+- **FR-2:** Invoices arrive through `POST /api/ingest/invoices` (INGEST key) or CSV:
+  - fields: invoice number, account CRM ID, period start and end, issued date, lines (kind, quantity, unit price, amount, description), and an external reference
+  - rows are validated one by one, rejected rows are reported back, and resending the same reference updates rather than duplicates
+- **FR-3:** Accounts and contracts import from CSV (existing importer), extended with billing cadence and true-up terms.
 
-### 4.1 Data in
-- **FR-1 Accounts and subscriptions.**
-  - CSV import with column mapping (from a CRM or billing export), plus manual create and edit.
-  - **Account fields:** name, domain, segment, CSM, account owner (seller), external CRM ID.
-  - **Subscription fields:** plan, seats purchased, committed credits, term start and end, ARR, add-ons owned, price overrides.
-- **FR-2 Usage ingest API.**
-  - `POST /api/ingest/usage`, with a bearer key per organisation.
-  - Takes daily aggregates per account: active seats (30-day), credits used in the current term, workspaces (with active users each), gated-feature attempts per add-on.
-  - Idempotent per account and date. Validated. Every row records where it came from (`API`, `CSV`, `SIMULATED`).
-- **FR-3 Contacts.** Name, title, email, seniority (derived from title, editable), first seen. They come from the CSV import or the API.
-- **FR-4 Data freshness.** If an account has no usage for more than N days (default 3), it shows "Usage data is N days old", and **no new signals are raised from stale data**.
+**Reconciliation:**
+- **FR-4:** A monthly job (`runMonthly`, also on demand) reconciles each account with a contract active in that month. It is idempotent per org and month: re-running refreshes the numbers and never duplicates exceptions.
+- **FR-5:** Expected billing for a month (`src/core/recon/expected.ts`):
+  - **Recurring:** ARR ÷ 12 for monthly billing. Quarterly and annual billing put the full amount in the period's first month.
+  - **Seat true-up**, if the contract allows it: (peak active seats in the month − seats purchased) × seat price ÷ 12, when above zero.
+  - **Usage overage:** units used beyond the annual commitment *during this month*, × the overage rate. Monthly overage contracts bill it monthly; term-end contracts bill the term total in the term's last month.
+  - Each expected line carries a plain-English `working` string.
+- **FR-6:** Invoiced amounts are the sum of invoice lines whose period falls in that month, grouped by kind.
+- **FR-7:** Exception types (`src/core/recon/classify.ts`):
 
-### 4.2 Signal detection
-- **FR-5 Rule types:**
+| Type | Raised when | Amount | Goes to |
+|---|---|---|---|
+| `UNBILLED_USAGE` | Expected usage overage − invoiced overage > tolerance | Gap to bill | Billing |
+| `UNBILLED_SEATS` | Expected seat true-up − invoiced seat true-up > tolerance | Gap to bill | Billing |
+| `UNDER_BILLED` | Recurring fees invoiced below contract by more than tolerance | Gap to bill | Billing |
+| `OVER_BILLED` | Total invoiced − total expected > tolerance | Credit owed | Billing |
+| `MISSING_INVOICE` | Expected > 0 and no invoice for the account and month | Full expected amount | Billing |
+| `UNDER_USE` | ≥ 25% of the term elapsed and projected term usage < under-use threshold | None (risk) | The account's CSM |
+| `RENEWAL_TRUE_UP` | Term-end overage contract, term ends within N days, projected overage > 0 | Projected true-up | Billing |
 
-  | Rule type | Condition | Estimated value |
-  |---|---|---|
-  | `SEAT_PRESSURE` | Active seats ≥ X% of purchased for Y days | Seats needed with headroom × seat price |
-  | `USAGE_PACE` | Projected term usage ≥ X% of commitment | Projected overage × overage rate, or the next commitment tier's price difference, whichever the price book says |
-  | `NEW_TEAM` | A workspace created in the last N days reaches ≥ M active users | M × seat price |
-  | `FEATURE_INTENT` | ≥ N gated attempts on add-on A in D days, for an account without A | Add-on A's list price |
-  | `NEW_EXECUTIVE` | A contact with senior seniority first seen in the last D days | None ("No direct value; relationship signal") |
+  Tolerance is the larger of `toleranceMinor` and `tolerancePct` × expected, configurable per type.
+- **FR-8:** If a re-run finds a gap closed (e.g. a later invoice included it), the open exception resolves automatically with a system note. If the gap changed, the amount refreshes.
 
-- **FR-6 Rule settings:** every rule has a threshold, window, minimum ARR, segments it applies to, a cooldown in days, a weight, and on/off.
-- **FR-7 Detection runs** daily (and on demand after an ingest), per account. Each signal stores:
-  - **evidence:** the metric values and dates that triggered it
-  - **an explanation sentence:** "47 of 50 analyst seats active for 21 days"
-  - **an estimated value,** with its formula inputs
-  - **a priority score** with its breakdown
-- **FR-8 Dedupe.** At most one open signal per account and rule type. Re-detection on an open signal updates its evidence. If a CSQL is already open for the account, the new evidence is **attached to that CSQL**, not raised as a new signal.
-- **FR-9 Cooldown.** After a dismissal or a closed CSQL, the same rule doesn't fire for that account until the cooldown ends. **After a dismissal only**, a value that grows by more than the "material change" margin (default 25%) overrides the cooldown. A closed CSQL always gets the full cooldown, because a seller has just spoken to the customer (refined during the build, when the seed raised a signal three days after a lost deal).
-- **FR-10 Auto-expiry.** A NEW signal whose condition no longer holds for 7 days becomes EXPIRED, with a note.
-- **FR-11 Priority** = estimated-value band + rule weight + modifiers:
-  - renewal within 120 days: plus
-  - open support escalation: minus, shown as "talk to support first"
-  - stale data: blocked
+**Decisions:**
+- **FR-9:** Money exceptions move through **NEW → PROPOSED → APPROVED → RECORDED**, or **DISMISSED** with a reason.
+  - Proposals within the approval limit are approved in the same step.
+  - Above it, a `FINANCE_LEAD` or `ADMIN` approves or rejects with a reason. A rejection returns the exception to NEW.
+- **FR-10:** `UNDER_USE` moves through **NEW → WITH_CS** (assigned to the account's CSM, or the CS lead if there's none) **→ DONE** (an action note is required), or DISMISSED.
+- **FR-11:** Every change writes the activity log. Writes check the lock version and refuse a stale update.
+- **FR-12:** Review deadline is N business days from raise (config). Reminders run when it's due soon and when it's overdue; leaders are escalated after +2 days (the existing reminder pattern).
 
-  The breakdown is always shown. There is no hidden model.
+**Ledger and reporting:**
+- **FR-13:** The ledger lists recorded adjustments only: INVOICE (recovered) and CREDIT_NOTE (credited back). It answers by period (quarter, year, all) in a sentence, with a table and a CSV export. Proposed or approved but unrecorded adjustments are shown separately as "in progress" and never added to recovered.
+- **FR-14:** The monthly close checklist for the current month:
+  - usage feed fresh (≤ stale days)
+  - invoices received for every billable account
+  - reconciliation run
+  - exceptions decided (n of N)
 
-### 4.3 Triage (CSM)
-- **FR-12** Queue of NEW signals for the CSM's accounts. Filter by rule type, value and age. Sort by priority.
-- **FR-13 Accept → create a CSQL.**
-  - Requires a handoff note.
-  - Optional: a confirmed contact, an adjusted estimated value (the original is kept).
-  - Several open signals on the same account can go into one CSQL.
-- **FR-14 Dismiss** requires a reason, from a configurable list plus "Other" with text. **Snooze** requires a date.
-- **FR-15** Triage deadline (default 2 business days). Overdue items are flagged, and a reminder goes to the CSM, then to the CS leader.
+**Notifications and integrations:**
+- **FR-15:** In-app and email notifications: assigned, approval needed, approved or rejected, sent to CS, overdue.
+- **FR-16:** Outbound signed webhooks: `exception.raised`, `adjustment.approved`, `adjustment.recorded`, `exception.dismissed`.
 
-### 4.4 Routing and seller work
-- **FR-16 Routing order:**
-  1. the account owner (seller)
-  2. the territory or segment queue, round-robin
-  3. the sales leader as fallback
-
-  The routing reason is stored ("Account owner", "Mid-market round-robin").
-- **FR-17 CSQL status flow:**
-  `ROUTED → ACCEPTED → OPPORTUNITY → WON | LOST`, with `RETURNED` (back to the CSM with a reason) and `CLOSED_NO_OPP` (seller decided there's no deal, with a reason).
-- **FR-18** Seller deadline to accept or return (default 1 business day). Overdue → reminder to the seller, then to the sales leader. Leaders can reassign, with a reason.
-- **FR-19 Opportunity record:** amount (ARR), type (seats, usage tier, add-on, multi), CRM opportunity ID or URL, expected close date. Outcome: WON (closed ARR, date) or LOST (reason).
-- **FR-20 Credit.** Each CSQL stores the sourcing CSM and the working seller. Reports count "CS-sourced" by those fields. Compensation rules are **out of scope**.
-
-### 4.5 Insight
-- **FR-21 Overview (answer first):**
-  - **the sentence:** pipeline created and revenue won from signals this quarter
-  - **three figures:** waiting for triage, waiting for sellers, won this quarter
-  - **my work:** for CSMs and sellers
-- **FR-22 Results page** (recorded facts only, by period):
-  - signals raised, accepted, dismissed
-  - CSQLs routed, accepted and converted
-  - pipeline and won ARR
-  - conversion by rule type, CSM and seller
-  - dismissal reasons
-  - median time to triage and to seller response
-  - CSV export
-- **FR-23 Rule tuning:** per rule, raised → accepted → opportunity → won, the dismissal-reason mix, and the median estimated value vs the recorded opportunity amount. Rule changes are versioned (audit log).
-
-### 4.6 Collaboration and notifications
-- **FR-24** Notes and an activity timeline on each account, signal and CSQL.
-- **FR-25** In-app notifications plus email (Mailpit locally), for: routed to you, returned to you, deadline approaching or overdue, CSQL won. Each person can turn email off.
-- **FR-26 Weekly digest email** (Monday): a person's open signals and CSQLs, plus last week's results. Built from the same service as the overview.
-
-### 4.7 Integrations out
-- **FR-27 Outbound webhook** (signed with HMAC) on: `csql.routed`, `csql.accepted`, `csql.opportunity_created`, `csql.closed`. Lets the vendor create the CRM opportunity with their own automation. Delivery attempts are logged and retried.
-- **FR-28 Inbound opportunity update:** `POST /api/crm/opportunity-update` (bearer key) to set stage, amount or outcome from the CRM.
-
----
+**Configuration:**
+- **FR-17:** Per org, in `config/clients/<name>.json`:
+  - price book (seat price, credit tiers, overage per 1,000)
+  - reconciliation (tolerances, under-use %, term-ending days, approval limit, review days)
+  - reason lists, terminology, brand
+- **FR-18:** Rules are versioned per type: enabled, tolerance, and threshold. A rule can be previewed against the current month before saving.
 
 ## 5. Non-functional requirements
+- **Correctness first:** all money is bigint minor units; the engine is pure, deterministic and unit-tested; every number on screen can be traced to its working.
+- **Performance:** reconciling 2,000 accounts in under 60s locally; list pages in under 1s warm.
+- **Security:** role-based permissions enforced in services (not just the UI); API keys stored hashed; webhooks HMAC-signed.
+- **Accessibility:** WCAG 2.1 AA; an axe sweep in CI; keyboard use everywhere (the command search, dialogs, sheets).
+- **Honesty:** demo invoices and usage are labelled SIMULATED everywhere they appear.
 
-- **NFR-1 Performance:** queue and overview under 1s at 2,000 accounts and 90 days of daily usage (180k snapshot rows); detection run under 60s for 2,000 accounts.
-- **NFR-2 Correctness:**
-  - money is stored as integer minor units with a currency
-  - every estimated value can be reproduced from its stored inputs
-  - only recorded facts count in results
-- **NFR-3 Security:**
-  - org scoping on every query
-  - ingest and CRM keys stored as hashes, shown once, rotatable
-  - webhook signing secret
-  - rate limits on public endpoints
-- **NFR-4 Accessibility:** WCAG 2.1 AA (axe sweep across key screens).
-- **NFR-5 Responsive:** usable at 390px wide; triage works on a phone.
-- **NFR-6 Audit:** every state change, rule change and reassignment is logged with who, when and why.
-- **NFR-7 Honesty:** simulated usage is labelled everywhere it appears (record badge and data-freshness line) and can never be mistaken for live data.
-
----
-
-## 6. Workflows
-
-### 6.1 Main flow
-```
-Usage feed / CSV ─► daily snapshot ─► detection (rules) ─► SIGNAL (NEW)
-   CSM triage: ── dismiss (reason) ─► DISMISSED ─► cooldown
-               ── snooze (date)    ─► SNOOZED ─► back to NEW on date
-               ── accept (note)    ─► CSQL (ROUTED to seller per routing rules, deadline starts)
-   Seller:     ── return (reason)  ─► RETURNED ─► CSM: re-route / close
-               ── accept           ─► ACCEPTED ─► record opportunity ─► OPPORTUNITY
-               ── no opportunity   ─► CLOSED_NO_OPP (reason)
-   Outcome:    ── WON (ARR, date) / LOST (reason)  ─► results & rule tuning
-```
-
-### 6.2 Deadline escalation
-Each deadline (triage, seller) has three points:
-- **due soon** (half the window left): reminder to the owner
-- **overdue:** flagged red, reminder to the owner and their leader
-- **overdue + 2 business days:** listed on the leader's "Needs reassigning" panel
-
-### 6.3 Rule tuning loop
-RevOps opens a rule → sees its funnel and dismissal reasons → edits the threshold → the change is versioned → new signals carry the rule version → results compare versions.
-
----
-
-## 7. Information architecture
-
-```
-Overview            (answer sentence, my work, three figures)
-Signals             (triage queue; Board by status | List; filters by rule, value, age, owner)
-  └ Signal detail   (evidence, explanation, value working, account context, triage actions)
-CSQLs               (Board: Routed → Accepted → Opportunity → Won/Lost; List)
-  └ CSQL detail     (handoff note, evidence, timeline, opportunity, outcome)
-Accounts            (list with seats/usage/ARR/renewal date; filter by CSM, owner, segment)
-  └ Account detail  (usage charts, subscription, contacts, signals and CSQLs, timeline)
-Results             (period switch; pipeline & won; by rule / CSM / seller; dismissals; export)
-Rules               (RevOps: list, funnel per rule, edit, version history)
-Settings            (branding, terminology, price book, routing, deadlines, dismiss reasons, data feeds & keys, webhooks, users)
-```
-
----
-
-## 8. Database schema (Postgres, Drizzle)
-
-Every business table has `org_id`. Money is `bigint` minor units with a `char(3)` currency.
-
-| Table | Key columns |
-|---|---|
-| `organizations` | name, slug, timezone, currency, config jsonb (branding, terminology, price book, deadlines, dismiss reasons) |
-| `users` / auth tables | name, email, role, org_id, preferences jsonb |
-| `teams` | name, kind (CS, SALES), segment, round-robin cursor |
-| `accounts` | name, domain, segment, csm_id, owner_id, crm_id, renewal_date (derived), status |
-| `contacts` | account_id, name, title, email, seniority, first_seen_at, source |
-| `subscriptions` | account_id, plan, seats_purchased, credits_committed, term_start, term_end, arr_minor, currency, addons text[], price_overrides jsonb |
-| `usage_snapshots` | account_id, date, active_seats, credits_used_term, workspaces jsonb `[{id,name,created_on,active_users}]`, gated_attempts jsonb `{addon: n}`, source (API/CSV/SIMULATED); **unique (account_id, date)** |
-| `signal_rules` | key, type, name, params jsonb, weight, min_arr_minor, segments text[], cooldown_days, enabled, version |
-| `signal_rule_versions` | rule_id, version, params, changed_by, changed_at, note |
-| `signals` | account_id, rule_id, rule_version, type, status (NEW/SNOOZED/ACCEPTED/DISMISSED/EXPIRED), detected_at, last_evaluated_at, evidence jsonb, explanation, est_value_minor, value_inputs jsonb, priority, priority_breakdown jsonb, triage_due_at, triaged_by, triaged_at, dismiss_reason, dismiss_note, snooze_until, csql_id |
-| `csqls` | number, account_id, sourced_by (CSM), owner_id (seller), routed_reason, status, handoff_note, est_value_minor, adjusted_value_minor, contact_id, seller_due_at, accepted_at, return_reason, opportunity jsonb {amount_minor, kind, crm_ref, expected_close}, outcome (WON/LOST/NO_OPP), outcome_amount_minor, outcome_reason, closed_at, lock_version |
-| `notes` | entity_type, entity_id, author_id, body |
-| `activity_log` | entity_type, entity_id, action, actor, summary, data jsonb |
-| `notifications` | user_id, kind, title, link, read_at, email_status |
-| `api_keys` | kind (INGEST, CRM), name, hash, last_used_at, revoked_at |
-| `webhook_endpoints` / `webhook_deliveries` | url, secret, events · event, payload, status, attempts, next_attempt_at, response_code |
-| `import_batches` | kind, filename, mapping jsonb, rows, created, updated, rejected, errors jsonb |
-
----
-
-## 9. Permissions
-
-| Action | ADMIN | REVOPS | CS_LEAD | CSM | SALES_LEAD | SELLER | EXEC |
+## 6. Permissions
+| Action | ADMIN | REVOPS | FINANCE_LEAD | BILLING | CS_LEAD | CSM | EXEC |
 |---|---|---|---|---|---|---|---|
-| View accounts/signals/CSQLs | all | all | all | own book* | all | own + routed | all (read) |
-| Triage signal | ✓ | — | ✓ | own book | — | — | — |
-| Work CSQL (accept/return/opp/outcome) | ✓ | — | — | — | ✓ | own | — |
-| Reassign signal / CSQL | ✓ | — | signals | — | CSQLs | — | — |
-| Edit accounts/subscriptions | ✓ | ✓ | ✓ | own book | — | — | — |
-| Rules, price book, routing, deadlines | ✓ | ✓ | — | — | — | — | — |
-| Keys, webhooks, imports | ✓ | ✓ | — | — | — | — | — |
-| Users and branding | ✓ | — | — | — | — | — | — |
-| Results and export | ✓ | ✓ | ✓ | own | ✓ | own | ✓ |
+| View exceptions and accounts | ✓ | ✓ | ✓ | ✓ | ✓ | own book | ✓ |
+| Propose, record, dismiss money exceptions | ✓ | | ✓ | ✓ | | | |
+| Approve above the limit | ✓ | | ✓ | | | | |
+| Act on under-use | ✓ | | | | ✓ | own | |
+| Rules, settings, feeds, keys | ✓ | ✓ | | | | | |
+| People | ✓ | | | | | | |
+| Ledger | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
-\* "Own book" means accounts where they are the CSM. The CS leader sees all.
+## 7. Edge cases and error states
+- Contract mid-month start or end: recurring fees are prorated by days.
+- No contract: no reconciliation, and the account shows "No active contract".
+- Stale usage (older than `staleAfterDays`): usage-based exceptions are held, and the account is flagged "Usage feed stale".
+- An invoice for an unknown account: the row is rejected with the reason.
+- A duplicate invoice reference: upsert, no duplicate.
+- A negative gap inside tolerance: nothing is raised.
+- Currency mismatch: the row is rejected.
+- Two people acting on one exception: the lock version conflict asks the second to refresh.
+- The approval limit is checked on the server; an attempt above the limit returns "Needs finance approval".
 
----
+## 8. White-label
+Brand, terminology, price book, tolerances, reasons and approval limits are all in client config. The pricing model (seats + commitment + overage tiers) is core; the numbers are config. Another consultant onboards a client by writing one config file and connecting two feeds (usage, invoices).
 
-## 10. Integrations (MVP truth table)
-
-| Integration | MVP state |
-|---|---|
-| Usage ingest API | **Real.** Bearer key, JSON batch, idempotent |
-| CSV import (accounts, subscriptions, contacts, usage) | **Real** |
-| Usage simulator | **Real script, simulated data.** `npm run usage:simulate` posts plausible daily aggregates through the **same ingest API**, marked `SIMULATED`, and labelled in the UI |
-| Outbound webhooks | **Real.** HMAC-signed, logged, retried |
-| CRM opportunity update (inbound) | **Real** endpoint, provider-neutral JSON |
-| Email | **Real** via SMTP (Mailpit locally) |
-| Native Salesforce/HubSpot connectors | **Not built.** Roadmap; the webhook and inbound endpoint are the bridge |
-| Segment/Amplitude/Mixpanel connectors | **Not built.** Roadmap; vendors push aggregates to the ingest API (typically from their warehouse) |
-| Slack | **Not built.** Roadmap |
-
----
-
-## 11. Automation rules
-
-| ID | Trigger | Action |
-|---|---|---|
-| A1 | Daily 06:00 org time, and after an ingest batch | Run detection for affected accounts |
-| A2 | Signal created | Notify the CSM if priority is high; otherwise it joins the queue and the daily digest |
-| A3 | Triage due soon / overdue / overdue + 2 days | Remind the CSM → the CS leader → the "Needs reassigning" panel |
-| A4 | Signal accepted | Create a CSQL, route it, set the seller deadline, notify the seller, fire the `csql.routed` webhook |
-| A5 | Seller deadline due soon / overdue | Remind the seller → the sales leader |
-| A6 | CSQL returned | Notify the sourcing CSM with the reason |
-| A7 | Snooze date reached | Signal back to NEW, CSM notified |
-| A8 | Condition cleared for 7 days on a NEW signal | EXPIRED, with a note |
-| A9 | Monday 07:00 | Weekly digest email per person (opt-out) |
-| A10 | Webhook delivery failed | Retry with backoff (1m, 5m, 30m, 2h, 12h), then mark failed and show it in Settings |
-
----
-
-## 12. Edge cases
-
-1. **Account with no seller owner** → routed to the segment queue; with no queue, to the sales leader, with the routing reason "No owner; sent to sales lead".
-2. **CSM with no accounts, or account with no CSM** → signals go to the CS leader's queue.
-3. **Duplicate usage row for the same account and date** → upsert (last write wins); the change is logged.
-4. **Usage arrives for an unknown account** → rejected per row with the reason, never auto-created.
-5. **A seat count drops** (seats removed) while a seat signal is open → the evidence updates; if below the threshold for 7 days, EXPIRED.
-6. **Subscription term ends or renews mid-window** → usage pace resets on the new term; the old term's signal expires.
-7. **Price book missing for a rule's value** → value is "Not estimated" (null), never $0; priority uses the rule weight only.
-8. **Signal accepted while another CSQL is open on the account** → offer "add to the open CSQL" (default) or "create a separate CSQL" (needs a reason).
-9. **Seller leaves or is deactivated** → their open CSQLs are flagged for reassignment.
-10. **Rule edited while signals are open** → open signals keep their rule version; re-evaluation uses the new version and notes the change.
-11. **Concurrent triage by two people** → optimistic lock; the second sees "Already accepted by Priya at 10:14".
-12. **Currency:** single currency per org in the MVP; subscriptions in other currencies are rejected at import with a clear message (roadmap).
-13. **Stale data** → no new signals; the account shows the data age; open signals are not expired by stale data alone.
-14. **Contact first seen with no title** → seniority unknown; the `NEW_EXECUTIVE` rule never fires on unknown.
-
----
-
-## 13. White-label architecture
-
-- **Core vs configuration:**
-  - **Core:** detection engine, workflow and state machines, deadlines, routing, results.
-  - **Configuration (per organisation):** everything that names Fernway.
-- **Config file** `config/clients/<name>.json` (seeded into `organizations.config`):
-  - branding: name, logo text, primary and accent colours
-  - **terminology:** "CSQL" or "Expansion lead"; "Credits" or "API calls"; "Seats" or "Licenses"; add-on names
-  - **price book:** seat price, credit tiers, overage rate, add-ons and prices
-  - rule set (rule types and parameters)
-  - deadlines and business days, dismissal reasons, routing segments
-- **Rule types are core; rule instances are config.** A new product metric (e.g. "API calls") is a configured `USAGE_PACE` rule over a renamed metric, not code.
-- **New client:** copy `config/clients/demo.json`, edit, then run `npm run db:seed -- --org-only`.
-
-## 14. Admin configuration (Settings)
-
-- **Branding and terminology**
-- **Price book:** seats, credit tiers, overage, add-ons
-- **Rules:** a list with on/off; an editor with a live preview ("would raise 12 signals today on these accounts")
-- **Routing:** segments and teams, round-robin members, fallback
-- **Deadlines:** triage and seller windows, business days, holidays
-- **Dismissal reasons**
-- **Data feeds:** ingest keys (create, rotate, revoke), last ingest, rejected rows
-- **CRM:** inbound key; outbound webhooks with delivery log
-- **Users and roles**
-
-## 15. MVP boundaries
-
-**In:** everything in §4, with the integrations marked Real in §10.
+## 9. MVP boundaries
+**In:**
+- monthly reconciliation
+- seven exception types
+- the decision workflow and ledger
+- feeds and imports
+- rules with preview
+- notifications, webhooks, roles
 
 **Out (roadmap):**
-- native CRM and analytics connectors
-- Slack
-- risk and contraction signals (the same engine, inverted)
-- multi-currency
-- compensation and credit splits
-- AI drafting of outreach
-
-**AI in the MVP:** none required.
-- Every signal is a deterministic, explainable rule, which is what RevOps needs to trust and tune.
-- An optional Claude-drafted outreach note is the first roadmap candidate (brief §17: only where it adds real value).
+- native Stripe, Chargebee, Metronome, Orb and Salesforce connectors (webhooks and CSV only for now)
+- multi-currency, mid-term amendments, ramp deals and prepaid credit drawdown models
+- revenue-recognition outputs

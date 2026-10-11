@@ -358,3 +358,17 @@ So a credible internal system must do one or more of these:
 **Candidate 2, Expansion Signal Desk** (selected by the user, 2026-10-07).
 
 Why it fits the challenge: it is the most different from Tool 01, and it is the job GTM engineers are hired to do (turn product data into routed, accountable pipeline). The main risk, believable usage data for a demo, is handled by an ingest API plus a clearly labelled usage simulator (spec §10).
+
+## Selected system (revised 2026-10-11)
+**Candidate 3, Commitment & Usage Reconciliation ("True-up Desk")**, selected by the user on 2026-10-11. It replaces Candidate 2.
+
+Why the switch:
+- The user asked: "isn't this something that already exists?"
+- For Candidate 2 the honest answer was "partly". Customer success platforms (Gainsight, ChurnZero, Vitally) and product-led sales tools (Pocus, Common Room) already raise usage-based expansion alerts. Our own $30-tool test above listed that as Candidate 2's weakness.
+- Candidate 3 passes the test more clearly:
+  - Billing platforms (Metronome, Orb, Chargebee) meter and invoice.
+  - The **three-way check of contract terms against metered usage and against what was actually invoiced**, with a person approving each correction, sits between finance and customer success. Nobody owns it.
+  - Its value is the most concrete of the five: money recovered, credits owed, and under-use caught before renewal.
+- Real vendors run this as a manual process. GitLab, for example, documents quarterly seat reconciliation and true-up invoicing for its own customers ([GitLab: billing for seat overages](https://docs.gitlab.com/subscriptions/quarterly_reconciliation/)).
+
+The Expansion Signal Desk build stays in git history (commits up to `e464ef9`) and in this repo's docs as a record of the decision.

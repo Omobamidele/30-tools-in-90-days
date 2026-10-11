@@ -299,3 +299,19 @@ All main screens were reviewed at 1440 and 390 px against this question: Home (C
 - **Brand:** green #0B7A55 (white text 5.34:1). The top bar uses `brand-strong` (white text 7.8:1; inactive nav text #D9EFE5 at 6.5:1).
 - **Neutrals:** surfaces #FFFFFF; table header and sunken #F5F7F6; text #1F2A24 (14.8:1); muted #56605A (6.5:1, 6.1:1 on sunken); faint #66706A (5.1:1, 4.8:1 on sunken); rules #E3E8E5 and #CFD6D2; field border #88918C (3.2:1).
 - **Shape:** control radius 4px, panel radius 6px. There are no shadows except on menus.
+
+# Revision 6, 2026-10-11: shadcn/ui kit (supersedes revision 5)
+
+**Feedback:** "It doesn't look like software but a newspaper." Revision 5's all-white pages with hairlines and no chrome read as a document. The user chose a **premium UI kit look**, and the product itself changed to the True-up Desk at the same time ([02](02-opportunity-discovery.md)).
+
+## System
+- **Components:** [shadcn/ui](https://ui.shadcn.com) (Radix primitives with Tailwind v4), installed as source under `src/components/ui`. We use its standard app patterns:
+  - the **Sidebar** block (collapsible, icon mode, mobile drawer)
+  - an inset **header** with Breadcrumb and a ⌘K **Command** menu
+  - **Card**, **Badge**, **Table**-based data tables with toolbar filters, **Sheet**, **Dialog**, **Tabs**, **DropdownMenu**, **Tooltip**, **Skeleton**, **Sonner** toasts
+- **Type and icons:** Geist Sans and Geist Mono; lucide icons.
+- **Colour:**
+  - shadcn's neutral base (`--background`, `--card`, `--muted`, `--border`)
+  - `--primary` comes from the org's brand colour (green #0B7A55 in the demo; white text on it is 5.34:1)
+  - status badges: green (recorded), amber (needs approval), red (overdue, over-billed), blue (with CS), grey (dismissed)
+- **The locked rule still applies:** no KPI tiles, money only in sentences and tables (left-aligned with its label), no line charts. The Overview leads with the close checklist and the work queue.
