@@ -56,6 +56,29 @@ Avoid the visual patterns commonly associated with low-effort AI-generated websi
 
 The product must feel like **software a serious company could actually operate inside every day.**
 
+## LOCKED RULE: NEVER A TRADING INTERFACE
+
+No build may look like a trading, forex, crypto or stock-market screen. This rule is non-negotiable and applies to every tool.
+
+Banned:
+
+* walls of numbers, KPI strips or stat tiles as the first thing on a page
+* big dollar figures as the main visual element
+* ticker-style rows of right-aligned figures
+* green/red money colouring, up/down arrows, percentage deltas
+* sparklines, line charts against thresholds, "live" markers
+* monospaced numerals as a style
+* dark terminal-like chrome
+* dense grey tables as the default view
+
+Required:
+
+* Lead with **people, customers and the work to do**, in plain sentences. Money supports the story; it is never the hero.
+* Each tool needs a warm, polished, purpose-built look for its industry, studied from real products people enjoy using (e.g. Attio, Linear, Notion, HubSpot, Pipedrive, Intercom, Front).
+* Before building any UI, research real interfaces in that category and write down which patterns were taken and why. Record this in the tool's design-system doc.
+* Before calling UI done, screenshot every main screen and ask: "Could this be mistaken for a trading app? Is it beautiful, not just tidy?" If yes, or if not, redo it.
+* Accessibility is part of beautiful: WCAG AA contrast, visible focus and keyboard use on every screen.
+
 ---
 
 # 2. RESEARCH BEFORE DESIGN
