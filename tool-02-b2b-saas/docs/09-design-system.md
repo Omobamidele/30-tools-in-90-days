@@ -1,4 +1,6 @@
-# 09 — Design system: "Signal room" (DESIGN.md)
+# 09 — Design system (DESIGN.md)
+
+> **Current: Revision 3, "Customer stories" (2026-10-11), at the end of this file.** Revisions 1 and 2 above it are kept as history.
 
 Chosen by the user on 2026-10-07, from three directions: **Signal room** (selected), workplace photography, and editorial/financial paper. Written **before any screen**. If a screen needs something this file doesn't cover, add it here first.
 
@@ -152,3 +154,65 @@ Chartreuse now appears only on the dark top bar (active tab, notification badge,
 - eight logo tile colours, each ≥5:1 with white text
 
 Chartreuse is retired.
+
+
+# Revision 3, 2026-10-11: "Customer stories" (supersedes revisions 1 and 2)
+
+**Feedback (third rejection):** "still looking like some trading interface, it's not beautiful, it looks boring." The user then locked a workspace rule (CLAUDE.md §1, *LOCKED RULE: NEVER A TRADING INTERFACE*).
+
+## Why revision 2 still read as trading
+Revision 2 changed the colours but not the structure. Several patterns survived:
+- a strip of four big numbers at the top of Home
+- dollar figures right-aligned in their own column on every list
+- green money
+- line charts against a dashed threshold (the "signal trace")
+- dense grey tables
+
+That is the anatomy of a trading screen, whatever the palette.
+
+## Research: what we took, and why
+- **Linear triage and Front's shared inbox:** the Signals page is an inbox. A list sits on the left and the selected signal opens in a reading pane on the right. A CSM decides without losing their place. Dismiss or snooze returns to the inbox, which opens the next signal. ([Linear: Triage](https://linear.app/docs/triage), [Front: inbox redesign](https://front.com/blog/front-inbox-redesign))
+- **Attio record pages:** a record is a details panel plus a story and a timeline, not a grid of figures. The account and CSQL pages follow this: who they are, who looks after them, how they use the product, what we've spotted, what happened. ([Attio: create and view records](https://attio.com/help/reference/managing-your-data/records/create-and-view-records))
+- **Vitally:** CS platforms frame expansion as a team motion (playbooks, account plans). This is why the handoff, CSM to seller, is shown with both people's faces everywhere. ([Vitally: why Vitally](https://www.vitally.io/why-vitally))
+
+## Principles
+1. **Lead with customers and people, in sentences.** Every signal has a one-line story built from its evidence (`src/ui/story.ts`), e.g. "More people than seats: 65 using 60 analyst seats".
+2. **Money is a quiet line, never the hero.** It appears as "Worth about $14k a year" in muted text. There are no money columns on lists and no green money.
+3. **Evidence as pictures of the thing, not charts over time** (`src/ui/evidence.tsx`, the signature element):
+   - seat map: one square per seat; striped squares are people without a seat
+   - commitment meter: used so far, then this pace, against a marker for the commitment
+   - a new team's people
+   - a tally of attempts to open an add-on
+   - a contact card for a new senior person
+
+   Each picture has a sentence for screen readers, and the numbers are always repeated in the caption.
+4. **One colour per signal type**, used for its icon tile, pill and evidence picture. This is where the colour comes from, instead of decoration.
+5. **Words for status and time:** "Due tomorrow", "In 3 months", "Steady", "1 signal to review". There are no percentages in lists.
+
+## Tokens
+- **Neutrals:** canvas #FFFFFF; sidebar and sunken #F4F5F9; text #1A1C2B; muted #575C6E; faint #656A7C; rules #E8EAF0 and #D9DCE5.
+- **Brand:** white-labelled `primaryColor`. Fernway's demo brand is ultramarine #3949C8.
+- **Signal types (ink on tint):** seats #1C64A8 on #E9F2FB; usage #94560A on #FDF3E2; new team #1B7348 on #E7F5ED; add-on #6B3FBF on #F2ECFC; new senior contact #B0285B on #FCEBF1.
+- **Type:**
+  - Bricolage Grotesque for headings and customer stories (hero 32/38, display 26/32, story 18/25)
+  - Instrument Sans for everything else
+  - Geist Mono only for API keys
+- **Company tiles:** initials in a dark hue on a 13% tint of the same hue, softer than the solid tiles of revision 2.
+
+## Contrast (computed, WCAG AA)
+| Pair | Ratio |
+|---|---|
+| white on brand #3949C8 | 7.09 |
+| brand on brand tint | 6.30 |
+| text on sidebar | 15.48 |
+| muted on white / on sidebar | 6.64 / 6.10 |
+| faint on white / on sidebar | 5.38 / 4.93 |
+| seats / usage / new team / add-on / new senior contact, ink on tint | 5.40 / 5.31 / 5.20 / 5.89 / 5.54 |
+| risk on risk tint | 5.97 |
+| neutral on neutral tint | 7.31 |
+| form border on white (non-text, ≥ 3:1) | 3.22 |
+
+## Self-check applied to every screen
+"Could this be mistaken for a trading app? Is it beautiful, not just tidy?"
+
+All main screens were reviewed at 1440 and 390 px against this question: Home (CSM and seller), the Signals inbox and its phone view, signal, CSQL board and detail, accounts list and detail, Results, and sign-in.

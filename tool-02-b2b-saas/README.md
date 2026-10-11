@@ -103,10 +103,11 @@ Usage feed (warehouse/product → API) ─► daily snapshot ─► rules ─►
   - routing queues
   - people and roles
 - Notifications (in-app plus email), a Monday digest, an opt-out under Your account, password change.
-- Designed as a modern CRM workspace (revision 2, replacing the earlier dark "Signal room" look):
-  - light left sidebar, white canvas, one teal accent
-  - company logo tiles and people avatars, so lists read as customers and owners rather than tickers
-  - Geist type, Phosphor icons, soft status pills, centred sign-in card
+- Designed around customer stories (revision 3, [docs/09](docs/09-design-system.md)):
+  - every signal reads as a sentence about the customer, with a picture of the evidence (seat map, commitment meter, a new team's people, add-on attempts, a new contact)
+  - Signals is an inbox with a reading pane
+  - money is a quiet line, never the headline; no stat strips, no line charts
+  - Bricolage Grotesque with Instrument Sans, one colour per signal type, white-labelled brand colour
   - WCAG AA throughout (axe: zero violations on 23 screens)
   - responsive down to 390 px
 

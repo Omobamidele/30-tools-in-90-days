@@ -1,46 +1,60 @@
 @import "tailwindcss";
 
-/* "Modern CRM workspace" tokens (docs/09, revision 2, chosen by the user on 2026-10-08).
-   Light sidebar, white canvas, soft cards, one confident accent. Every text pair is AA:
-   text 17.7:1, muted 6.4:1 (5.8:1 on sunken), faint 5.1:1, white on brand 6.3:1. */
+/* Revision 3, "Customer stories" (docs/09). Leads with customers and people, never with
+   figures (CLAUDE.md, locked rule: never a trading interface). Cool paper sidebar, white canvas,
+   one brand colour from client config, and one colour per signal type. Contrast is computed in
+   docs/09; every text pair is AA. */
 :root {
-  --sidebar: #f7f7f5;
+  --sidebar: #f4f5f9;
   --canvas: #ffffff;
   --surface: #ffffff;
-  --sunken: #f3f3f1;
-  --hover: #efefec;
-  --text: #18181b;
-  --muted: #5c5f66;
-  --faint: #6b6e76;
-  --rule: #ececea;
-  --rule-strong: #dededb;
-  --field: #8e8e96; /* form borders, 3.25:1 */
+  --sunken: #f4f5f9;
+  --hover: #eef0f6;
+  --text: #1a1c2b;
+  --muted: #575c6e;
+  --faint: #656a7c;
+  --rule: #e8eaf0;
+  --rule-strong: #d9dce5;
+  --field: #8a8fa0; /* form borders, 3.2:1 */
 
-  --brand: #0d6b6b; /* white-labelled: primaryColor */
-  --brand-strong: color-mix(in srgb, var(--brand) 84%, black);
+  --brand: #3949c8; /* white-labelled: primaryColor */
+  --brand-strong: color-mix(in srgb, var(--brand) 82%, black);
   --brand-tint: color-mix(in srgb, var(--brand) 9%, white);
   --accent: var(--brand);
 
-  /* Kept for compatibility with components that used the old dark chrome. */
-  --ink: #18181b;
-  --ink-2: #27272a;
+  /* One colour per signal type: ink for text and marks, tint for backgrounds. */
+  --t-seats: #1c64a8;
+  --t-seats-bg: #e9f2fb;
+  --t-usage: #94560a;
+  --t-usage-bg: #fdf3e2;
+  --t-team: #1b7348;
+  --t-team-bg: #e7f5ed;
+  --t-addon: #6b3fbf;
+  --t-addon-bg: #f2ecfc;
+  --t-exec: #b0285b;
+  --t-exec-bg: #fcebf1;
+
+  /* Kept for components that still reference them. */
+  --ink: #1a1c2b;
+  --ink-2: #2a2d3e;
   --on-ink: #ffffff;
-  --on-ink-muted: #d4d4d8;
-  --signal-ink: #0d6b6b;
+  --on-ink-muted: #d4d6de;
+  --signal-ink: var(--brand);
 
   --risk: #b42318;
-  --risk-bg: #fef2f1;
-  --watch: #9a5300;
-  --watch-bg: #fff6e6;
-  --won: #13703f;
-  --won-bg: #ecf7f0;
-  --neutral: #4b4e55;
-  --neutral-bg: #f1f1ef;
-  --by-cs: #6b46c1;
-  --by-sales: #1d5fa6;
+  --risk-bg: #fef1f0;
+  --watch: #94560a;
+  --watch-bg: #fdf3e2;
+  --won: #1b7348;
+  --won-bg: #e7f5ed;
+  --neutral: #4a4e5f;
+  --neutral-bg: #f0f1f5;
+  --by-cs: #6b3fbf;
+  --by-sales: #1c64a8;
 
-  --shadow-card: 0 1px 2px rgb(24 24 27 / 0.04), 0 1px 1px rgb(24 24 27 / 0.02);
-  --shadow-pop: 0 12px 32px rgb(24 24 27 / 0.12), 0 2px 6px rgb(24 24 27 / 0.06);
+  --shadow-card: 0 1px 2px rgb(26 28 43 / 0.05), 0 0 0 1px rgb(26 28 43 / 0.02);
+  --shadow-lift: 0 6px 20px -6px rgb(26 28 43 / 0.14), 0 1px 3px rgb(26 28 43 / 0.06);
+  --shadow-pop: 0 16px 40px -8px rgb(26 28 43 / 0.18), 0 2px 6px rgb(26 28 43 / 0.06);
 }
 
 @theme inline {
@@ -74,13 +88,30 @@
   --color-neutral-bg: var(--neutral-bg);
   --color-by-cs: var(--by-cs);
   --color-by-sales: var(--by-sales);
+  --color-t-seats: var(--t-seats);
+  --color-t-seats-bg: var(--t-seats-bg);
+  --color-t-usage: var(--t-usage);
+  --color-t-usage-bg: var(--t-usage-bg);
+  --color-t-team: var(--t-team);
+  --color-t-team-bg: var(--t-team-bg);
+  --color-t-addon: var(--t-addon);
+  --color-t-addon-bg: var(--t-addon-bg);
+  --color-t-exec: var(--t-exec);
+  --color-t-exec-bg: var(--t-exec-bg);
 
-  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-instrument), ui-sans-serif, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-  --text-display: 28px;
-  --text-display--line-height: 36px;
+  --text-hero: 32px;
+  --text-hero--line-height: 38px;
+  --text-hero--letter-spacing: -0.025em;
+  --text-display: 26px;
+  --text-display--line-height: 32px;
   --text-display--letter-spacing: -0.02em;
+  --text-story: 18px;
+  --text-story--line-height: 25px;
+  --text-story--letter-spacing: -0.012em;
   --text-title: 22px;
   --text-title--line-height: 28px;
   --text-title--letter-spacing: -0.015em;
@@ -101,6 +132,7 @@
   --radius-control: 8px;
   --radius-panel: 12px;
   --shadow-card: var(--shadow-card);
+  --shadow-lift: var(--shadow-lift);
   --shadow-pop: var(--shadow-pop);
 }
 
@@ -114,6 +146,14 @@ body {
   font-size: 14px;
   line-height: 20px;
   -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
 }
 
 .panel {

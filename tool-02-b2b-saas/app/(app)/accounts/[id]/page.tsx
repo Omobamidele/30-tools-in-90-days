@@ -6,14 +6,20 @@ import { getAccount } from "@/services/accounts";
 import { isNotFound } from "@/services/errors";
 import { csqlLabel } from "@/services/csqls";
 import { termElapsed } from "@/core/rules/evaluate";
-import type { Trace } from "@/core/rules/types";
-import { Attributes, PageHeader, Panel } from "@/ui/page";
-import { CompanyLogo, MoneyShort, RuleTag, SimulatedTag, Status } from "@/ui/bits";
-import { SignalTrace } from "@/ui/trace";
+import { daysBetween } from "@/core/dates";
+import { localDate } from "@/core/business-time";
+import { Attributes, Breadcrumbs, Panel } from "@/ui/page";
+import { Avatar, CompanyLogo, MoneyShort, SimulatedTag, Status, TypeBadge } from "@/ui/bits";
+import { CommitmentMeter, SeatMap } from "@/ui/evidence";
+import { User } from "@/ui/icons";
+import { storyHeadline } from "@/ui/story";
 import { formatDateTime } from "@/ui/format";
 import { TeamEditor } from "./team-editor";
 
 export const metadata: Metadata = { title: "Account" };
+
+// An account told as a customer (docs/09 rev. 3): who they are and who looks after them, how
+// they use the product today (as pictures, not charts), what's been spotted, and what happened.
 
 export default async function AccountPage({ params }: PageProps<"/accounts/[id]">) {
   const { id } = await params;
@@ -22,128 +28,137 @@ export default async function AccountPage({ params }: PageProps<"/accounts/[id]"
     if (isNotFound(e)) notFound();
     throw e;
   });
-  const { account: a, subscription: sub, usage, latest } = d;
+  const { account: a, subscription: sub, latest } = d;
   const cfg = ctx.actor.config;
   const t = cfg.terminology;
   const currency = ctx.actor.currency;
   const stale = d.dataAgeDays === null || d.dataAgeDays > cfg.detection.staleAfterDays;
-
-  const seatTrace: Trace | null = sub && usage.length > 1 ? { label: `Active ${t.seats.toLowerCase()}`, unit: "seat", points: usage.map((u) => ({ date: u.date, value: u.activeSeats })), threshold: (d.thresholds.seatPct / 100) * sub.seatsPurchased } : null;
-  const paceTrace: Trace | null =
-    sub && sub.creditsCommitted > 0 && usage.length > 1
-      ? {
-          label: "Projected use, % of commitment",
-          unit: "%",
-          points: usage.filter((u) => u.date >= sub.termStart).map((u) => ({ date: u.date, value: Math.round((u.creditsUsedTerm / Math.max(termElapsed(sub.termStart, sub.termEnd, u.date), 0.0001) / sub.creditsCommitted) * 100) })),
-          threshold: d.thresholds.pacePct,
-        }
-      : null;
+  const today = localDate(ctx.now(), ctx.actor.timezone);
+  const segment = cfg.segments.find((s) => s.key === a.segment)?.name ?? "No segment";
   const workspaces = (latest?.workspaces as Array<{ id: string; name: string; createdOn: string; activeUsers: number }> | undefined) ?? [];
   const addonsOwned = sub?.addons ?? [];
+  const elapsed = sub && latest ? termElapsed(sub.termStart, sub.termEnd, latest.date) : 0;
+  const projected = sub && latest && elapsed > 0 ? latest.creditsUsedTerm / elapsed : null;
 
   return (
     <>
-      <PageHeader
-        crumbs={[{ href: "/accounts", label: "Accounts" }, { label: a.name }]}
-        title={
-          <span className="flex items-center gap-3">
-            <CompanyLogo name={a.name} size={40} />
-            {a.name}
-          </span>
-        }
-        meta={
-          <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span>{cfg.segments.find((s) => s.key === a.segment)?.name ?? "No segment"}</span>
-            <span>{a.industry}</span>
-            <span>{a.crmId}</span>
-            {stale ? <Status tone="watch">{d.dataAgeDays === null ? "No usage received yet" : `Usage is ${d.dataAgeDays} days old; no new signals until it updates`}</Status> : <span>Usage updated {latest?.date}</span>}
+      <Breadcrumbs items={[{ href: "/accounts", label: "Accounts" }, { label: a.name }]} />
+      <header className="mb-8 flex flex-wrap items-start gap-4">
+        <CompanyLogo name={a.name} size={56} />
+        <div className="min-w-0 flex-1">
+          <h1 className="text-display font-semibold">{a.name}</h1>
+          <p className="mt-1 max-w-2xl text-section text-muted">
+            {segment} {a.industry ? `${a.industry.toLowerCase()} ` : ""}customer
+            {sub ? `, on the ${sub.plan} plan until ${sub.termEnd} (renews in ${daysBetween(today, sub.termEnd)} days)` : ""}.
+          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-table">
+            <span className="flex items-center gap-2">
+              <Avatar name={d.csmName} size={24} className="ring-0" />
+              <span>
+                {d.csmName ?? "No CSM"} <span className="text-muted">looks after them</span>
+              </span>
+            </span>
+            <span className="flex items-center gap-2">
+              <Avatar name={d.ownerName} size={24} className="ring-0" />
+              <span>
+                {d.ownerName ?? "No account owner"} <span className="text-muted">sells to them</span>
+              </span>
+            </span>
+            {stale ? <Status tone="watch">{d.dataAgeDays === null ? "No usage received yet" : `Usage is ${d.dataAgeDays} days old`}</Status> : null}
             {latest?.source === "SIMULATED" ? <SimulatedTag /> : null}
-          </span>
-        }
-      />
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="flex min-w-0 flex-col gap-4">
-          <Panel title="Usage, last 90 days" id="usage">
-            <div className="grid gap-6 p-4 xl:grid-cols-2">
-              {seatTrace ? (
-                <figure>
-                  <figcaption className="mb-1 text-table">
-                    <span className="font-medium">{t.seats}:</span> <span className="num">{latest?.activeSeats}</span> active of <span className="num">{sub!.seatsPurchased}</span>
-                  </figcaption>
-                  <SignalTrace trace={seatTrace} width={480} height={150} axes fluid />
-                </figure>
-              ) : null}
-              {paceTrace && paceTrace.points.length > 1 ? (
-                <figure>
-                  <figcaption className="mb-1 text-table">
-                    <span className="font-medium">{t.usageMetric}:</span> <span className="num">{latest?.creditsUsedTerm.toLocaleString("en-US")}</span> of{" "}
-                    <span className="num">{sub!.creditsCommitted.toLocaleString("en-US")}</span> used this term
-                  </figcaption>
-                  <SignalTrace trace={paceTrace} width={480} height={150} axes fluid />
-                </figure>
-              ) : null}
-              {!seatTrace && !paceTrace ? <p className="text-table text-muted">No usage received for this account yet.</p> : null}
-            </div>
-            {workspaces.length ? (
-              <div className="border-t border-rule px-4 py-3">
-                <p className="mb-2 text-table font-medium">Workspaces</p>
-                <ul className="flex flex-wrap gap-2">
-                  {workspaces.map((w) => (
-                    <li key={w.id} className="rounded-control border border-rule px-2.5 py-1.5 text-table">
-                      {w.name} · <span className="num">{w.activeUsers}</span> active <span className="text-meta text-muted">since {w.createdOn}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
-          </Panel>
+          </div>
+        </div>
+      </header>
 
-          <Panel title="Signals and CSQLs" id="history">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="flex min-w-0 flex-col gap-8">
+          <section aria-labelledby="usage">
+            <h2 id="usage" className="text-section font-semibold">
+              How they use it today
+            </h2>
+            {sub && latest ? (
+              <div className="mt-3 grid gap-4 xl:grid-cols-2">
+                <div className="rounded-panel border border-rule bg-sunken/60 p-5">
+                  <p className="mb-3 text-table font-medium">{t.seats}</p>
+                  <SeatMap active={latest.activeSeats} purchased={sub.seatsPurchased} streakDays={0} terms={t} size="compact" />
+                </div>
+                {sub.creditsCommitted > 0 && projected !== null ? (
+                  <div className="rounded-panel border border-rule bg-sunken/60 p-5">
+                    <p className="mb-3 text-table font-medium">{t.usageMetric} this term</p>
+                    <CommitmentMeter used={latest.creditsUsedTerm} projected={projected} committed={sub.creditsCommitted} termEnd={sub.termEnd} unit={t.usageUnit} size="compact" />
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <p className="mt-2 text-table text-muted">No usage received for this account yet.</p>
+            )}
+            {workspaces.length ? (
+              <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                {workspaces.map((w) => (
+                  <li key={w.id} className="flex items-center gap-3 rounded-panel border border-rule px-4 py-3">
+                    <span aria-hidden className="inline-flex size-9 shrink-0 items-center justify-center rounded-[10px] bg-t-team-bg text-t-team">
+                      <User size={18} weight="duotone" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block truncate font-medium">{w.name}</span>
+                      <span className="block text-meta text-muted">
+                        {w.activeUsers} people, since {w.createdOn}
+                      </span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </section>
+
+          <section aria-labelledby="spotted">
+            <h2 id="spotted" className="text-section font-semibold">
+              What we&apos;ve spotted
+            </h2>
             {d.signals.length ? (
-              <ul className="divide-y divide-rule">
+              <ul className="mt-3 flex flex-col gap-2">
                 {d.signals.map((s) => {
                   const c = d.csqls.find((x) => x.id === s.csqlId);
                   return (
-                    <li key={s.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5">
-                      <span className="min-w-0">
-                        <RuleTag type={s.type} />
-                        <Link href={`/signals/${s.id}`} className="mt-1 block text-table hover:underline">
-                          {s.explanation}
-                        </Link>
-                        <span className="text-meta text-muted">{formatDateTime(s.detectedAt, ctx.actor.timezone)}</span>
-                      </span>
-                      <span className="text-right text-table">
-                        <span className="block capitalize">{s.status.toLowerCase()}</span>
-                        {c ? (
-                          <Link href={`/csqls/${c.id}`} className="link text-meta">
-                            {csqlLabel(t.csql, c.number)} · {c.status.toLowerCase().replace(/_/g, " ")}
-                          </Link>
-                        ) : s.dismissReason ? (
-                          <span className="text-meta text-muted">{s.dismissReason}</span>
-                        ) : null}
-                      </span>
+                    <li key={s.id}>
+                      <Link href={`/signals/${s.id}`} className="flex items-start gap-3 rounded-panel border border-rule px-4 py-3 hover:border-rule-strong hover:shadow-card">
+                        <TypeBadge type={s.type} size={32} />
+                        <span className="min-w-0 flex-1">
+                          <span className="block font-medium">{storyHeadline(s.type, s.evidence, t)}</span>
+                          <span className="mt-0.5 block text-meta text-muted">
+                            Spotted {formatDateTime(s.detectedAt, ctx.actor.timezone)}
+                            {c ? `, now ${csqlLabel(t.csql, c.number)} (${c.status.toLowerCase().replace(/_/g, " ")})` : s.dismissReason ? `, dismissed: ${s.dismissReason}` : ""}
+                          </span>
+                        </span>
+                        <Status tone={s.status === "NEW" ? "brand" : s.status === "ACCEPTED" ? "won" : "neutral"}>{s.status === "NEW" ? "To review" : s.status.charAt(0) + s.status.slice(1).toLowerCase()}</Status>
+                      </Link>
                     </li>
                   );
                 })}
               </ul>
             ) : (
-              <p className="px-4 py-3 text-table text-muted">No signals on this account yet.</p>
+              <p className="mt-2 text-table text-muted">Nothing spotted on this account yet.</p>
             )}
-          </Panel>
+          </section>
 
-          <Panel title="Activity" id="activity">
-            <ol className="divide-y divide-rule">
-              {d.history.slice(0, 20).map((h) => (
-                <li key={h.id} className="flex flex-wrap justify-between gap-2 px-4 py-2 text-table">
-                  <span>
-                    <span className="font-medium">{h.actorLabel}</span> · {h.summary}
-                  </span>
-                  <span className="text-meta text-muted">{formatDateTime(h.at, ctx.actor.timezone)}</span>
-                </li>
-              ))}
-              {!d.history.length ? <li className="px-4 py-3 text-table text-muted">No activity yet.</li> : null}
-            </ol>
-          </Panel>
+          <section aria-labelledby="activity">
+            <h2 id="activity" className="text-section font-semibold">
+              What happened
+            </h2>
+            {d.history.length ? (
+              <ol className="mt-3 border-l border-rule-strong pl-4">
+                {d.history.slice(0, 20).map((h) => (
+                  <li key={h.id} className="relative pb-3 text-table">
+                    <span aria-hidden className="absolute top-1.5 -left-[21px] size-2.5 rounded-full border-2 border-surface bg-rule-strong" />
+                    <span className="font-medium">{h.actorLabel}</span> <span className="text-muted">{h.summary}</span>
+                    <span className="block text-meta text-faint">{formatDateTime(h.at, ctx.actor.timezone)}</span>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className="mt-2 text-table text-muted">No activity yet.</p>
+            )}
+          </section>
         </div>
 
         <div className="flex flex-col gap-4">
@@ -153,7 +168,7 @@ export default async function AccountPage({ params }: PageProps<"/accounts/[id]"
                 sub
                   ? [
                       { label: "Plan", value: sub.plan },
-                      { label: "ARR", value: <MoneyShort minor={sub.arrMinor} currency={currency} /> },
+                      { label: "Pays", value: <span><MoneyShort minor={sub.arrMinor} currency={currency} /> a year</span> },
                       { label: "Term", value: `${sub.termStart} to ${sub.termEnd}` },
                       { label: t.seats, value: <span className="num">{sub.seatsPurchased}</span> },
                       { label: `${t.usageMetric} committed`, value: <span className="num">{sub.creditsCommitted.toLocaleString("en-US")}</span> },
@@ -169,6 +184,7 @@ export default async function AccountPage({ params }: PageProps<"/accounts/[id]"
                           </span>
                         ),
                       },
+                      { label: "CRM ID", value: a.crmId },
                     ]
                   : [{ label: "Subscription", value: null }]
               }
@@ -187,18 +203,21 @@ export default async function AccountPage({ params }: PageProps<"/accounts/[id]"
             csms={d.people.filter((p) => p.role === "CSM" || p.role === "CS_LEAD")}
             sellers={d.people.filter((p) => p.role === "SELLER" || p.role === "SALES_LEAD")}
           />
-          <Panel title="Contacts" id="contacts">
+          <Panel title="People at the customer" id="contacts">
             <ul className="divide-y divide-rule">
               {d.contacts.map((c) => (
-                <li key={c.id} className="px-4 py-2 text-table">
-                  <span className="font-medium">{c.name}</span>
-                  <span className="block text-meta text-muted">
-                    {c.title ?? "No title"}
-                    {c.seniority ? ` · ${c.seniority.toLowerCase()}` : ""} · first active {c.firstSeenOn ?? "unknown"}
+                <li key={c.id} className="flex items-center gap-3 px-5 py-2.5 text-table">
+                  <Avatar name={c.name} size={28} className="ring-0" />
+                  <span className="min-w-0">
+                    <span className="block font-medium">{c.name}</span>
+                    <span className="block text-meta text-muted">
+                      {c.title ?? "No title"}
+                      {c.firstSeenOn ? `, first active ${c.firstSeenOn}` : ""}
+                    </span>
                   </span>
                 </li>
               ))}
-              {!d.contacts.length ? <li className="px-4 py-3 text-table text-muted">No contacts yet.</li> : null}
+              {!d.contacts.length ? <li className="px-5 py-3 text-table text-muted">No contacts yet.</li> : null}
             </ul>
           </Panel>
         </div>

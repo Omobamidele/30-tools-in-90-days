@@ -4,8 +4,8 @@ import { formatMoney, formatMoneyShort } from "@/core/money";
 import { Gauge, IdentificationBadge, LockKeyOpen, TreeStructure, UsersThree, type IconType } from "./icons";
 import { cx } from "./cx";
 
-// Shared display pieces for the CRM workspace look (docs/09 rev. 2): company logo tiles,
-// coloured avatars, soft status pills, money.
+// Shared display pieces (docs/09 rev. 3, "Customer stories"): company tiles, avatars, one colour
+// per signal type, soft status pills, and money kept quiet.
 
 /** Summary money: "$212k" on screen, the exact amount for hover and screen readers. */
 export function MoneyShort({ minor, currency, className, empty = "Not estimated" }: { minor: number | null | undefined; currency: string; className?: string; empty?: string }) {
@@ -32,14 +32,35 @@ export const RULE_META: Record<RuleType, { label: string; icon: IconType; short:
   NEW_EXECUTIVE: { label: "New executive", short: "Executive", plain: "New senior contact", icon: IdentificationBadge },
 };
 
-/** The signal type as a soft pill with its icon. */
+/** Tailwind classes for each signal type's colour (tokens in globals.css, AA computed in docs/09). */
+export const TYPE_TONE: Record<RuleType, { text: string; bg: string; fill: string; ring: string }> = {
+  SEAT_PRESSURE: { text: "text-t-seats", bg: "bg-t-seats-bg", fill: "bg-t-seats", ring: "ring-t-seats/30" },
+  USAGE_PACE: { text: "text-t-usage", bg: "bg-t-usage-bg", fill: "bg-t-usage", ring: "ring-t-usage/30" },
+  NEW_TEAM: { text: "text-t-team", bg: "bg-t-team-bg", fill: "bg-t-team", ring: "ring-t-team/30" },
+  FEATURE_INTENT: { text: "text-t-addon", bg: "bg-t-addon-bg", fill: "bg-t-addon", ring: "ring-t-addon/30" },
+  NEW_EXECUTIVE: { text: "text-t-exec", bg: "bg-t-exec-bg", fill: "bg-t-exec", ring: "ring-t-exec/30" },
+};
+
+/** The signal type as a coloured pill with its icon and plain name. */
 export function RuleTag({ type, className }: { type: RuleType; className?: string }) {
   const m = RULE_META[type];
+  const t = TYPE_TONE[type];
   const Icon = m.icon;
   return (
-    <span className={cx("inline-flex items-center gap-1 rounded-full bg-neutral-bg px-2 py-0.5 text-meta font-medium text-neutral", className)}>
-      <Icon size={13} aria-hidden />
+    <span className={cx("inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-meta font-medium", t.bg, t.text, className)}>
+      <Icon size={13} weight="bold" aria-hidden />
       {m.plain}
+    </span>
+  );
+}
+
+/** The signal type as an icon tile: the first thing the eye lands on in a story. */
+export function TypeBadge({ type, size = 36, className }: { type: RuleType; size?: number; className?: string }) {
+  const t = TYPE_TONE[type];
+  const Icon = RULE_META[type].icon;
+  return (
+    <span aria-hidden className={cx("inline-flex shrink-0 items-center justify-center", t.bg, t.text, className)} style={{ width: size, height: size, borderRadius: Math.round(size * 0.3) }}>
+      <Icon size={Math.round(size * 0.52)} weight="duotone" />
     </span>
   );
 }
@@ -60,8 +81,9 @@ export function Status({ tone, children, className }: { tone: Tone; children: Re
   return <span className={cx("inline-flex items-center whitespace-nowrap rounded-full px-2 py-0.5 text-meta font-medium", PILL[tone], className)}>{children}</span>;
 }
 
-// Eight tile colours, each ≥ 5:1 with white text (contrast computed in docs/09).
-const TILE = ["#2F6F8F", "#7A4E9E", "#A2541B", "#3E7A3A", "#B23A5B", "#4C5BB0", "#8A6A12", "#0F766E"];
+// Eight tile colours: dark ink on its own light tint, each ≥ 5:1 (contrast computed in docs/09).
+const TILE = ["#1f5f86", "#6a3f99", "#8f4a14", "#2f6b2c", "#a12f52", "#3a4aa8", "#735a0c", "#0f655e"];
+const tint = (c: string) => `color-mix(in srgb, ${c} 13%, white)`;
 function hue(s: string) {
   let h = 0;
   for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0;
@@ -82,8 +104,8 @@ export function CompanyLogo({ name, size = 32, className }: { name: string; size
   return (
     <span
       aria-hidden
-      className={cx("inline-flex shrink-0 items-center justify-center font-semibold text-white", className)}
-      style={{ width: size, height: size, borderRadius: Math.round(size * 0.28), background: hue(name), fontSize: Math.round(size * 0.38), letterSpacing: "-0.01em" }}
+      className={cx("font-display inline-flex shrink-0 items-center justify-center font-bold", className)}
+      style={{ width: size, height: size, borderRadius: Math.round(size * 0.28), background: tint(hue(name)), color: hue(name), boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${hue(name)} 18%, transparent)`, fontSize: Math.round(size * 0.38), letterSpacing: "-0.01em" }}
     >
       {initialsOf(name)}
     </span>

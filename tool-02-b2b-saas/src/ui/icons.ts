@@ -1,5 +1,6 @@
 // Phosphor icons (docs/09 § Iconography), re-exported so every screen uses one set.
 export {
+  ArrowLeft,
   ArrowRight,
   ArrowSquareOut,
   Bell,
@@ -29,6 +30,7 @@ export {
   Tray,
   TreeStructure,
   Upload,
+  User,
   UserCircle,
   Users,
   UsersThree,

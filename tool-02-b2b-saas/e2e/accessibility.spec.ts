@@ -8,6 +8,8 @@ import { signIn } from "./helpers";
 async function scan(page: Page, route: string) {
   await page.goto(route);
   await page.waitForLoadState("load");
+  // Scan the finished page, not the streaming skeleton.
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0, { timeout: 30_000 });
   const r = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
   return r.violations.map((v) => `${route} · ${v.id} (${v.impact}): ${v.help}\n    ${v.nodes.slice(0, 3).map((n) => n.target.join(" ")).join("\n    ")}`);
 }
@@ -21,9 +23,10 @@ test("signed-in screens have no WCAG A/AA violations", async ({ page }) => {
   test.setTimeout(420_000);
   const failures: string[] = [];
   await signIn(page, "priya@fernway.test");
-  const signal = await first(page, "/signals", 'a[href^="/signals/"]');
+  const inboxItem = await first(page, "/signals", 'a[href*="open="]');
+  const signal = `/signals/${new URL(inboxItem, "http://x").searchParams.get("open")}`;
   const account = await first(page, "/accounts", 'a[href^="/accounts/"]');
-  for (const r of ["/", "/signals", "/signals?layout=list", signal, "/accounts", account, "/csqls", "/results", "/notifications", "/account", "/search?q=bright"]) failures.push(...(await scan(page, r)));
+  for (const r of ["/", "/signals", inboxItem, signal, "/accounts", account, "/csqls", "/results", "/notifications", "/account", "/search?q=bright"]) failures.push(...(await scan(page, r)));
   await signIn(page, "aisha@fernway.test");
   const csql = await first(page, "/csqls", 'a[href^="/csqls/"]');
   for (const r of ["/", csql, "/csqls?layout=list"]) failures.push(...(await scan(page, r)));

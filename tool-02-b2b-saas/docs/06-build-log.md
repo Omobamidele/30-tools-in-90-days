@@ -126,6 +126,26 @@ Fixed during review:
 
 Verified: typecheck, 44 Vitest, 7 Playwright (axe zero violations on 23 screens), and screenshots at 1440 and 390 px.
 
+### Design revision 3: customer stories (2026-10-11)
+Feedback: it still looked like a trading interface, and it looked boring. The user locked a workspace rule against trading-style UI (CLAUDE.md §1). Research and reasoning are in [09](09-design-system.md), revision 3.
+
+Changed:
+- **Home:** a sentence headline and story cards (customer, one-line story, evidence picture, handoff, a quiet value line). There is no stat strip. Sellers see the CSM's note as the story.
+- **Signals:** an inbox with a reading pane (Linear/Front pattern). It shares `SignalStory` with the signal page. On phones, the list and the story are separate screens.
+- **Evidence pictures** replace the line chart: seat map, commitment meter, team people, attempt tally, contact card. `src/ui/trace.tsx` is removed.
+- **Account page:** told as a customer, with who looks after them, usage pictures and a timeline.
+- **Accounts list:** who looks after each customer, what's happening in words, and renewal in months. The ARR and percentage columns are gone.
+- **CSQL board and detail:** the handoff note is the story; value is a quiet line.
+- **Results:** a sentence answer, a signal-to-win journey, win stories with people, per-type sentences, and people lists. There are no stat tiles.
+- **Brand and type:** Fernway's demo brand is now ultramarine. Bricolage Grotesque and Instrument Sans replace Geist.
+
+Fixed during review:
+- **Loading skeleton:** it had `aria-label` on a role-less div (axe: aria-prohibited-attr). It now has `role="status"`.
+- **Accessibility sweep:** it now waits for streaming to finish, so it scans the real page and not the skeleton.
+- **e2e flow test:** it waits for the reading pane before acting.
+
+Verified: typecheck, lint, 44 Vitest, 7 Playwright (axe zero violations), and screenshots at 1440 and 390 px.
+
 ## Testing checklist (brief §14)
 - [x] **Happy paths:** e2e full loop; integration loop.
 - [x] **Incorrect inputs:** ingest per-row rejections; money parsing; rule parameter bounds; webhook URL validation.

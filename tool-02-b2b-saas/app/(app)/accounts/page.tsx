@@ -3,8 +3,7 @@ import type { Metadata } from "next";
 import { appCtx } from "@/services/app-ctx";
 import { listAccounts } from "@/services/accounts";
 import { Chips, EmptyState, PageHeader, Panel } from "@/ui/page";
-import { Avatar, CompanyLogo, MoneyShort, SimulatedTag, Status } from "@/ui/bits";
-import { cx } from "@/ui/cx";
+import { Avatar, CompanyLogo, SimulatedTag, Status } from "@/ui/bits";
 
 export const metadata: Metadata = { title: "Accounts" };
 
@@ -45,71 +44,63 @@ export default async function AccountsPage({ searchParams }: PageProps<"/account
       </PageHeader>
       <Panel bodyClassName="overflow-x-auto">
         {rows.length ? (
-          <table className="w-full min-w-[980px] text-table">
+          <table className="w-full min-w-[760px] text-table">
             <caption className="sr-only">Accounts</caption>
-            <thead className="border-b border-rule text-left text-meta text-muted">
+            <thead className="text-left text-meta text-muted">
               <tr>
-                <th className="px-4 py-2 font-medium">Account</th>
-                <th className="px-2 py-2 text-right font-medium">ARR</th>
-                <th className="px-2 py-2 font-medium">{cfg.terminology.seats}</th>
-                <th className="px-2 py-2 text-right font-medium">{cfg.terminology.usageMetric} pace</th>
-                <th className="px-2 py-2 font-medium">Renewal</th>
-                <th className="px-2 py-2 font-medium">CSM</th>
-                <th className="px-2 py-2 font-medium">Owner</th>
-                <th className="px-4 py-2 font-medium">Open signals</th>
+                <th className="px-5 pt-4 pb-2 font-medium">Customer</th>
+                <th className="px-3 pt-4 pb-2 font-medium">Looked after by</th>
+                <th className="px-3 pt-4 pb-2 font-medium">What&apos;s happening</th>
+                <th className="px-5 pt-4 pb-2 font-medium">Renews</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-rule">
+            <tbody>
               {shown.map((r) => {
                 const pct = r.sub && r.activeSeats !== null && r.sub.seatsPurchased ? Math.round((r.activeSeats / r.sub.seatsPurchased) * 100) : null;
                 const stale = r.dataAgeDays === null || r.dataAgeDays > staleAfter;
                 return (
-                  <tr key={r.account.id} className="hover:bg-sunken/50">
-                    <td className="px-4 py-2.5">
+                  <tr key={r.account.id} className="border-t border-rule hover:bg-sunken/50">
+                    <td className="px-5 py-3">
                       <span className="flex items-center gap-3">
-                      <CompanyLogo name={r.account.name} size={32} />
-                      <span>
-                      <Link href={`/accounts/${r.account.id}`} className="font-medium hover:underline">
-                        {r.account.name}
-                      </Link>
-                      <span className="block text-meta text-muted">
-                        {cfg.segments.find((s) => s.key === r.account.segment)?.name ?? "No segment"} · {r.account.industry ?? r.account.domain}
-                      </span>
-                      </span>
-                      </span>
-                    </td>
-                    <td className="px-2 py-2 text-right">
-                      <MoneyShort minor={r.sub?.arrMinor} currency={ctx.actor.currency} empty="—" />
-                    </td>
-                    <td className="px-2 py-2">
-                      {pct !== null ? (
-                        <span className="flex items-center gap-2">
-                          <span aria-hidden className="h-1.5 w-16 overflow-hidden rounded-full bg-sunken">
-                            <span className={cx("block h-full rounded-full", pct >= 90 ? "bg-signal-ink" : "bg-muted")} style={{ width: `${Math.min(100, pct)}%` }} />
-                          </span>
-                          <span className="num">
-                            {r.activeSeats}/{r.sub!.seatsPurchased}
-                          </span>
-                        </span>
-                      ) : (
-                        "—"
-                      )}
-                    </td>
-                    <td className={cx("px-2 py-2 text-right num", r.usagePacePct !== null && r.usagePacePct >= 110 ? "font-semibold text-signal-ink" : "")}>{r.usagePacePct !== null ? `${r.usagePacePct}%` : "—"}</td>
-                    <td className="px-2 py-2">{r.renewalInDays !== null ? <span className={r.renewalInDays <= 60 ? "text-watch" : ""}>{r.renewalInDays} days</span> : "—"}</td>
-                    <td className="px-2 py-2">{r.csmName ? <span className="flex items-center gap-1.5"><Avatar name={r.csmName} size={22} className="ring-0" />{r.csmName}</span> : <span className="text-faint">None</span>}</td>
-                    <td className="px-2 py-2">{r.ownerName ?? <span className="text-faint">Queue</span>}</td>
-                    <td className="px-4 py-2">
-                      {stale ? (
-                        <Status tone="watch">{r.dataAgeDays === null ? "No usage yet" : `Usage ${r.dataAgeDays} days old`}</Status>
-                      ) : r.openSignals ? (
+                        <CompanyLogo name={r.account.name} size={34} />
                         <span>
-                          <span className="num font-semibold">{r.openSignals}</span>{r.openSignalValue ? <> <MoneyShort minor={r.openSignalValue} currency={ctx.actor.currency} className="text-muted" /></> : null}
+                          <Link href={`/accounts/${r.account.id}`} className="font-medium hover:underline">
+                            {r.account.name}
+                          </Link>
+                          <span className="block text-meta text-muted">
+                            {cfg.segments.find((s) => s.key === r.account.segment)?.name ?? "No segment"}, {r.account.industry ?? r.account.domain}
+                          </span>
                         </span>
+                      </span>
+                    </td>
+                    <td className="px-3 py-3">
+                      <span className="flex items-center gap-2">
+                        <span className="flex -space-x-1">
+                          <Avatar name={r.csmName} size={24} />
+                          {r.ownerName ? <Avatar name={r.ownerName} size={24} /> : null}
+                        </span>
+                        <span className="text-table">
+                          {r.csmName?.split(" ")[0] ?? "No CSM"}
+                          <span className="text-muted">{r.ownerName ? ` and ${r.ownerName.split(" ")[0]}` : ", no seller"}</span>
+                        </span>
+                      </span>
+                    </td>
+                    <td className="px-3 py-3">
+                      {r.openSignals ? (
+                        <Status tone="brand">
+                          {r.openSignals} {r.openSignals === 1 ? "signal" : "signals"} to review
+                        </Status>
+                      ) : stale ? (
+                        <Status tone="watch">{r.dataAgeDays === null ? "No usage received yet" : `Usage ${r.dataAgeDays} days old`}</Status>
+                      ) : pct !== null && pct >= 90 ? (
+                        <span>Using {r.activeSeats} of {r.sub!.seatsPurchased} seats</span>
+                      ) : r.usagePacePct !== null && r.usagePacePct >= 110 ? (
+                        <span>Using more than planned</span>
                       ) : (
-                        <span className="text-faint">None</span>
+                        <span className="text-muted">Steady</span>
                       )}
                     </td>
+                    <td className="px-5 py-3">{r.renewalInDays !== null ? <span className={r.renewalInDays <= 60 ? "font-medium text-watch" : "text-muted"}>{renewsIn(r.renewalInDays)}</span> : <span className="text-faint">No term</span>}</td>
                   </tr>
                 );
               })}
@@ -147,4 +138,11 @@ export default async function AccountsPage({ searchParams }: PageProps<"/account
       ) : null}
     </>
   );
+}
+
+function renewsIn(days: number) {
+  if (days < 0) return "Lapsed";
+  if (days <= 45) return `In ${days} days`;
+  const months = Math.round(days / 30);
+  return `In ${months} month${months === 1 ? "" : "s"}`;
 }

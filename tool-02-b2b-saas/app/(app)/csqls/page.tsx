@@ -51,7 +51,7 @@ export default async function CsqlsPage({ searchParams }: PageProps<"/csqls">) {
           </span>
         </div>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
-          <MoneyShort minor={value(c)} currency={ctx.actor.currency} className="font-semibold" empty="—" />
+          <span className="text-meta text-muted">{value(c) ? `About ${formatMoneyShort(value(c)!, ctx.actor.currency)} a year` : "No estimate"}</span>
           {due ? (
             <Status tone={due.tone} className="text-meta">
               {due.text}
@@ -72,6 +72,7 @@ export default async function CsqlsPage({ searchParams }: PageProps<"/csqls">) {
             <span className="text-meta text-muted">{ago(c.updatedAt, now)}</span>
           )}
         </div>
+        <p className="mt-2.5 line-clamp-2 text-table text-muted">“{c.handoffNote}”</p>
         <div className="mt-3 border-t border-rule pt-2.5 text-meta text-muted">
           <Handoff from={r.sourcedByName} to={r.ownerName} />
         </div>
@@ -108,14 +109,13 @@ export default async function CsqlsPage({ searchParams }: PageProps<"/csqls">) {
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
           {COLUMNS.map((col) => {
             const items = shown.filter((r) => col.statuses.includes(r.csql.status));
-            const total = items.reduce((n, r) => n + (value(r.csql) ?? 0), 0);
             return (
               <section key={col.key} aria-labelledby={`c-${col.key}`} className="flex min-w-0 flex-col rounded-panel bg-sunken p-2">
                 <header className="flex items-baseline justify-between px-2 pt-1 pb-2">
                   <h2 id={`c-${col.key}`} className="text-body font-semibold">
                     {col.title} <span className="num font-normal text-muted">{items.length}</span>
                   </h2>
-                  <span className="truncate pl-2 text-meta text-muted">{items.length && total ? formatMoneyShort(total, ctx.actor.currency) : col.hint}</span>
+                  <span className="truncate pl-2 text-meta text-muted">{col.hint}</span>
                 </header>
                 <ul className="flex flex-col gap-2">
                   {items.map((r) => (

@@ -4,16 +4,16 @@ import { and, eq, sql } from "drizzle-orm";
 import { appCtx } from "@/services/app-ctx";
 import { listSignals } from "@/services/signals";
 import { csqlLabel, listCsqls, type Opportunity } from "@/services/csqls";
-import { getResults } from "@/services/results";
 import { calendarOf } from "@/services/org";
 import { requireActor } from "@/auth/session";
 import { formatMoneyShort } from "@/core/money";
 import { deadlineState } from "@/core/business-time";
 import { getDb } from "@/db/client";
 import { usageSnapshots } from "@/db/schema";
-import { ButtonLink, EmptyState, Panel } from "@/ui/page";
-import { CompanyLogo, Handoff, MoneyShort, RuleTag, Status } from "@/ui/bits";
-import { ArrowRight } from "@/ui/icons";
+import { EmptyState } from "@/ui/page";
+import { Avatar, CompanyLogo, Status } from "@/ui/bits";
+import { NoteCard, StoryCard } from "@/ui/story-card";
+import { storyHeadline, worthText } from "@/ui/story";
 import { ago, deadlineText } from "@/ui/format";
 
 export const metadata: Metadata = { title: "Home" };
@@ -29,8 +29,7 @@ export default async function HomePage() {
   const isSeller = role === "SELLER" || role === "SALES_LEAD";
   const leader = role === "CS_LEAD" || role === "SALES_LEAD" || role === "ADMIN";
 
-  const [results, open, allCsqls, freshness] = await Promise.all([
-    getResults(ctx, "90d"),
+  const [open, allCsqls, freshness] = await Promise.all([
     listSignals(ctx, { status: ["NEW"], who: role === "CSM" ? "mine" : "all" }),
     listCsqls(ctx, {}),
     getDb()
@@ -38,7 +37,6 @@ export default async function HomePage() {
       .from(usageSnapshots)
       .where(and(eq(usageSnapshots.orgId, ctx.actor.orgId))),
   ]);
-  const f = results.funnel;
   const triageStart = (d: Date) => new Date(d.getTime() - ctx.actor.config.deadlines.triageBusinessDays * 86_400_000);
   const waitingSellers = allCsqls.filter((r) => r.csql.status === "ROUTED");
   const mine = allCsqls.filter((r) => r.csql.ownerId === ctx.actor.userId && ["ROUTED", "ACCEPTED", "OPPORTUNITY"].includes(r.csql.status));
@@ -56,170 +54,152 @@ export default async function HomePage() {
     .sort((a, b) => (b.csql.closedAt?.getTime() ?? 0) - (a.csql.closedAt?.getTime() ?? 0))
     .slice(0, 4);
   const first = actor.name.split(" ")[0];
-  const openValue = open.reduce((n, r) => n + (r.signal.estValueMinor ?? 0), 0);
+  const short = (m: number | null | undefined) => (m === null || m === undefined ? null : formatMoneyShort(m, currency));
+  const high = ctx.actor.config.detection.highPriorityScore;
+  const lastWin = wins[0];
+
+  const headline = isSeller
+    ? mine.length
+      ? `${count(mine.length, "customer")} ${mine.length === 1 ? "is" : "are"} ready to talk about growing.`
+      : "Nothing new from customer success today."
+    : open.length
+      ? `${count(open.length, "customer")} ${open.length === 1 ? "looks" : "look"} ready for more.`
+      : "You're all caught up.";
+  const context = [
+    isSeller
+      ? open.length
+        ? `Customer success is reviewing ${open.length} more.`
+        : null
+      : waitingSellers.length
+        ? `${waitingSellers.length === 1 ? "One deal is" : `${count(waitingSellers.length, "deal")} are`} waiting for a seller to pick up.`
+        : null,
+    lastWin ? `${lastWin.ownerName?.split(" ")[0] ?? "A seller"} won ${lastWin.account.name} ${lastWin.csql.closedAt ? ago(lastWin.csql.closedAt, now) : "recently"}.` : null,
+  ].filter(Boolean);
 
   return (
-    <div className="flex flex-col gap-6">
-      <header>
-        <p className="text-table text-muted">
+    <div className="flex flex-col gap-8">
+      <header className="max-w-3xl">
+        <p className="text-body text-muted">
           {greeting(now, ctx.actor.timezone)}, {first}
         </p>
-        <h1 className="mt-1 max-w-3xl text-display font-semibold">
-          {isSeller
-            ? mine.length
-              ? `You have ${mine.length} expansion ${mine.length === 1 ? "deal" : "deals"} from customer success to work.`
-              : "Nothing new from customer success right now."
-            : open.length
-              ? `${open.length} ${open.length === 1 ? "customer looks" : "customers look"} ready to grow.`
-              : "No customers are waiting for review."}
-        </h1>
-        <p className="mt-1 text-body text-muted">
-          {f.pipelineMinor || f.wonMinor
-            ? `In the last 90 days, signals turned into ${formatMoneyShort(f.pipelineMinor, currency)} of pipeline and ${formatMoneyShort(f.wonMinor, currency)} of won revenue.`
-            : "Pipeline and wins from signals will show here as sellers record them."}
-        </p>
+        <h1 className="mt-1 text-hero font-semibold text-balance">{headline}</h1>
+        {context.length ? <p className="mt-2 text-section text-muted">{context.join(" ")}</p> : null}
       </header>
 
-      <section aria-label="At a glance" className="panel grid grid-cols-2 sm:grid-cols-4 sm:divide-x sm:divide-rule">
-        <Stat label="To review" value={String(open.length)} note={open.length ? `about ${formatMoneyShort(openValue, currency)} a year` : "all caught up"} href="/signals" />
-        <Stat label="With sellers" value={String(waitingSellers.length)} note="waiting to be picked up" href="/csqls" />
-        <Stat label="Pipeline, 90 days" value={formatMoneyShort(f.pipelineMinor, currency)} note={`${f.opportunities} opportunit${f.opportunities === 1 ? "y" : "ies"}`} href="/results" />
-        <Stat label="Won, 90 days" value={formatMoneyShort(f.wonMinor, currency)} note={`${f.won} ${f.won === 1 ? "deal" : "deals"}`} href="/results" />
-      </section>
-
-      {leader && stuck.length ? (
-        <Panel title="Needs a new owner" id="stuck" description="More than two business days past the deadline.">
-          <ul className="divide-y divide-rule">
-            {stuck.map((e) => (
-              <li key={e.href}>
-                <Link href={e.href} className="flex items-center gap-3 px-5 py-3 hover:bg-hover/60">
-                  <CompanyLogo name={e.account} size={32} />
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-medium">{e.account}</span>
-                    <span className="block text-meta text-muted">
-                      {e.what} · with {e.who}
-                    </span>
-                  </span>
-                  <Status tone="risk">Overdue</Status>
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-8 xl:grid-cols-[minmax(0,1fr)_340px]">
+        <section aria-labelledby="stories">
+          <div className="mb-3 flex items-baseline justify-between gap-3">
+            <h2 id="stories" className="text-section font-semibold">
+              {isSeller ? "Handed to you by customer success" : "Ready for you to review"}
+            </h2>
+            <Link href={isSeller ? "/csqls" : "/signals"} className="text-table font-medium text-brand hover:underline">
+              {isSeller ? `All ${t.csqlPlural}` : "Open the inbox"}
+            </Link>
+          </div>
+          {isSeller ? (
+            mine.length ? (
+              <div className="flex flex-col gap-3">
+                {mine.map(({ csql: c, account, sourcedByName }) => (
+                  <NoteCard
+                    key={c.id}
+                    href={`/csqls/${c.id}`}
+                    account={account.name}
+                    label={csqlLabel(t.csql, c.number)}
+                    note={c.handoffNote}
+                    from={sourcedByName}
+                    due={c.status === "ROUTED" && c.dueAt && c.clockStartedAt ? deadlineText(c.clockStartedAt, c.dueAt, now, cal) : null}
+                    status={c.status === "OPPORTUNITY" ? "In the CRM" : c.status === "ACCEPTED" ? "You're on it" : undefined}
+                    worth={worthText(short((c.opportunity as Opportunity | null)?.amountMinor ?? c.adjustedValueMinor ?? c.estValueMinor))}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="panel">
+                <EmptyState title="No open deals for you">When a CSM accepts a signal on one of your accounts, it arrives here with their note and the evidence.</EmptyState>
+              </div>
+            )
+          ) : open.length ? (
+            <div className="flex flex-col gap-3">
+              {open.slice(0, 6).map(({ signal: s, account, triagerName, ownerName }) => (
+                <StoryCard
+                  key={s.id}
+                  href={`/signals?open=${s.id}`}
+                  account={account.name}
+                  type={s.type}
+                  headline={storyHeadline(s.type, s.evidence, t)}
+                  evidence={s.evidence}
+                  terms={t}
+                  due={deadlineText(triageStart(s.triageDueAt), s.triageDueAt, now, cal)}
+                  worth={worthText(short(s.estValueMinor))}
+                  from={triagerName}
+                  to={ownerName}
+                  high={s.priority >= high}
+                />
+              ))}
+              {open.length > 6 ? (
+                <Link href="/signals" className="rounded-panel border border-dashed border-rule-strong px-5 py-3 text-center text-table font-medium text-brand hover:bg-hover/50">
+                  {open.length - 6} more in the inbox
                 </Link>
-              </li>
-            ))}
-          </ul>
-        </Panel>
-      ) : null}
+              ) : null}
+            </div>
+          ) : (
+            <div className="panel">
+              <EmptyState title="Nothing waiting for review">New signals appear when a customer&apos;s usage crosses one of your rules. Detection runs every morning and after each usage upload.</EmptyState>
+            </div>
+          )}
+        </section>
 
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
-        {isSeller ? (
-          <Panel title="Your deals from customer success" id="mine" actions={<ButtonLink href="/csqls" size="sm">View all</ButtonLink>}>
-            {mine.length ? (
-              <ul className="divide-y divide-rule">
-                {mine.map(({ csql: c, account, sourcedByName }) => {
-                  const due = c.status === "ROUTED" && c.dueAt && c.clockStartedAt ? deadlineText(c.clockStartedAt, c.dueAt, now, cal) : null;
-                  return (
-                    <li key={c.id}>
-                      <Link href={`/csqls/${c.id}`} className="flex items-center gap-3 px-5 py-3 hover:bg-hover/60">
-                        <CompanyLogo name={account.name} size={36} />
-                        <span className="min-w-0 flex-1">
-                          <span className="block font-medium">{account.name}</span>
-                          <span className="block text-meta text-muted">
-                            {csqlLabel(t.csql, c.number)} · from {sourcedByName}
-                          </span>
-                        </span>
-                        <span className="flex flex-col items-end gap-1">
-                          <MoneyShort minor={(c.opportunity as Opportunity | null)?.amountMinor ?? c.adjustedValueMinor ?? c.estValueMinor} currency={currency} className="font-semibold" empty="—" />
-                          {due ? <Status tone={due.tone}>{due.text}</Status> : <Status tone="neutral">{c.status === "OPPORTUNITY" ? "In the CRM" : "Working"}</Status>}
-                        </span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            ) : (
-              <EmptyState title="No open deals for you">Customer success routes accepted signals here, with a note and the evidence.</EmptyState>
-            )}
-          </Panel>
-        ) : (
-          <Panel title="Ready to review" id="review" actions={<ButtonLink href="/signals" size="sm">View all</ButtonLink>}>
-            {open.length ? (
-              <ul className="divide-y divide-rule">
-                {open.slice(0, 6).map(({ signal: s, account, triagerName }) => {
-                  const due = deadlineText(triageStart(s.triageDueAt), s.triageDueAt, now, cal);
-                  return (
-                    <li key={s.id}>
-                      <Link href={`/signals/${s.id}`} className="flex items-center gap-3 px-5 py-3 hover:bg-hover/60">
-                        <CompanyLogo name={account.name} size={36} />
-                        <span className="min-w-0 flex-1">
-                          <span className="flex flex-wrap items-center gap-2">
-                            <span className="font-medium">{account.name}</span>
-                            <RuleTag type={s.type} />
-                          </span>
-                          <span className="mt-0.5 block truncate text-meta text-muted">{s.explanation}</span>
-                          {role !== "CSM" ? (
-                            <span className="mt-1 block">
-                              <Handoff from={triagerName} to={null} />
-                            </span>
-                          ) : null}
-                        </span>
-                        <span className="flex shrink-0 flex-col items-end gap-1">
-                          <MoneyShort minor={s.estValueMinor} currency={currency} className="font-semibold" empty="—" />
-                          <Status tone={due.tone}>{due.text}</Status>
-                        </span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            ) : (
-              <EmptyState title="You're all caught up">New signals appear when a customer&apos;s usage crosses one of your rules. Detection runs every morning and after each usage upload.</EmptyState>
-            )}
-          </Panel>
-        )}
-
-        <div className="flex flex-col gap-6">
-          {returned.length ? (
-            <Panel title="Sent back to you" id="returned">
-              <ul className="divide-y divide-rule">
-                {returned.map(({ csql: c, account }) => (
-                  <li key={c.id}>
-                    <Link href={`/csqls/${c.id}`} className="flex items-center gap-3 px-5 py-3 hover:bg-hover/60">
-                      <CompanyLogo name={account.name} size={32} />
-                      <span className="min-w-0 flex-1">
-                        <span className="block font-medium">{account.name}</span>
-                        <span className="block text-meta text-muted">{c.returnReason}</span>
-                      </span>
-                      <ArrowRight size={16} aria-hidden className="text-faint" />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </Panel>
+        <aside className="flex flex-col gap-8" aria-label="Around the team">
+          {leader && stuck.length ? (
+            <Rail title="Needs a new owner" note="More than two business days late.">
+              {stuck.map((e) => (
+                <RailItem key={e.href} href={e.href} account={e.account} line={`${e.what}, with ${e.who}`} right={<Status tone="risk">Late</Status>} />
+              ))}
+            </Rail>
           ) : null}
-          <Panel title="Recent wins" id="wins" actions={<ButtonLink href="/results" size="sm">Results</ButtonLink>}>
+
+          {returned.length ? (
+            <Rail title="Sent back to you">
+              {returned.map(({ csql: c, account, ownerName }) => (
+                <RailItem key={c.id} href={`/csqls/${c.id}`} account={account.name} line={`${ownerName?.split(" ")[0] ?? "The seller"}: ${c.returnReason ?? "sent back"}`} />
+              ))}
+            </Rail>
+          ) : null}
+
+          {!isSeller && waitingSellers.length ? (
+            <Rail title="Waiting for a seller">
+              {waitingSellers.slice(0, 5).map(({ csql: c, account, ownerName }) => {
+                const due = c.dueAt && c.clockStartedAt ? deadlineText(c.clockStartedAt, c.dueAt, now, cal) : null;
+                return <RailItem key={c.id} href={`/csqls/${c.id}`} account={account.name} line={`With ${ownerName ?? "the seller queue"}`} right={due ? <Status tone={due.tone}>{due.text}</Status> : null} />;
+              })}
+            </Rail>
+          ) : null}
+
+          <Rail title="Recent wins" more={{ href: "/results", label: "Results" }}>
             {wins.length ? (
-              <ul className="divide-y divide-rule">
-                {wins.map(({ csql: c, account, ownerName }) => (
-                  <li key={c.id}>
-                    <Link href={`/csqls/${c.id}`} className="flex items-center gap-3 px-5 py-3 hover:bg-hover/60">
-                      <CompanyLogo name={account.name} size={32} />
-                      <span className="min-w-0 flex-1">
-                        <span className="block font-medium">{account.name}</span>
-                        <span className="block text-meta text-muted">
-                          {ownerName} · {c.closedAt ? ago(c.closedAt, now) : ""}
-                        </span>
+              wins.map(({ csql: c, account, ownerName, sourcedByName }) => (
+                <li key={c.id}>
+                  <Link href={`/csqls/${c.id}`} className="block rounded-control px-2 py-2.5 hover:bg-hover/60">
+                    <span className="flex items-center gap-2.5">
+                      <CompanyLogo name={account.name} size={28} />
+                      <span className="min-w-0 flex-1 font-medium">{account.name}</span>
+                    </span>
+                    <span className="mt-1.5 block line-clamp-2 text-table text-muted">“{c.handoffNote}”</span>
+                    <span className="mt-2 flex items-center gap-1.5 text-meta text-muted">
+                      <span className="flex -space-x-1">
+                        <Avatar name={sourcedByName} size={18} />
+                        <Avatar name={ownerName} size={18} />
                       </span>
-                      <span className="text-right">
-                        <MoneyShort minor={c.outcomeAmountMinor} currency={currency} className="font-semibold text-won" />
-                        <span className="block text-meta text-faint">a year</span>
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+                      Spotted by {sourcedByName?.split(" ")[0]}, won by {ownerName?.split(" ")[0]} {c.closedAt ? ago(c.closedAt, now) : ""}
+                    </span>
+                  </Link>
+                </li>
+              ))
             ) : (
-              <EmptyState title="No wins yet">Won deals appear here when sellers record them.</EmptyState>
+              <li className="px-2 py-2 text-table text-muted">Won deals appear here when sellers record them.</li>
             )}
-          </Panel>
-        </div>
+          </Rail>
+        </aside>
       </div>
 
       {freshness[0]?.simulated ? (
@@ -229,14 +209,41 @@ export default async function HomePage() {
   );
 }
 
-function Stat({ label, value, note, href }: { label: string; value: string; note: string; href: string }) {
+function Rail({ title, note, more, children }: { title: string; note?: string; more?: { href: string; label: string }; children: React.ReactNode }) {
   return (
-    <Link href={href} className="group px-5 py-4 hover:bg-hover/50">
-      <span className="block text-meta font-medium text-muted">{label}</span>
-      <span className="num mt-1 block text-figure font-semibold">{value}</span>
-      <span className="block text-meta text-faint group-hover:text-muted">{note}</span>
-    </Link>
+    <section>
+      <div className="mb-1 flex items-baseline justify-between gap-3 px-2">
+        <h2 className="text-section font-semibold">{title}</h2>
+        {more ? (
+          <Link href={more.href} className="text-table font-medium text-brand hover:underline">
+            {more.label}
+          </Link>
+        ) : null}
+      </div>
+      {note ? <p className="mb-1 px-2 text-meta text-muted">{note}</p> : null}
+      <ul>{children}</ul>
+    </section>
   );
+}
+
+function RailItem({ href, account, line, right }: { href: string; account: string; line: string; right?: React.ReactNode }) {
+  return (
+    <li>
+      <Link href={href} className="flex items-center gap-2.5 rounded-control px-2 py-2 hover:bg-hover/60">
+        <CompanyLogo name={account} size={28} />
+        <span className="min-w-0 flex-1">
+          <span className="block truncate font-medium">{account}</span>
+          <span className="block truncate text-meta text-muted">{line}</span>
+        </span>
+        {right}
+      </Link>
+    </li>
+  );
+}
+
+const WORDS = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
+function count(n: number, noun: string) {
+  return `${WORDS[n] ?? n} ${noun}${n === 1 ? "" : "s"}`;
 }
 
 function greeting(now: Date, tz: string) {

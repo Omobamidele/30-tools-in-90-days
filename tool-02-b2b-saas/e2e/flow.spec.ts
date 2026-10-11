@@ -8,7 +8,11 @@ test("CSM accepts a signal, the seller wins it, and Results counts it", async ({
   await signIn(page, "priya@fernway.test");
   await page.goto("/signals");
   await page.getByRole("link", { name: /Harbor Peak Foods/ }).first().click();
-  await expect(page.getByText(/On pace to use .* committed documents/).first()).toBeVisible();
+  // The inbox opens the signal in the reading pane; wait for it before acting on the form.
+  await expect(page).toHaveURL(/open=/);
+  const pane = page.getByRole("region", { name: "Selected signal" });
+  await expect(pane.getByRole("link", { name: "Harbor Peak Foods" })).toBeVisible();
+  await expect(pane.getByText(/On pace to use \d+% of the documents they committed to/).first()).toBeVisible();
 
   // A handoff note is required.
   await page.getByRole("button", { name: "Accept and route" }).click();
@@ -37,7 +41,7 @@ test("CSM accepts a signal, the seller wins it, and Results counts it", async ({
   // Leaders see it in Results; the CSM is notified.
   await signIn(page, "cslead@fernway.test");
   await page.goto("/results?period=90d");
-  await expect(page.getByRole("heading", { name: /signals created .* of pipeline/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /customer success spotted .* ready for more/ })).toBeVisible();
   await signIn(page, "priya@fernway.test");
   await page.goto("/notifications");
   await expect(page.getByText(/Won: Harbor Peak Foods/)).toBeVisible();

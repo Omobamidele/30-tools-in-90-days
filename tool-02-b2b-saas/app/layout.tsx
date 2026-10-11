@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Geist_Mono, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 
-// "Modern CRM workspace" (docs/09, revision 2): Geist for everything a person reads; Geist Mono
-// only for API keys and code samples.
-const geist = Geist({ variable: "--font-geist", subsets: ["latin"], display: "swap" });
+// Revision 3 (docs/09): Bricolage Grotesque for headings and customer stories, Instrument Sans
+// for everything else a person reads; Geist Mono only for API keys and code samples.
+const bricolage = Bricolage_Grotesque({ variable: "--font-bricolage", subsets: ["latin"], display: "swap" });
+const instrument = Instrument_Sans({ variable: "--font-instrument", subsets: ["latin"], display: "swap" });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${bricolage.variable} ${instrument.variable} ${geistMono.variable}`}>
       <body className="min-h-dvh">{children}</body>
     </html>
   );
