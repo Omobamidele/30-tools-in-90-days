@@ -102,15 +102,15 @@ function today() {
       const urgent = a.rank === 0 || a.rank === 2 || (a.kind === 'thank-you' && a.minutes > 0);
       return `<tr data-kind="${a.kind}" data-oid="${a.id}" class="${view.open?.id === a.id ? 'sel' : ''}">
         <td><span class="who">${esc(a.who)}</span>${!past ? checkLine(rec) : ''}</td>
-        <td>${st(urgent ? 'red' : 'amber', a.why)}</td>
-        <td class="sub2">${past ? 'Past couple' : rules.channels[rec.channel]}</td>
-        <td class="sub2">${past ? `Married ${shortDate(rec.weddingDate)}` : rec.weddingDate ? shortDate(rec.weddingDate) : 'No date yet'}</td>
+        <td class="wrap">${st(urgent ? "red" : "amber", a.why)}</td>
+        <td class="sub2 opt">${past ? 'Past couple' : rules.channels[rec.channel]}</td>
+        <td class="sub2 opt">${past ? `Married ${shortDate(rec.weddingDate)}` : rec.weddingDate ? shortDate(rec.weddingDate) : 'No date yet'}</td>
         <td class="num"><button class="btn sm ${urgent ? 'pri' : ''}" data-act="open" data-kind="${a.kind}" data-id="${a.id}">${ACTION_LABEL[a.kind]}</button></td></tr>`;
     }).join('') : `<tr class="grp"><td colspan="5" class="sub2" style="font-weight:400;background:#fff">Nothing waiting</td></tr>`);
   }).join('');
   return `${header('Today', '', addBtn)}
   <div class="tools"><span class="sub2">${q.length ? `${q.length} couple${q.length > 1 ? 's' : ''} waiting on you, most urgent first` : 'Nothing is waiting on you'}</span><span class="meta">${fmtDate(now())}</span></div>
-  <div class="page"><table class="tbl"><thead><tr><th>Couple</th><th>Why now</th><th>Channel</th><th>Wedding</th><th class="num"></th></tr></thead><tbody>${rows}</tbody></table>
+  <div class="page"><table class="tbl today"><thead><tr><th>Couple</th><th>Why now</th><th class="opt">Channel</th><th class="opt">Wedding</th><th class="num"></th></tr></thead><tbody>${rows}</tbody></table>
   <p class="month">So far this month we've had ${s.total} enquiries. Median first reply was ${R.fmtMinutes(s.medianReplyMinutes)}, and ${s.slowOrNone} waited over ${R.fmtMinutes(rules.firstReply.targetMinutes)} or got no reply. ${s.bookedFromReferrals} of ${s.booked} bookings came from referrals.</p></div>`;
 }
 

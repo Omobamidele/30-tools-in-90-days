@@ -57,10 +57,10 @@ None live. A website-form webhook and calendar sync are on the roadmap.
 ## Testing
 ```bash
 npm test           # 56 rule and data tests (node --test, no install needed)
-npm run test:e2e   # 10 browser tests in Chrome via playwright-core
+npm run test:e2e   # 12 browser tests in Chrome via playwright-core
 npm run test:all   # both
 ```
-They cover each rule and its boundaries, bad and missing input, duplicates, empty data and 2,000 enquiries, plus the full reply → quote → nudge → booked flow, persistence after a reload, the phone layout, keyboard use and accessible names. The log is in [docs/06-build-log.md](docs/06-build-log.md).
+They cover each rule and its boundaries, bad and missing input, duplicates, empty data and 2,000 enquiries, plus the full reply → quote → nudge → booked flow, persistence after a reload, the phone layout, keyboard use, accessible names and design guardrails (no gradients, no emoji, no radius over 6px). The log is in [docs/06-build-log.md](docs/06-build-log.md).
 
 ## Deployment
 Any static host serving `index.html`, `src/`, `config/` and `sample-data/`. Not deployed.
