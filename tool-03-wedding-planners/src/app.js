@@ -32,7 +32,7 @@ async function sampleData(get) {
 }
 const save = () => localStorage.setItem(STORE_KEY, JSON.stringify(data));
 const byId = (id) => data.enquiries.find((e) => e.id === id);
-const check = (e) => R.dateCheck({ weddingDate: e.weddingDate, venue: e.venue, selfId: e.id }, data.weddings, data.enquiries, rules);
+const check = (e) => R.dateCheck({ weddingDate: e.weddingDate, venue: e.venue, selfId: e.id, selfCouple: e.couple }, data.weddings, data.enquiries, rules);
 const toast = (msg) => { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('on'), 2400); };
 
 // ---------- small pieces ----------

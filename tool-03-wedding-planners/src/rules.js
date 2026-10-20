@@ -30,10 +30,10 @@ export function replyState(enq, now, rules) {
 
 // ---------- Rule 2: date check (capacity + venue + open quotes) ----------
 // level: "free" | "tight" | "full" | "venue-clash"
-export function dateCheck({ weddingDate, venue, selfId }, weddings, enquiries, rules) {
+export function dateCheck({ weddingDate, venue, selfId, selfCouple }, weddings, enquiries, rules) {
   if (!weddingDate) return { level: 'unknown', booked: [], holds: [], message: 'No wedding date yet' };
   const max = rules.capacity.maxWeddingsPerDate;
-  const booked = weddings.filter((w) => w.date === weddingDate);
+  const booked = weddings.filter((w) => w.date === weddingDate && !(selfId && w.enquiryId === selfId) && !(selfCouple && w.couple === selfCouple));
   const holds = rules.capacity.holdWarningForOpenQuotes
     ? enquiries.filter((e) => e.id !== selfId && e.weddingDate === weddingDate && e.status === 'Quote sent')
     : [];

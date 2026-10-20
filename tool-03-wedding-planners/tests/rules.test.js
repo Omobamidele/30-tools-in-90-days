@@ -74,6 +74,13 @@ describe('rule 2: date check', () => {
     const c = R.dateCheck({ weddingDate: '2027-06-12', selfId: 'a' }, [], list, rules);
     assert.equal(c.level, 'free'); assert.equal(c.holds.length, 1); assert.match(c.message, /1 other quote out/);
   });
+  test('a booked couple never clashes with its own booking', () => {
+    const isla = enquiries.find((e) => e.couple.startsWith('Isla'));
+    assert.equal(R.dateCheck({ ...isla, selfId: isla.id, selfCouple: isla.couple }, weddings, enquiries, rules).level, 'free');
+    const own = [{ id: 'w', enquiryId: 'x', couple: 'New & Couple', date: '2027-01-09', venue: 'V', planner: 'Elena Lane' }];
+    assert.equal(R.dateCheck({ weddingDate: '2027-01-09', venue: 'V', selfId: 'x' }, own, [], rules).level, 'free');
+    assert.equal(R.dateCheck({ weddingDate: '2027-01-09', venue: 'V', selfId: 'y' }, own, [], rules).level, 'venue-clash');
+  });
   test('no date yet', () => assert.equal(R.dateCheck({ weddingDate: null }, weddings, enquiries, rules).level, 'unknown'));
   test('empty calendar', () => assert.equal(R.dateCheck({ weddingDate: '2026-10-31' }, [], [], rules).level, 'free'));
 });

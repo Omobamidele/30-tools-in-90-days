@@ -134,3 +134,4 @@ code{font-size:12px;background:var(--side);border:1px solid var(--line);border-r
 .tbl td.wrap .st{white-space:normal}.tbl td.wrap .st::before{align-self:flex-start;margin-top:5px}
 .tbl.today td{white-space:normal}.tbl.today .st{white-space:normal}.tbl.today .st::before{align-self:flex-start;margin-top:5px}.tbl.today td.num{white-space:nowrap}
 .tbl.today td:first-child{width:40%}
+dialog{margin:auto}
