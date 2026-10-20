@@ -1,9 +1,7 @@
-# Tool 03 — Industry TBD
+# Tool 03 — Wedding Enquiry Tracker
 
-**Status:** Not started, awaiting industry
+**Status:** Spec, industry assigned: wedding planners
 **App:** http://localhost:3003 · **API port:** 4003 (if needed) · **DB port:** 5403 (if needed)
-
-When the industry is assigned, rename this folder to `tool-03-<industry-slug>` and update the tracker in the root README.
 
 ---
 

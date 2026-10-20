@@ -15,7 +15,7 @@ Port `3000` is never used — too many tools default to it.
 |---|---|---|---|---|
 | 01 | tool-01-event-management | http://localhost:3001 | 4001 | 5401 |
 | 02 | tool-02-b2b-saas | http://localhost:3002 | 4002 | 5402 |
-| 03 | tool-03 | http://localhost:3003 | 4003 | 5403 |
+| 03 | tool-03-wedding-planners | http://localhost:3003 | 4003 | 5403 |
 | 04 | tool-04 | http://localhost:3004 | 4004 | 5404 |
 | 05 | tool-05 | http://localhost:3005 | 4005 | 5405 |
 | 06 | tool-06 | http://localhost:3006 | 4006 | 5406 |

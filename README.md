@@ -30,7 +30,7 @@ Status values: `Not started` · `Research` · `Opportunities` · `Spec` · `UX` 
 |---|---|---|---|---|---|---|
 | 01 | [tool-01-event-management](tool-01-event-management/) | Event management companies | Exposure Register (contract exposure + change control) | http://localhost:3001 | Complete (local build, not yet deployed) | Ready to record |
 | 02 | [tool-02-b2b-saas](tool-02-b2b-saas/) | B2B SaaS (mid-market) | True-up Desk (contract vs usage vs invoice reconciliation → approved adjustments → recovered-revenue ledger). Replaced the Expansion Signal Desk on 2026-10-11 | http://localhost:3002 | Build (spec and design revised) | — |
-| 03 | [tool-03](tool-03/) | — | — | http://localhost:3003 | Not started | — |
+| 03 | [tool-03-wedding-planners](tool-03-wedding-planners/) | Wedding planners | Wedding Enquiry Tracker (every enquiry in one list → fast first reply → day 3 and day 7 quote nudges → referral ask after the wedding) | http://localhost:3003 | Spec | — |
 | 04 | [tool-04](tool-04/) | — | — | http://localhost:3004 | Not started | — |
 | 05 | [tool-05](tool-05/) | — | — | http://localhost:3005 | Not started | — |
 | 06 | [tool-06](tool-06/) | — | — | http://localhost:3006 | Not started | — |
