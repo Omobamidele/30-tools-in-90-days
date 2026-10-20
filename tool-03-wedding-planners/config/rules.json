@@ -1,0 +1,39 @@
+{
+  "company": {
+    "name": "Juniper & Lane Weddings",
+    "initial": "J",
+    "brandColor": "#0f7a70",
+    "currency": "GBP",
+    "locale": "en-GB",
+    "senderName": "Elena"
+  },
+  "team": [
+    { "name": "Elena Lane", "role": "Owner, lead planner" },
+    { "name": "Marcus Hale", "role": "Lead planner" }
+  ],
+  "capacity": {
+    "maxWeddingsPerDate": 2,
+    "sameVenueSameDate": "block",
+    "holdWarningForOpenQuotes": true
+  },
+  "firstReply": { "targetMinutes": 120 },
+  "followUp": { "nudgeDays": [3, 7], "goneQuietAfterDays": 3 },
+  "referral": { "askAfterDays": 14, "reviewNudgeAfterDays": 7 },
+  "channels": {
+    "ig": "Instagram DM",
+    "wa": "WhatsApp",
+    "web": "Website form",
+    "email": "Email",
+    "ref": "Referral"
+  },
+  "templates": {
+    "firstReply": "Hi {firstNames}, thank you so much for getting in touch about your wedding on {weddingDate}! {dateLine} I'd love to hear more. Are you free for a 20-minute call this week? {sender}, {company}",
+    "dateFree": "Good news: we're free that day.",
+    "dateTight": "We have one planner free that day, so it's worth holding it soon.",
+    "dateFull": "We're fully booked on that date, but I'd be glad to suggest a nearby date or a planner we trust.",
+    "nudge3": "Hi {firstNames}, just checking the quote came through OK and answering any questions you have. Happy to jump on a quick call. {sender}",
+    "nudge7": "Hi {firstNames}, I don't want to leave you hanging! {weddingDate} is still free for now. Shall I hold it for you for a week? {sender}",
+    "thankYou": "Hi {firstNames}, it was a joy planning your day at {venue}. If you have a minute, a review would mean the world to us, and if any friends are planning a wedding, we'd love to help them too. {sender}",
+    "reviewNudge": "Hi {firstNames}, a gentle reminder about the review, only if you have a moment. Thank you again! {sender}"
+  }
+}

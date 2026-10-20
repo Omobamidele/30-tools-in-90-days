@@ -1,0 +1,52 @@
+[
+ {
+  "id": "p1",
+  "couple": "Ella Santos & Marco Ricci",
+  "weddingDate": "2026-09-12",
+  "venue": "Larkfield House",
+  "thankYouSentOn": "2026-09-28",
+  "reviewNudgeSentOn": null,
+  "review": "5 stars, Google",
+  "referralsSent": 2
+ },
+ {
+  "id": "p2",
+  "couple": "Aisha Khan & Robert Lyle",
+  "weddingDate": "2026-09-19",
+  "venue": "Old Mill Barn",
+  "thankYouSentOn": "2026-10-05",
+  "reviewNudgeSentOn": null,
+  "review": null,
+  "referralsSent": 0
+ },
+ {
+  "id": "p3",
+  "couple": "Megan Price & Tom Ali",
+  "weddingDate": "2026-09-26",
+  "venue": "The Glasshouse",
+  "thankYouSentOn": "2026-10-10",
+  "reviewNudgeSentOn": null,
+  "review": "5 stars, Instagram",
+  "referralsSent": 1
+ },
+ {
+  "id": "p4",
+  "couple": "Lucy Hart & Sean Byrne",
+  "weddingDate": "2026-10-03",
+  "venue": "Hartwell Manor",
+  "thankYouSentOn": null,
+  "reviewNudgeSentOn": null,
+  "review": null,
+  "referralsSent": 0
+ },
+ {
+  "id": "p5",
+  "couple": "Kate Moore & Ivan Petrov",
+  "weddingDate": "2026-10-10",
+  "venue": "Larkfield House",
+  "thankYouSentOn": null,
+  "reviewNudgeSentOn": null,
+  "review": null,
+  "referralsSent": 0
+ }
+]

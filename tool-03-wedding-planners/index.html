@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wedding Enquiry Tracker</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="logo" id="logo">J</span><span id="company">Wedding Enquiry Tracker</span><span class="product">Enquiry Tracker</span></div>
+  <label class="search"><span class="sr">Search enquiries</span><input id="search" type="search" placeholder="Search couples, venues, contacts" autocomplete="off"></label>
+  <div class="clock" id="clock" title="Sample clock keeps the demo repeatable"></div>
+</header>
+<div class="wrap">
+  <nav id="nav" aria-label="Main"></nav>
+  <main id="app" tabindex="-1"><p class="loading">Loading enquiries…</p></main>
+  <aside id="drawer" class="drawer" aria-label="Enquiry details" hidden></aside>
+</div>
+<dialog id="addDialog" aria-labelledby="addTitle"></dialog>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script type="module" src="src/app.js"></script>
+</body>
+</html>

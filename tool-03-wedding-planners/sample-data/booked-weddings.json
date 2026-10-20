@@ -1,0 +1,51 @@
+[
+ {
+  "id": "w1",
+  "couple": "Priya Nair & Tom Becker",
+  "date": "2026-10-24",
+  "venue": "The Glasshouse",
+  "planner": "Marcus Hale"
+ },
+ {
+  "id": "w2",
+  "couple": "Clara Whitfield & James Osei",
+  "date": "2026-10-31",
+  "venue": "Hartwell Manor",
+  "planner": "Elena Lane"
+ },
+ {
+  "id": "w3",
+  "couple": "Olivia Reed & Kwame Mensah",
+  "date": "2026-10-31",
+  "venue": "Old Mill Barn",
+  "planner": "Marcus Hale"
+ },
+ {
+  "id": "w4",
+  "couple": "Sofia Marin & Daniel Reyes",
+  "date": "2026-12-12",
+  "venue": "Old Mill Barn",
+  "planner": "Elena Lane"
+ },
+ {
+  "id": "w5",
+  "couple": "Hannah Cole & Leo Martins",
+  "date": "2027-03-20",
+  "venue": "Larkfield House",
+  "planner": "Marcus Hale"
+ },
+ {
+  "id": "w6",
+  "couple": "Isla Murray & Jack Bell",
+  "date": "2027-04-24",
+  "venue": "Hartwell Manor",
+  "planner": "Elena Lane"
+ },
+ {
+  "id": "w7",
+  "couple": "Evie Scott & Dan Hill",
+  "date": "2027-05-29",
+  "venue": "The Glasshouse",
+  "planner": "Marcus Hale"
+ }
+]
