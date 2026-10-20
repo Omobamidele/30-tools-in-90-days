@@ -1,15 +1,16 @@
 "use client";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle } from "@/components/icons";
+import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { useStore } from "@/lib/store";
 export function ErrorBanner() {
   const { error, restore } = useStore();
   if (!error) return null;
   return (
-    <div role="alert" className="mb-4 flex items-center gap-3 rounded-lg bg-red-50 px-4 py-3 text-[13px] text-red-800 ring-1 ring-inset ring-red-600/20">
-      <AlertCircle className="size-4 shrink-0" aria-hidden />
-      <span className="flex-1">{error} <span className="font-mono text-[12px] text-red-700/80">ref: local-storage/wet:v2</span></span>
-      <Button size="sm" onClick={restore}>Retry with starting data</Button>
+    <div role="alert" className="mb-5 flex flex-wrap items-center gap-3 rounded-panel border border-line bg-surface px-4 py-3 text-[14px] text-ink">
+      <AlertCircle className="size-5 shrink-0 text-danger" aria-hidden />
+      <span className="flex-1">{error} Restoring the starting data clears the saved changes in this browser and fixes it.</span>
+      <Button size="sm" onClick={() => { restore(); toast("Starting data restored"); }}>Restore starting data</Button>
     </div>
   );
 }

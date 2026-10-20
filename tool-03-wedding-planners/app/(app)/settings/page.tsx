@@ -1,9 +1,8 @@
 "use client";
 import * as React from "react";
 import { toast } from "sonner";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw } from "@/components/icons";
 import { PageHeader, Footer } from "@/components/shell";
-import { Card, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { useStore } from "@/lib/store";
@@ -30,17 +29,24 @@ export default function Settings() {
             <DialogTrigger asChild><Button><RotateCcw />Restore starting data</Button></DialogTrigger>
             <DialogContent title="Restore starting data?" description="Changes made in this browser will be lost. This can’t be undone.">
               <div className="flex justify-end gap-2 px-5 py-4"><DialogClose asChild><Button>Cancel</Button></DialogClose>
-                <Button variant="danger" onClick={() => { restore(); setOpen(false); toast.success("Starting data restored"); }}>Restore</Button></div>
+                <Button variant="danger" onClick={() => { restore(); setOpen(false); toast("Starting data restored"); }}>Restore starting data</Button></div>
             </DialogContent>
           </Dialog>
         } />
-      <div className="space-y-6">
-        <Card><CardHeader title="Rules" />
-          <dl className="divide-y divide-gray-100">{rows.map(([k, v]) => <div key={k} className="grid grid-cols-1 gap-1 px-5 py-3 sm:grid-cols-[220px_1fr]"><dt className="text-gray-500">{k}</dt><dd className="text-gray-900">{v}</dd></div>)}</dl>
-        </Card>
-        <Card><CardHeader title="Message templates" meta="Drafts only. You copy them into WhatsApp, Instagram or email." />
-          <ul className="divide-y divide-gray-100">{Object.entries(TPL).map(([k, l]) => <li key={k} className="px-5 py-3"><p className="font-medium text-gray-900">{l}</p><p className="mt-0.5 text-gray-600">{r.templates[k]}</p></li>)}</ul>
-        </Card>
+      <div className="max-w-4xl space-y-10">
+        <section aria-labelledby="h-data">
+          <h2 id="h-data" className="text-[16px] font-semibold text-ink">About this data</h2>
+          <p className="mt-2 text-[15px] leading-6 text-fg" data-testid="demo-note">Everything here is sample data for {r.company.name}, a made-up planning company. Every number on screen is worked out from these records; nothing is typed in by hand. Changes you make are saved in this browser only.</p>
+        </section>
+        <section aria-labelledby="h-rules">
+          <h2 id="h-rules" className="text-[16px] font-semibold text-ink">Rules</h2>
+          <dl className="mt-3 divide-y divide-line border-y border-line">{rows.map(([k, v]) => <div key={k} className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-[220px_1fr]"><dt className="text-muted">{k}</dt><dd className="text-ink">{v}</dd></div>)}</dl>
+        </section>
+        <section aria-labelledby="h-tpl">
+          <h2 id="h-tpl" className="text-[16px] font-semibold text-ink">Message templates</h2>
+          <p className="mt-1 text-[14px] text-muted">Drafts only. You copy them into WhatsApp, Instagram or email.</p>
+          <ul className="mt-3 divide-y divide-line border-y border-line">{Object.entries(TPL).map(([k, l]) => <li key={k} className="py-3"><p className="font-semibold text-ink">{l}</p><p className="mt-0.5 text-fg">{r.templates[k]}</p></li>)}</ul>
+        </section>
       </div>
       <Footer />
     </>

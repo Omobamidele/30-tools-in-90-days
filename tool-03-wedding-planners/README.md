@@ -35,7 +35,7 @@ Not included, on purpose: sending messages (you copy the draft), inbox sync, ven
 ```text
 Manual entry / sample-data/*.json ─▶ config/rules.json ─▶ lib/rules.js (pure, tested) ─▶ app/ routes + components/ (Next.js)
 ```
-Next.js 16 (app router) and React 19, with Tailwind v4, Radix UI primitives in the shadcn style (dialog, sheet, toggle group), TanStack Table v8, react-hook-form, sonner toasts and lucide icons. Every screen has its own URL (`/today`, `/enquiries`, `/follow-ups`, `/referrals`, `/settings`); filters and the open record live in the query string. No backend. There's no AI, because every decision is a date comparison. Details: [docs/05-architecture.md](docs/05-architecture.md).
+Next.js 16 (app router) and React 19, with Tailwind v4 (default palette, radii and shadows switched off), Radix UI primitives (dialog, sheet, toggle group), TanStack Table v8, react-hook-form, sonner toasts, Phosphor icons and the Figtree typeface. The look is modelled on HoneyBook; tokens and rules are in [DESIGN.md](DESIGN.md) and [design.json](design.json). Every screen has its own URL (`/today`, `/enquiries`, `/follow-ups`, `/referrals`, `/settings`); filters and the open record live in the query string. No backend. There's no AI, because every decision is a date comparison. Details: [docs/05-architecture.md](docs/05-architecture.md).
 
 ## Setup
 ```bash
@@ -48,7 +48,7 @@ npm run dev        # http://localhost:3003  (npm run demo is the same)
 See `.env.example`. `PORT=3003` (fixed) and an optional `CHROME_PATH` for the browser tests. There are no secrets.
 
 ## Database
-None. Sample data loads from `sample-data/`; your changes are saved in this browser's `localStorage`. House rules → Reset sample data clears them. The sample clock is fixed at Tue 20 Oct 2026, 09:30 so the demo is repeatable; add `?clock=live` to use the real time.
+None. Sample data loads from `sample-data/`; your changes are saved in this browser's `localStorage`. House rules > Restore starting data clears them. The sample-data note lives on the House rules screen, not in the main view. The sample clock is fixed at Tue 20 Oct 2026, 09:30 so the demo is repeatable; add `?clock=live` to use the real time.
 
 ## Integrations
 None live. A website-form webhook and calendar sync are on the roadmap.
@@ -56,10 +56,10 @@ None live. A website-form webhook and calendar sync are on the roadmap.
 ## Testing
 ```bash
 npm test           # 51 rule and data tests (vitest)
-npm run test:e2e   # 10 browser tests in Chrome (@playwright/test, against a production build)
+npm run test:e2e   # 20 browser tests in Chrome (@playwright/test, against a production build), including a scan for vibe-coded tells
 npm run test:all   # both
 ```
-They cover each rule and its boundaries, bad and missing input, duplicates, empty data and 2,000 enquiries, plus the full reply → quote → nudge → booked flow, persistence after a reload, the phone layout, keyboard use, accessible names and design guardrails (no gradients, no emoji, Inter, no placeholder copy). The log is in [docs/06-build-log.md](docs/06-build-log.md).
+They cover each rule and its boundaries, bad and missing input, duplicates, empty data and 2,000 enquiries, plus the full reply → quote → nudge → booked flow, persistence after a reload, the phone layout, keyboard use, accessible names and a scan of every screen for the tells in DESIGN.md's ban list (gradients, glows, caps eyebrows, KPI grids, coloured left borders, panel shadows, stray pointer cursors, em dashes, hype words, off-brand purple), URL state across refresh and Back, toast wording, focus trapping and layout shift while loading. The log is in [docs/06-build-log.md](docs/06-build-log.md).
 
 ## Deployment
 `npm run build` produces a fully static app; any Next.js host (e.g. Vercel) works. Not deployed.

@@ -58,7 +58,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       weddings = [...weddings, { id: "w-" + e.id, enquiryId: e.id, couple: e.couple, date: e.weddingDate!, venue: e.venue || "Venue to confirm", planner: planner || rules.team[0].name }];
     }
     commit({ ...data, enquiries, weddings });
-    return ({ reply: "First reply logged", quote: "Quote logged. Day 3 nudge scheduled", nudge: "Nudge logged", booked: "Booked. The date is now held", lost: "Marked as lost", quiet: "Marked as gone quiet" } as Record<string, string>)[action];
+    return ({ reply: "Reply marked as sent", quote: "Quote marked as sent", nudge: `Day ${rules.followUp.nudgeDays[Math.min(e.nudgesSent.length, 1)]} nudge marked as sent`, booked: "Marked as booked", lost: "Marked as lost", quiet: "Marked as gone quiet" } as Record<string, string>)[action];
   }, [data, now, commit]);
 
   const pastAct = React.useCallback((id: string, action: string) => {

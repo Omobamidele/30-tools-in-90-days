@@ -101,7 +101,7 @@ test("referral ask for a past couple", async ({ page }) => {
   await expect(page.locator("#draft")).toHaveValue(/^Hi Lucy & Seán[\s\S]*Hartwell Manor/);
   await page.locator('[data-action="sent"]').click();
   await page.keyboard.press("Escape");
-  await expect(page.getByText(/Asked · reminder/).first()).toBeVisible();
+  await expect(page.getByText(/Asked, reminder on/).first()).toBeVisible();
 });
 
 test("booking frees the live check counter", async ({ page }) => {
@@ -115,7 +115,7 @@ test("booking frees the live check counter", async ({ page }) => {
   await expect(page.locator("#liveCheck")).toContainText("1 of 2 slots left (Maya & Sam booked)");
 });
 
-test("guardrails: Inter, no gradients, no emoji, no placeholder copy, labelled controls", async ({ page }) => {
+test("guardrails: Figtree, no gradients, no emoji, no placeholder copy, labelled controls", async ({ page }) => {
   for (const p of ["/today", "/enquiries", "/follow-ups", "/referrals", "/settings"]) {
     await fresh(page, p);
     const r = await page.evaluate(() => {
@@ -131,7 +131,7 @@ test("guardrails: Inter, no gradients, no emoji, no placeholder copy, labelled c
       return { grad, font: getComputedStyle(document.body).fontFamily, emoji: /\p{Extended_Pictographic}/u.test(text), lorem: /lorem|ipsum|TODO|placeholder/i.test(text), unnamed };
     });
     expect(r.grad, p).toBe(0);
-    expect(r.font).toMatch(/Inter/i);
+    expect(r.font).toMatch(/Figtree/i);
     expect(r.emoji, p).toBe(false);
     expect(r.lorem, p).toBe(false);
     expect(r.unnamed, p).toEqual([]);

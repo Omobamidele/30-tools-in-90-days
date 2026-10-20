@@ -1,15 +1,18 @@
 import { cn } from "./cn";
-export function Card({ className, children }: { className?: string; children: React.ReactNode }) {
-  return <section className={cn("rounded-lg border border-gray-200 bg-white", className)}>{children}</section>;
+/** A panel is used for one thing per screen: the main list. Everything else sits on the canvas, separated by spacing and rules. */
+export function Panel({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <section className={cn("rounded-panel border border-line bg-surface", className)}>{children}</section>;
 }
-export function CardHeader({ title, meta, actions, children }: { title: string; meta?: React.ReactNode; actions?: React.ReactNode; children?: React.ReactNode }) {
+export const Card = Panel;
+export function SectionHead({ title, meta, actions, children }: { title: string; meta?: React.ReactNode; actions?: React.ReactNode; children?: React.ReactNode }) {
   return (
-    <header className="flex min-h-12 flex-wrap items-center gap-3 border-b border-gray-200 px-5 py-3">
-      <h2 className="text-[14px] font-semibold leading-5 text-gray-900">{title}</h2>
-      {meta ? <span className="text-[12px] text-gray-500 tabular-nums">{meta}</span> : null}
+    <header className="flex min-h-12 flex-wrap items-center gap-x-3 gap-y-2 px-5 py-3">
+      <h2 className="text-[16px] font-semibold leading-6 text-ink">{title}</h2>
+      {meta != null ? <span className="text-[14px] text-muted">{meta}</span> : null}
       {children}
       {actions ? <div className="ml-auto flex items-center gap-2">{actions}</div> : null}
     </header>
   );
 }
-export const Skeleton = ({ className }: { className?: string }) => <div className={cn("animate-pulse rounded bg-gray-100", className)} />;
+export const CardHeader = SectionHead;
+export const Skeleton = ({ className }: { className?: string }) => <div className={cn("rounded-control bg-sunken", className)} aria-hidden />;

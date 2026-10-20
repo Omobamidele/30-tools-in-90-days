@@ -3,17 +3,17 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useForm, type Resolver } from "react-hook-form";
 import { toast } from "sonner";
-import { Plus } from "lucide-react";
+import { Plus } from "@/components/icons";
 import { Dialog, DialogContent, DialogTrigger, DialogClose } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Field, Input, NativeSelect, Textarea } from "./ui/field";
 import { useStore } from "@/lib/store";
 import { R, CHECK_TONE } from "@/lib/view";
-import { cn } from "./ui/cn";
+import { Notice } from "./ui/badge";
 
 type Values = { couple: string; channel: string; receivedAt: string; contact: string; referredBy: string; weddingDate: string; venue: string; guests: string; budget: string; note: string };
 
-export function NewEnquiryButton() {
+export function NewEnquiryButton({ secondary }: { secondary?: boolean } = {}) {
   const { data, now, rules, add } = useStore();
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
@@ -35,7 +35,7 @@ export function NewEnquiryButton() {
     if (d && !dup) { setDup(d); return; }
     const id = add(v as unknown as Record<string, string>);
     setOpen(false); reset(); setDup(null);
-    toast.success("Enquiry added", { description: v.couple });
+    toast("Enquiry added", { description: v.couple });
     router.push(`/enquiries?open=${id}`);
   });
   const err = (k: keyof Values) => errors[k]?.message as string | undefined;
@@ -43,10 +43,10 @@ export function NewEnquiryButton() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild><Button variant="primary" data-action="new-enquiry"><Plus />New enquiry</Button></DialogTrigger>
+      <DialogTrigger asChild><Button variant={secondary ? "secondary" : "primary"} data-action="new-enquiry"><Plus weight="bold" />Add enquiry</Button></DialogTrigger>
       <DialogContent title="New enquiry" description="From a DM, WhatsApp, email or the website form. The date is checked as you type." className="max-w-lg">
         <form onSubmit={save} noValidate>
-          <div className="grid grid-cols-1 gap-4 px-5 py-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 px-6 py-4 sm:grid-cols-2">
             <Field id="f-couple" label="Couple’s names" error={err("couple")} className="sm:col-span-2"><Input {...register("couple")} {...aria("couple")} autoFocus /></Field>
             <Field id="f-channel" label="Came in by" error={err("channel")}><NativeSelect {...register("channel")} {...aria("channel")}>{Object.entries(rules.channels).map(([k, l]) => <option key={k} value={k}>{l as string}</option>)}</NativeSelect></Field>
             <Field id="f-receivedAt" label="Received" error={err("receivedAt")}><Input type="datetime-local" {...register("receivedAt")} {...aria("receivedAt")} /></Field>
@@ -60,16 +60,16 @@ export function NewEnquiryButton() {
             <datalist id="venues">{[...new Set(data.weddings.map((w) => w.venue))].map((x) => <option key={x} value={x} />)}</datalist>
           </div>
           {live ? (
-            <div id="liveCheck" role="status" className={cn("mx-5 mb-4 rounded-md px-3 py-2 text-[13px] ring-1 ring-inset", { danger: "bg-red-50 text-red-800 ring-red-600/20", warning: "bg-amber-50 text-amber-800 ring-amber-600/20", success: "bg-emerald-50 text-emerald-800 ring-emerald-600/20", neutral: "bg-gray-50 text-gray-700 ring-gray-500/20" }[CHECK_TONE[live.level] as "danger"])}>
+            <Notice id="liveCheck" role="status" tone={CHECK_TONE[live.level]} className="mx-6 mb-4">
               Date check: {live.message}
-            </div>
+            </Notice>
           ) : null}
           {dup ? (
-            <div id="dupWarn" role="alert" className="mx-5 mb-4 rounded-md bg-amber-50 px-3 py-2 text-[13px] text-amber-800 ring-1 ring-inset ring-amber-600/20">
-              Possible duplicate: {dup.couple} came in by {rules.channels[dup.channel]} on {dup.receivedAt.slice(0, 10)}. Save again to add it anyway.
-            </div>
+            <Notice id="dupWarn" role="alert" tone="warning" className="mx-6 mb-4">
+              Possible duplicate: {dup.couple} came in by {rules.channels[dup.channel]} on {dup.receivedAt.slice(0, 10)}. Select Add anyway to keep both.
+            </Notice>
           ) : null}
-          <div className="flex justify-end gap-2 border-t border-gray-200 px-5 py-3">
+          <div className="flex justify-end gap-2 border-t border-line px-6 py-4">
             <DialogClose asChild><Button>Cancel</Button></DialogClose>
             <Button type="submit" variant="primary" disabled={isSubmitting}>{dup ? "Add anyway" : "Add enquiry"}</Button>
           </div>

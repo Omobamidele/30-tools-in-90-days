@@ -3,17 +3,18 @@ import { Slot } from "radix-ui";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "./cn";
 
+// Three button styles only. Primary (brand) is used once per screen.
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md text-[13px] font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600/40 focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap rounded-control font-semibold transition-colors duration-100 disabled:opacity-45 [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        primary: "bg-brand-600 text-white shadow-sm hover:bg-brand-700",
-        secondary: "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50",
-        ghost: "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
-        danger: "bg-red-600 text-white shadow-sm hover:bg-red-700",
+        primary: "bg-brand text-white hover:bg-brand-hover",
+        secondary: "border border-line-strong bg-surface text-ink hover:bg-canvas",
+        ghost: "text-fg hover:bg-sunken",
+        danger: "bg-danger text-white hover:opacity-90",
       },
-      size: { md: "h-8 px-3", sm: "h-7 px-2.5 text-[12px]", icon: "h-8 w-8" },
+      size: { md: "h-9 px-3.5 text-[14px]", sm: "h-8 px-2.5 text-[13px]", icon: "size-8" },
     },
     defaultVariants: { variant: "secondary", size: "md" },
   },

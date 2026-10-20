@@ -1,26 +1,55 @@
 @import "tailwindcss";
 
-/* Mo Bamidele tool design kit (Lemon Squeezy dashboard style): white surfaces on a gray-50 canvas,
-   Inter, purple #5423e7 as the brand accent, yellow #ffc233 for one or two touches per screen. */
+/* Tokens come from DESIGN.md / design.json (extracted from HoneyBook's Projects screen).
+   Tailwind's default palette, radii and shadows are switched off so nothing falls back to a default. */
 @theme {
-  --color-brand-50: #f3f0fe;
-  --color-brand-100: #e6dffd;
-  --color-brand-500: #6a3ff0;
-  --color-brand-600: #5423e7;
-  --color-brand-700: #431bc0;
-  --color-accent: #ffc233;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-transparent: transparent;
+  --color-ink: #131416;        /* headings, primary text, rail background */
+  --color-fg: #2e3036;         /* body text */
+  --color-muted: #646875;      /* secondary text (4.9:1 on canvas) */
+  --color-faint: #9a9ea8;      /* icons and placeholders only, never text */
+  --color-line: #e3e5e8;       /* hairlines, table rules */
+  --color-line-strong: #cdd0d6;/* control borders */
+  --color-canvas: #f6f7f8;     /* page background */
+  --color-sunken: #eceef0;     /* hover rows, pills, search */
+  --color-surface: #ffffff;    /* panels, sheet, dialogs */
+  --color-rail: #131416;
+  --color-rail-hover: #222326;
+  --color-rail-active: #2b2c2d;
+  --color-rail-fg: #d8dade;
+  --color-rail-muted: #8a8d94;
+  --color-brand: #5423e7;      /* logo mark, primary button, active nav indicator only */
+  --color-brand-hover: #4519c4;
+  --color-danger: #b42335;
+  --color-warn: #8a5100;
+  --color-ok: #17704a;
+  --color-danger-dot: #d93a4f;
+  --color-warn-dot: #e09a1a;
+  --color-ok-dot: #2e9e6a;
+
+  --radius-*: initial;
+  --radius-control: 4px;   /* buttons, inputs */
+  --radius-panel: 8px;     /* tables, dialogs */
+  --radius-pill: 999px;    /* search, status pills */
+
+  --shadow-*: initial;
+  --shadow-overlay: 0 12px 32px rgb(19 20 22 / 0.14), 0 0 0 1px rgb(19 20 22 / 0.06); /* dialogs, sheet, toasts only */
+
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 html { -webkit-font-smoothing: antialiased; }
-body { font-feature-settings: "cv11", "ss01"; }
+body { font-variant-numeric: tabular-nums; }
+/* Pointer only on things that do something. */
+button:not(:disabled), a[href], select, summary, [role="tab"], label[for] { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+:focus-visible { outline: 2px solid var(--color-ink); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
-@keyframes sheet-in { from { transform: translateX(100%); } to { transform: translateX(0); } }
-@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-@keyframes pop-in { from { opacity: 0; transform: translate(-50%, -48%) scale(0.98); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
-.anim-sheet[data-state="open"] { animation: sheet-in 200ms ease-out; }
-.anim-fade[data-state="open"] { animation: fade-in 200ms ease-out; }
-.anim-pop[data-state="open"] { animation: pop-in 200ms ease-out; }
+/* The only motion: the record sheet slides in from the right (it is a place, not a popup). */
+@keyframes sheet-in { from { transform: translateX(24px); opacity: 0.6; } to { transform: none; opacity: 1; } }
+.anim-sheet[data-state="open"] { animation: sheet-in 160ms ease-out; }

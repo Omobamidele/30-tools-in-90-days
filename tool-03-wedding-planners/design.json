@@ -1,0 +1,45 @@
+{
+  "source": {
+    "reference": "HoneyBook web app, Projects screen and pipeline header (help.honeybook.com article screenshots, 2026)",
+    "urls": ["https://help.honeybook.com/en/articles/2463528-customize-your-pipeline-in-honeybook", "https://help.honeybook.com/en/articles/5758575-navigate-sort-by-and-filter-projects-in-your-pipeline"],
+    "method": "Pixel samples taken with PIL from the 3136x1792 Projects screenshot; sizes measured at 1x (1024 px wide render)."
+  },
+  "measured": {
+    "rail": "#131416", "railActiveItem": "#2b2c2d", "railText": "#d8dade",
+    "canvas": "#f6f7f8", "boardColumn": "#eaebec", "card": "#ffffff", "cardEdge": "#dfe0e4",
+    "searchPill": "#e9ebec", "title": "#222222", "metaText": "#717684", "faint": "#b8bac1",
+    "primaryButton": "#17171a", "secondaryButtonBorder": "#a8abb5", "tabUnderline": "#4f81e5",
+    "pageTitle": "about 26px, bold", "navItem": "about 32px high, 13 to 14px", "cardRadius": "about 6px", "buttonRadius": "about 4px", "searchRadius": "full pill",
+    "shadows": "none on cards; one soft shadow on the dropdown overlay",
+    "font": "Proxima Nova (geometric sans)"
+  },
+  "tokens": {
+    "color": {
+      "ink": "#131416", "fg": "#2e3036", "muted": "#646875", "faint": "#9a9ea8",
+      "line": "#e3e5e8", "lineStrong": "#cdd0d6", "canvas": "#f6f7f8", "sunken": "#eceef0", "surface": "#ffffff",
+      "rail": "#131416", "railHover": "#222326", "railActive": "#2b2c2d", "railFg": "#d8dade", "railMuted": "#8a8d94",
+      "brand": "#5423e7", "brandHover": "#4519c4",
+      "danger": "#b42335", "warn": "#8a5100", "ok": "#17704a",
+      "dangerDot": "#d93a4f", "warnDot": "#e09a1a", "okDot": "#2e9e6a"
+    },
+    "brandUse": ["logo mark", "primary button", "active nav indicator bar"],
+    "yellow": "not used",
+    "font": { "ui": "Figtree 400/500/600/700 (free geometric sans closest to Proxima Nova)", "mono": "ui-monospace, for record refs only" },
+    "type": {
+      "pageTitle": "28/36 bold", "sheetTitle": "20/28 bold", "section": "16/24 semibold", "body": "14/20 regular",
+      "tableHeader": "13/20 medium muted, sentence case", "meta": "13/20 muted", "min": "12px (rail sub-labels only)"
+    },
+    "space": [4, 8, 12, 16, 20, 24, 32, 40],
+    "radius": { "control": "4px (buttons, inputs)", "panel": "8px (tables, dialogs)", "pill": "999px (search, status)", "sheet": "0" },
+    "shadow": { "overlay": "0 12px 32px rgb(19 20 22 / .14), 0 0 0 1px rgb(19 20 22 / .06)", "cards": "none" },
+    "icons": "Phosphor, regular weight (bold for the active nav item), 16 to 18px",
+    "motion": "Record sheet slides 24px in 160ms. Nothing else animates."
+  },
+  "layout": {
+    "nav": "Dark left rail 232px: logo mark and name, 4 work views with live counts, a rule, House rules, signed-in user at the bottom. No group caps labels.",
+    "pageHeader": "Search pill top left on the canvas. Title 28px left, at most one primary button right, underlined view tabs under the title.",
+    "tables": "One white panel with an 8px radius and a 1px line. Sentence-case header on white, rows 56px, rules between rows, sort carets, pagination footer 'Showing 1–10 of N'. Row click opens the record sheet.",
+    "record": "Right sheet 560px, title 20px bold, definition list, date check, draft, activity, sticky action bar with the primary button on the right.",
+    "status": "One neutral pill style (sunken background, body text) with a small dot. Colour only means urgency."
+  }
+}

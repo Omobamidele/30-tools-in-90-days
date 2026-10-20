@@ -1,17 +1,25 @@
 import { cn } from "./cn";
+// One status treatment: neutral pill, text in body colour. Colour only carries urgency (a small dot), never decoration.
 export type Tone = "success" | "warning" | "danger" | "info" | "neutral" | "brand";
-const TONES: Record<Tone, string> = {
-  success: "bg-emerald-50 text-emerald-700 ring-emerald-600/20 before:bg-emerald-500",
-  warning: "bg-amber-50 text-amber-700 ring-amber-600/20 before:bg-amber-500",
-  danger: "bg-red-50 text-red-700 ring-red-600/20 before:bg-red-500",
-  info: "bg-sky-50 text-sky-700 ring-sky-600/20 before:bg-sky-500",
-  neutral: "bg-gray-50 text-gray-600 ring-gray-500/20 before:bg-gray-400",
-  brand: "bg-brand-50 text-brand-700 ring-brand-600/20 before:bg-brand-600",
-};
+const DOT: Record<Tone, string> = { success: "bg-ok-dot", warning: "bg-warn-dot", danger: "bg-danger-dot", info: "bg-faint", neutral: "bg-faint", brand: "bg-faint" };
 export function Badge({ tone = "neutral", children, className }: { tone?: Tone; children: React.ReactNode; className?: string }) {
   return (
-    <span className={cn("inline-flex items-center gap-1.5 whitespace-nowrap rounded-md px-2 py-0.5 text-[12px] font-medium ring-1 ring-inset before:size-1.5 before:rounded-full before:content-['']", TONES[tone], className)}>
+    <span className={cn("inline-flex h-6 items-center gap-1.5 whitespace-nowrap rounded-pill bg-sunken px-2.5 text-[13px] text-fg", className)}>
+      <span className={cn("size-1.5 shrink-0 rounded-pill", DOT[tone])} aria-hidden />
       {children}
     </span>
+  );
+}
+/** Urgency as text: red for late, amber-brown for due, plain otherwise. */
+export function Urgent({ tone, children, className }: { tone: Tone; children: React.ReactNode; className?: string }) {
+  return <span className={cn(tone === "danger" ? "text-danger" : tone === "warning" ? "text-warn" : "text-muted", className)}>{children}</span>;
+}
+/** Inline notice (date check, duplicate warning): neutral box, coloured dot, headline in ink. */
+export function Notice({ tone, children, className, ...rest }: { tone: Tone; children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div className={cn("flex gap-2.5 rounded-control border border-line bg-canvas px-3.5 py-3 text-[14px] text-ink", className)} {...rest}>
+      <span className={cn("mt-[7px] size-2 shrink-0 rounded-pill", DOT[tone])} aria-hidden />
+      <div className="min-w-0 flex-1">{children}</div>
+    </div>
   );
 }
