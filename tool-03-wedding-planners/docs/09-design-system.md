@@ -9,12 +9,16 @@ Rev 1 was rejected as looking vibe-coded: coloured initial avatars on every row,
 - **HoneyBook:** the pipeline language planners already use (inquiry, follow-up, booked).
 
 ## Tokens (`src/styles.css` `:root`)
-- Neutrals: page `#fff`, sidebar `#f7f7f6`, hover `#f3f3f2`, hairline `#e7e7e5`, ink `#1d1f22` / `#53575e` / `#7b7f86`.
-- One accent, from config (`brandColor`, default `#2f5d50`). Used only for the primary button, the workspace mark, the selected row tint and focus rings.
+- Neutrals (Mo Bamidele brand lock): page `#fff`, sidebar `#f7f7f5`, hover/selected `#f4f4f2`, hairline `#e4e6ea`, ink `#0f1222`, greys `#5b6070` / `#6b7080`.
+- One accent, from config (`brandColor`, `#5423e7`). Used only as a line: the active view tab, the 2px bar on the selected row, focus rings and link hover. Never a fill, never a gradient (a browser test checks this). Primary buttons are near-black `#0f1222`.
+- Status marks have different shapes, not just colours: hollow ring (New), half-filled ring (Replied, Asked), solid grey (Quote sent), green (Booked), red/amber dots for time pressure.
 - Status colours: red (late), amber (due), green (done), blue (new), grey (closed). Shown as a 7px dot; only overdue text turns red.
-- Type: IBM Plex Sans (system sans as the fallback), 13px body, 12px meta, 14–16px titles, weights 400/500/600, tabular numbers, sentence case.
+- Type: Inter (system sans as the fallback), tracked -0.006em for body and -0.012 to -0.016em for titles, 13px body, 12px meta, 14–16px titles, weights 400/500/600, tabular numbers, sentence case.
 - Radius: 4px controls, 6px dialogs, 0 for table rows. Hairline borders, with shadows only on the dialog and the floating panel.
 - Rows are 38px, headers 32px and the top bar 48px.
 
 ## Rules (checked by `tests/e2e.test.js` "design system guardrails")
 No gradients, no emoji, no radius over 6px on boxes. No KPI tiles or charts: numbers live in columns, view-tab counts and one sentence under Today.
+
+## Rev 3 (20 Oct 2026)
+Brand colours and Inter; uneven, specific sample data; planner column; weddings in the next 14 days on Today; no sidebar clock; row buttons are secondary; see `11-vibe-coded-audit.md` for every tell found and fixed.

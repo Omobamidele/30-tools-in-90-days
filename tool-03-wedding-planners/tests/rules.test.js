@@ -12,7 +12,7 @@ describe('date helpers', () => {
     assert.equal(R.minutesBetween('2026-10-16T21:40', '2026-10-20T09:05'), 5005 + 0 * 60);
   });
   test('first names from either form of couple name', () => {
-    assert.equal(R.firstNames('Maya Ellis & Sam Turner'), 'Maya & Sam');
+    assert.equal(R.firstNames('Maya Okonjo-Reid & Sam Whitlock'), 'Maya & Sam');
     assert.equal(R.firstNames('  Maya &Sam '), 'Maya & Sam');
   });
   test('minutes read like a person would say them', () => {
@@ -54,10 +54,10 @@ describe('rule 2: date check', () => {
   test('free date', () => assert.equal(R.dateCheck({ weddingDate: '2027-06-05' }, weddings, enquiries, rules).level, 'free'));
   test('one wedding booked, one planner free', () => {
     const c = R.dateCheck({ weddingDate: '2026-12-12' }, weddings, enquiries, rules);
-    assert.equal(c.level, 'tight'); assert.match(c.message, /Free: Marcus Hale/);
+    assert.equal(c.level, 'tight'); assert.match(c.message, /Free: Marcus Adebayo/);
   });
   test('same venue on a booked date is a clash even with a planner free', () => {
-    const c = R.dateCheck({ weddingDate: '2026-12-12', venue: 'old mill barn' }, weddings, enquiries, rules);
+    const c = R.dateCheck({ weddingDate: '2026-12-12', venue: 'wickham old mill' }, weddings, enquiries, rules);
     assert.equal(c.level, 'venue-clash');
   });
   test('two weddings on a date fills it', () => {
@@ -67,7 +67,7 @@ describe('rule 2: date check', () => {
     const solo = { ...rules, capacity: { ...rules.capacity, maxWeddingsPerDate: 1 } };
     assert.equal(R.dateCheck({ weddingDate: '2026-12-12' }, weddings, enquiries, solo).level, 'full');
     const allow = { ...rules, capacity: { ...rules.capacity, sameVenueSameDate: 'allow' } };
-    assert.equal(R.dateCheck({ weddingDate: '2026-12-12', venue: 'Old Mill Barn' }, weddings, enquiries, allow).level, 'tight');
+    assert.equal(R.dateCheck({ weddingDate: '2026-12-12', venue: 'Wickham Old Mill' }, weddings, enquiries, allow).level, 'tight');
   });
   test('other open quotes for the same date are a warning, not a block, and exclude itself', () => {
     const list = [enq({ id: 'a', status: 'Quote sent', weddingDate: '2027-06-12' }), enq({ id: 'b', status: 'Quote sent', weddingDate: '2027-06-12' })];
@@ -77,7 +77,7 @@ describe('rule 2: date check', () => {
   test('a booked couple never clashes with its own booking', () => {
     const isla = enquiries.find((e) => e.couple.startsWith('Isla'));
     assert.equal(R.dateCheck({ ...isla, selfId: isla.id, selfCouple: isla.couple }, weddings, enquiries, rules).level, 'free');
-    const own = [{ id: 'w', enquiryId: 'x', couple: 'New & Couple', date: '2027-01-09', venue: 'V', planner: 'Elena Lane' }];
+    const own = [{ id: 'w', enquiryId: 'x', couple: 'New & Couple', date: '2027-01-09', venue: 'V', planner: 'Elena Marsh' }];
     assert.equal(R.dateCheck({ weddingDate: '2027-01-09', venue: 'V', selfId: 'x' }, own, [], rules).level, 'free');
     assert.equal(R.dateCheck({ weddingDate: '2027-01-09', venue: 'V', selfId: 'y' }, own, [], rules).level, 'venue-clash');
   });
@@ -163,7 +163,7 @@ describe('input checks and duplicates', () => {
   test('optional fields can be empty', () => assert.deepEqual(R.validateEnquiry({ ...ok, weddingDate: '', guests: '', budget: '' }, NOW, rules), {}));
   test('same couple in the other order is a duplicate', () => {
     const list = sample().enquiries;
-    assert.equal(R.findDuplicate({ couple: 'sam turner & MAYA ELLIS' }, list)?.id, 'e01');
+    assert.equal(R.findDuplicate({ couple: 'sam whitlock & MAYA OKONJO-REID' }, list)?.id, 'e01');
   });
   test('same handle on another channel is a duplicate', () => {
     assert.equal(R.findDuplicate({ couple: 'Someone New', contact: '+44 7700 900 123' }, sample().enquiries)?.id, 'e03');
@@ -207,8 +207,8 @@ describe('actions', () => {
 describe('message drafts', () => {
   const fmt = (d) => d;
   test('first reply mentions the date status', () => {
-    const t = R.draftFor('reply', enq({ couple: 'Grace Lin & Owen Hart', weddingDate: '2026-10-31' }), { level: 'full' }, rules, fmt);
-    assert.match(t, /^Hi Grace & Owen/); assert.match(t, /fully booked/); assert.match(t, /Elena, Juniper & Lane Weddings$/);
+    const t = R.draftFor('reply', enq({ couple: 'Grace Lindqvist & Owen McAteer', weddingDate: '2026-10-31' }), { level: 'full' }, rules, fmt);
+    assert.match(t, /^Hi Grace & Owen/); assert.match(t, /fully booked/); assert.match(t, /Elena, Hollis & Wren Weddings$/);
   });
   test('second nudge uses the day 7 text', () => {
     assert.match(R.draftFor('nudge', enq({ nudgesSent: ['2026-10-18'] }), null, rules, fmt), /hold it for you/);

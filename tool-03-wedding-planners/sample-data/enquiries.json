@@ -1,37 +1,38 @@
 [
  {
   "id": "e01",
-  "couple": "Maya Ellis & Sam Turner",
+  "couple": "Maya Okonjo-Reid & Sam Whitlock",
   "channel": "ig",
-  "contact": "@maya.and.sam",
+  "contact": "@mayaandsam.2027",
   "receivedAt": "2026-10-20T08:52",
   "weddingDate": "2027-06-05",
   "venue": null,
-  "guests": 110,
-  "budget": 38000,
+  "guests": 112,
+  "budget": 38650,
   "firstReplyAt": null,
   "status": "New",
   "quoteSentOn": null,
   "nudgesSent": [],
   "referredBy": null,
-  "note": "Asked about full planning packages",
+  "note": "Asked about full planning packages. No venue yet, looking at barns in Kent",
   "history": [
    {
     "at": "2026-10-20T08:52",
     "what": "Enquiry received"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e02",
-  "couple": "Grace Lin & Owen Hart",
+  "couple": "Grace Lindqvist & Owen McAteer",
   "channel": "web",
-  "contact": "grace.lin@example.com",
+  "contact": "grace.lindqvist@example.com",
   "receivedAt": "2026-10-20T07:15",
   "weddingDate": "2026-10-31",
   "venue": "Hartwell Manor",
-  "guests": 90,
-  "budget": 30000,
+  "guests": 86,
+  "budget": 28750,
   "firstReplyAt": null,
   "status": "New",
   "quoteSentOn": null,
@@ -43,11 +44,12 @@
     "at": "2026-10-20T07:15",
     "what": "Enquiry received"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e03",
-  "couple": "Rosa Alvarez & Ben Keane",
+  "couple": "Rosa Ferreira & Benedict Keane",
   "channel": "wa",
   "contact": "+44 7700 900123",
   "receivedAt": "2026-10-19T18:20",
@@ -60,7 +62,7 @@
   "quoteSentOn": null,
   "nudgesSent": [],
   "referredBy": null,
-  "note": "Offered a call on Thursday",
+  "note": "Offered a call Thurs after 6pm",
   "history": [
    {
     "at": "2026-10-19T18:20",
@@ -70,23 +72,24 @@
     "at": "2026-10-19T18:42",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": "Elena Marsh"
  },
  {
   "id": "e04",
-  "couple": "Nina Patel & Chris Doyle",
+  "couple": "Nisha Raval & Chris Doyle",
   "channel": "ref",
-  "contact": "nina.patel@example.com",
+  "contact": "nisha.raval@example.com",
   "receivedAt": "2026-10-19T11:05",
   "weddingDate": "2027-09-18",
   "venue": null,
-  "guests": 140,
-  "budget": 52000,
+  "guests": 146,
+  "budget": 53800,
   "firstReplyAt": "2026-10-19T11:19",
   "status": "Quote sent",
   "quoteSentOn": "2026-10-19",
   "nudgesSent": [],
-  "referredBy": "Megan Price & Tom Ali",
+  "referredBy": "Megan Price & Tariq Ali",
   "note": "",
   "history": [
    {
@@ -101,18 +104,19 @@
     "at": "2026-10-19T17:00",
     "what": "Quote sent"
    }
-  ]
+  ],
+  "owner": "Marcus Adebayo"
  },
  {
   "id": "e05",
-  "couple": "Leah Brooks & Ryan Moss",
+  "couple": "Leah Brannigan & Ryan Moss",
   "channel": "ig",
   "contact": "@leahandryan",
   "receivedAt": "2026-10-16T21:40",
   "weddingDate": "2027-05-22",
   "venue": null,
-  "guests": 100,
-  "budget": 34000,
+  "guests": 97,
+  "budget": 33600,
   "firstReplyAt": "2026-10-20T09:05",
   "status": "Lost",
   "quoteSentOn": null,
@@ -128,24 +132,25 @@
     "at": "2026-10-20T09:05",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": "Elena Marsh"
  },
  {
   "id": "e06",
-  "couple": "Amelia Grant & Noah Price",
+  "couple": "Amelia Grant & Kofi Asante",
   "channel": "web",
   "contact": "amelia.grant@example.com",
   "receivedAt": "2026-10-16T10:30",
   "weddingDate": "2027-08-14",
   "venue": null,
-  "guests": 120,
-  "budget": 41000,
+  "guests": 121,
+  "budget": 43350,
   "firstReplyAt": "2026-10-16T11:40",
   "status": "Quote sent",
   "quoteSentOn": "2026-10-16",
   "nudgesSent": [],
   "referredBy": null,
-  "note": "",
+  "note": "Wants a quote for partial planning too",
   "history": [
    {
     "at": "2026-10-16T10:30",
@@ -159,18 +164,19 @@
     "at": "2026-10-16T17:00",
     "what": "Quote sent"
    }
-  ]
+  ],
+  "owner": "Elena Marsh"
  },
  {
   "id": "e07",
-  "couple": "Zoe Carter & Ethan Wu",
+  "couple": "Zoë Carter & Ethan Wu",
   "channel": "wa",
   "contact": "+44 7700 900456",
   "receivedAt": "2026-10-15T13:10",
   "weddingDate": "2027-07-03",
   "venue": null,
-  "guests": 80,
-  "budget": 29000,
+  "guests": 87,
+  "budget": 29750,
   "firstReplyAt": "2026-10-15T13:45",
   "status": "Quote sent",
   "quoteSentOn": "2026-10-15",
@@ -178,7 +184,7 @@
    "2026-10-18"
   ],
   "referredBy": null,
-  "note": "",
+  "note": "Prefers WhatsApp voice notes. Small ceremony, bigger evening",
   "history": [
    {
     "at": "2026-10-15T13:10",
@@ -196,7 +202,8 @@
     "at": "2026-10-18T10:00",
     "what": "Day 3 nudge sent"
    }
-  ]
+  ],
+  "owner": "Marcus Adebayo"
  },
  {
   "id": "e08",
@@ -207,7 +214,7 @@
   "weddingDate": "2027-04-24",
   "venue": null,
   "guests": 125,
-  "budget": 48000,
+  "budget": 47100,
   "firstReplyAt": "2026-10-14T09:40",
   "status": "Booked",
   "quoteSentOn": "2026-10-14",
@@ -227,11 +234,12 @@
     "at": "2026-10-14T17:00",
     "what": "Quote sent"
    }
-  ]
+  ],
+  "owner": "Elena Marsh"
  },
  {
   "id": "e09",
-  "couple": "Freya Hughes & Liam Ross",
+  "couple": "Freya Hughes & Liam O'Rourke",
   "channel": "ig",
   "contact": "",
   "receivedAt": "2026-10-13T20:05",
@@ -246,7 +254,7 @@
    "2026-10-16"
   ],
   "referredBy": null,
-  "note": "",
+  "note": "Replied at 1:45am, sorry Marcus",
   "history": [
    {
     "at": "2026-10-13T20:05",
@@ -264,7 +272,8 @@
     "at": "2026-10-16T10:00",
     "what": "Day 3 nudge sent"
    }
-  ]
+  ],
+  "owner": "Marcus Adebayo"
  },
  {
   "id": "e10",
@@ -275,7 +284,7 @@
   "weddingDate": "2027-03-20",
   "venue": "Larkfield House",
   "guests": 115,
-  "budget": 39000,
+  "budget": 40150,
   "firstReplyAt": "2026-10-12T16:10",
   "status": "Lost",
   "quoteSentOn": null,
@@ -291,19 +300,20 @@
     "at": "2026-10-12T16:10",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": "Elena Marsh"
  },
  {
   "id": "e11",
-  "couple": "Ruby Fox & Matt Lowe",
+  "couple": "Ruby Fairclough & Matt Lowe",
   "channel": "wa",
   "contact": "",
-  "receivedAt": "2026-10-09T12:00",
+  "receivedAt": "2026-10-09T12:03",
   "weddingDate": "2027-06-26",
   "venue": null,
   "guests": 95,
-  "budget": 33000,
-  "firstReplyAt": "2026-10-09T12:25",
+  "budget": 30400,
+  "firstReplyAt": "2026-10-09T12:28",
   "status": "Quote sent",
   "quoteSentOn": "2026-10-09",
   "nudgesSent": [
@@ -311,29 +321,30 @@
    "2026-10-16"
   ],
   "referredBy": null,
-  "note": "",
+  "note": "Comparing us with two others",
   "history": [
    {
-    "at": "2026-10-09T12:00",
+    "at": "2026-10-09T12:03",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-09T12:25",
+    "at": "2026-10-09T12:28",
     "what": "First reply sent"
    },
    {
-    "at": "2026-10-09T17:00",
+    "at": "2026-10-09T17:03",
     "what": "Quote sent"
    },
    {
-    "at": "2026-10-12T10:00",
+    "at": "2026-10-12T10:03",
     "what": "Day 3 nudge sent"
    },
    {
-    "at": "2026-10-16T10:00",
+    "at": "2026-10-16T10:03",
     "what": "Day 7 nudge sent"
    }
-  ]
+  ],
+  "owner": "Marcus Adebayo"
  },
  {
   "id": "e12",
@@ -343,8 +354,8 @@
   "receivedAt": "2026-10-08T10:15",
   "weddingDate": "2027-05-29",
   "venue": null,
-  "guests": 120,
-  "budget": 44000,
+  "guests": 124,
+  "budget": 44450,
   "firstReplyAt": "2026-10-08T10:30",
   "status": "Booked",
   "quoteSentOn": "2026-10-08",
@@ -364,19 +375,20 @@
     "at": "2026-10-08T17:00",
     "what": "Quote sent"
    }
-  ]
+  ],
+  "owner": "Marcus Adebayo"
  },
  {
   "id": "e13",
-  "couple": "Olivia Reed & Tom Lane",
+  "couple": "Olivia Reed & Tomasz Nowak",
   "channel": "ig",
   "contact": "",
-  "receivedAt": "2026-10-07T09:00",
+  "receivedAt": "2026-10-07T09:07",
   "weddingDate": "2027-04-03",
   "venue": null,
-  "guests": 70,
-  "budget": 30000,
-  "firstReplyAt": "2026-10-07T09:45",
+  "guests": 72,
+  "budget": 31900,
+  "firstReplyAt": "2026-10-07T09:52",
   "status": "Gone quiet",
   "quoteSentOn": "2026-10-08",
   "nudgesSent": [
@@ -384,41 +396,42 @@
    "2026-10-15"
   ],
   "referredBy": null,
-  "note": "",
+  "note": "Seen the quote, 'thinking about it'",
   "history": [
    {
-    "at": "2026-10-07T09:00",
+    "at": "2026-10-07T09:07",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-07T09:45",
+    "at": "2026-10-07T09:52",
     "what": "First reply sent"
    },
    {
-    "at": "2026-10-08T17:00",
+    "at": "2026-10-08T17:07",
     "what": "Quote sent"
    },
    {
-    "at": "2026-10-11T10:00",
+    "at": "2026-10-11T10:07",
     "what": "Day 3 nudge sent"
    },
    {
-    "at": "2026-10-15T10:00",
+    "at": "2026-10-15T10:07",
     "what": "Day 7 nudge sent"
    }
-  ]
+  ],
+  "owner": "Elena Marsh"
  },
  {
   "id": "e14",
   "couple": "Hannah Shaw & Luke Mills",
   "channel": "web",
   "contact": "",
-  "receivedAt": "2026-10-07T14:00",
+  "receivedAt": "2026-10-07T14:01",
   "weddingDate": "2027-05-08",
   "venue": null,
   "guests": 83,
-  "budget": 33700,
-  "firstReplyAt": "2026-10-07T14:30",
+  "budget": 33450,
+  "firstReplyAt": "2026-10-07T14:31",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -426,26 +439,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-07T14:00",
+    "at": "2026-10-07T14:01",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-07T14:30",
+    "at": "2026-10-07T14:31",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e15",
   "couple": "Sophie Webb & Josh Nash",
   "channel": "ig",
   "contact": "",
-  "receivedAt": "2026-10-07T19:00",
+  "receivedAt": "2026-10-07T19:08",
   "weddingDate": "2027-06-12",
   "venue": null,
   "guests": 96,
   "budget": 37400,
-  "firstReplyAt": "2026-10-08T05:00",
+  "firstReplyAt": "2026-10-08T05:08",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -453,26 +467,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-07T19:00",
+    "at": "2026-10-07T19:08",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-08T05:00",
+    "at": "2026-10-08T05:08",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e16",
   "couple": "Ava Cole & Alex Owen",
   "channel": "wa",
   "contact": "",
-  "receivedAt": "2026-10-06T10:00",
+  "receivedAt": "2026-10-06T10:04",
   "weddingDate": "2027-07-17",
   "venue": null,
   "guests": 109,
   "budget": 41100,
-  "firstReplyAt": "2026-10-06T10:20",
+  "firstReplyAt": "2026-10-06T10:24",
   "status": "Booked",
   "quoteSentOn": "2026-10-07",
   "nudgesSent": [],
@@ -480,30 +495,31 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-06T10:00",
+    "at": "2026-10-06T10:04",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-06T10:20",
+    "at": "2026-10-06T10:24",
     "what": "First reply sent"
    },
    {
-    "at": "2026-10-07T17:00",
+    "at": "2026-10-07T17:04",
     "what": "Quote sent"
    }
-  ]
+  ],
+  "owner": "Elena Marsh"
  },
  {
   "id": "e17",
   "couple": "Lily Ford & Ben Page",
   "channel": "web",
   "contact": "",
-  "receivedAt": "2026-10-06T16:00",
+  "receivedAt": "2026-10-06T16:06",
   "weddingDate": "2027-08-21",
   "venue": null,
   "guests": 122,
-  "budget": 44800,
-  "firstReplyAt": "2026-10-06T17:35",
+  "budget": 44550,
+  "firstReplyAt": "2026-10-06T17:41",
   "status": "Gone quiet",
   "quoteSentOn": "2026-10-07",
   "nudgesSent": [
@@ -514,38 +530,39 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-06T16:00",
+    "at": "2026-10-06T16:06",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-06T17:35",
+    "at": "2026-10-06T17:41",
     "what": "First reply sent"
    },
    {
-    "at": "2026-10-07T17:00",
+    "at": "2026-10-07T17:06",
     "what": "Quote sent"
    },
    {
-    "at": "2026-10-10T10:00",
+    "at": "2026-10-10T10:06",
     "what": "Day 3 nudge sent"
    },
    {
-    "at": "2026-10-14T10:00",
+    "at": "2026-10-14T10:06",
     "what": "Day 7 nudge sent"
    }
-  ]
+  ],
+  "owner": "Marcus Adebayo"
  },
  {
   "id": "e18",
   "couple": "Emily Hunt & Sam Quinn",
   "channel": "ig",
   "contact": "",
-  "receivedAt": "2026-10-06T21:00",
+  "receivedAt": "2026-10-06T21:02",
   "weddingDate": "2027-09-25",
   "venue": null,
   "guests": 135,
   "budget": 48500,
-  "firstReplyAt": "2026-10-07T20:00",
+  "firstReplyAt": "2026-10-07T20:02",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -553,26 +570,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-06T21:00",
+    "at": "2026-10-06T21:02",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-07T20:00",
+    "at": "2026-10-07T20:02",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e19",
   "couple": "Jess Kerr & Will Rowe",
   "channel": "ig",
   "contact": "",
-  "receivedAt": "2026-10-05T11:00",
+  "receivedAt": "2026-10-05T11:09",
   "weddingDate": "2027-04-03",
   "venue": null,
   "guests": 148,
   "budget": 52200,
-  "firstReplyAt": "2026-10-05T11:40",
+  "firstReplyAt": "2026-10-05T11:49",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -580,26 +598,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-05T11:00",
+    "at": "2026-10-05T11:09",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-05T11:40",
+    "at": "2026-10-05T11:49",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e20",
-  "couple": "Mia Lane & Joe Sims",
+  "couple": "Mia Lanyon & Joe Sims",
   "channel": "wa",
   "contact": "",
-  "receivedAt": "2026-10-05T13:00",
+  "receivedAt": "2026-10-05T13:05",
   "weddingDate": "2027-05-08",
   "venue": null,
   "guests": 71,
-  "budget": 30900,
-  "firstReplyAt": "2026-10-05T13:15",
+  "budget": 30650,
+  "firstReplyAt": "2026-10-05T13:20",
   "status": "Gone quiet",
   "quoteSentOn": "2026-10-06",
   "nudgesSent": [
@@ -610,38 +629,39 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-05T13:00",
+    "at": "2026-10-05T13:05",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-05T13:15",
+    "at": "2026-10-05T13:20",
     "what": "First reply sent"
    },
    {
-    "at": "2026-10-06T17:00",
+    "at": "2026-10-06T17:05",
     "what": "Quote sent"
    },
    {
-    "at": "2026-10-09T10:00",
+    "at": "2026-10-09T10:05",
     "what": "Day 3 nudge sent"
    },
    {
-    "at": "2026-10-13T10:00",
+    "at": "2026-10-13T10:05",
     "what": "Day 7 nudge sent"
    }
-  ]
+  ],
+  "owner": "Elena Marsh"
  },
  {
   "id": "e21",
   "couple": "Ella Mills & Max Tate",
   "channel": "web",
   "contact": "",
-  "receivedAt": "2026-10-05T18:00",
+  "receivedAt": "2026-10-05T18:03",
   "weddingDate": "2027-06-12",
   "venue": null,
   "guests": 84,
   "budget": 34600,
-  "firstReplyAt": "2026-10-05T22:00",
+  "firstReplyAt": "2026-10-05T22:03",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -649,26 +669,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-05T18:00",
+    "at": "2026-10-05T18:03",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-05T22:00",
+    "at": "2026-10-05T22:03",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e22",
   "couple": "Poppy Nash & Finn Vale",
   "channel": "ref",
   "contact": "",
-  "receivedAt": "2026-10-04T10:00",
+  "receivedAt": "2026-10-04T10:07",
   "weddingDate": "2027-07-17",
   "venue": null,
   "guests": 97,
   "budget": 38300,
-  "firstReplyAt": "2026-10-04T10:25",
+  "firstReplyAt": "2026-10-04T10:32",
   "status": "Booked",
   "quoteSentOn": "2026-10-05",
   "nudgesSent": [],
@@ -676,30 +697,31 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-04T10:00",
+    "at": "2026-10-04T10:07",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-04T10:25",
+    "at": "2026-10-04T10:32",
     "what": "First reply sent"
    },
    {
-    "at": "2026-10-05T17:00",
+    "at": "2026-10-05T17:07",
     "what": "Quote sent"
    }
-  ]
+  ],
+  "owner": "Elena Marsh"
  },
  {
   "id": "e23",
   "couple": "Holly Owen & Leo Wynn",
   "channel": "ig",
   "contact": "",
-  "receivedAt": "2026-10-04T20:00",
+  "receivedAt": "2026-10-04T20:01",
   "weddingDate": "2027-08-21",
   "venue": null,
-  "guests": 110,
+  "guests": 104,
   "budget": 42000,
-  "firstReplyAt": "2026-10-06T18:00",
+  "firstReplyAt": "2026-10-06T18:01",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -707,26 +729,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-04T20:00",
+    "at": "2026-10-04T20:01",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-06T18:00",
+    "at": "2026-10-06T18:01",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e24",
   "couple": "Anna Page & Kai York",
   "channel": "ig",
   "contact": "",
-  "receivedAt": "2026-10-03T12:00",
+  "receivedAt": "2026-10-03T12:08",
   "weddingDate": "2027-09-25",
   "venue": null,
   "guests": 123,
   "budget": 45700,
-  "firstReplyAt": "2026-10-03T12:55",
+  "firstReplyAt": "2026-10-03T13:03",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -734,26 +757,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-03T12:00",
+    "at": "2026-10-03T12:08",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-03T12:55",
+    "at": "2026-10-03T13:03",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e25",
   "couple": "Kira Quinn & Ian Ames",
   "channel": "wa",
   "contact": "",
-  "receivedAt": "2026-10-03T15:00",
+  "receivedAt": "2026-10-03T15:04",
   "weddingDate": "2027-04-03",
   "venue": null,
   "guests": 136,
   "budget": 49400,
-  "firstReplyAt": "2026-10-03T15:35",
+  "firstReplyAt": "2026-10-03T15:39",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -761,25 +785,26 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-03T15:00",
+    "at": "2026-10-03T15:04",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-03T15:35",
+    "at": "2026-10-03T15:39",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e26",
   "couple": "Tara Rowe & Rob Bird",
   "channel": "ig",
   "contact": "",
-  "receivedAt": "2026-10-03T22:00",
+  "receivedAt": "2026-10-03T22:06",
   "weddingDate": "2027-05-08",
   "venue": null,
   "guests": 149,
-  "budget": 53100,
+  "budget": 52850,
   "firstReplyAt": null,
   "status": "Lost",
   "quoteSentOn": null,
@@ -788,22 +813,23 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-03T22:00",
+    "at": "2026-10-03T22:06",
     "what": "Enquiry received"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e27",
   "couple": "Beth Sims & Ed Cross",
   "channel": "web",
   "contact": "",
-  "receivedAt": "2026-10-02T09:00",
+  "receivedAt": "2026-10-02T09:02",
   "weddingDate": "2027-06-12",
   "venue": null,
   "guests": 72,
   "budget": 31800,
-  "firstReplyAt": "2026-10-02T09:50",
+  "firstReplyAt": "2026-10-02T09:52",
   "status": "Booked",
   "quoteSentOn": "2026-10-03",
   "nudgesSent": [],
@@ -811,30 +837,31 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-02T09:00",
+    "at": "2026-10-02T09:02",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-02T09:50",
+    "at": "2026-10-02T09:52",
     "what": "First reply sent"
    },
    {
-    "at": "2026-10-03T17:00",
+    "at": "2026-10-03T17:02",
     "what": "Quote sent"
    }
-  ]
+  ],
+  "owner": "Marcus Adebayo"
  },
  {
   "id": "e28",
   "couple": "Nora Tate & Dev Dunn",
   "channel": "ig",
   "contact": "",
-  "receivedAt": "2026-10-02T13:00",
+  "receivedAt": "2026-10-02T13:09",
   "weddingDate": "2027-07-17",
   "venue": null,
   "guests": 85,
   "budget": 35500,
-  "firstReplyAt": "2026-10-02T14:10",
+  "firstReplyAt": "2026-10-02T14:19",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -842,26 +869,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-02T13:00",
+    "at": "2026-10-02T13:09",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-02T14:10",
+    "at": "2026-10-02T14:19",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e29",
   "couple": "Iris Vale & Raj Eden",
   "channel": "wa",
   "contact": "",
-  "receivedAt": "2026-10-02T17:00",
+  "receivedAt": "2026-10-02T17:05",
   "weddingDate": "2027-08-21",
   "venue": null,
   "guests": 98,
-  "budget": 39200,
-  "firstReplyAt": "2026-10-02T17:18",
+  "budget": 38950,
+  "firstReplyAt": "2026-10-02T17:23",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -869,26 +897,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-02T17:00",
+    "at": "2026-10-02T17:05",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-02T17:18",
+    "at": "2026-10-02T17:23",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e30",
   "couple": "Jade Wynn & Ali Frost",
   "channel": "ig",
   "contact": "",
-  "receivedAt": "2026-10-02T20:00",
+  "receivedAt": "2026-10-02T20:03",
   "weddingDate": "2027-09-25",
   "venue": null,
   "guests": 111,
   "budget": 42900,
-  "firstReplyAt": "2026-10-03T12:00",
+  "firstReplyAt": "2026-10-03T12:03",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -896,26 +925,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-02T20:00",
+    "at": "2026-10-02T20:03",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-03T12:00",
+    "at": "2026-10-03T12:03",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e31",
   "couple": "Lara York & Jon Gray",
   "channel": "web",
   "contact": "",
-  "receivedAt": "2026-10-01T10:00",
+  "receivedAt": "2026-10-01T10:07",
   "weddingDate": "2027-04-03",
   "venue": null,
   "guests": 124,
   "budget": 46600,
-  "firstReplyAt": "2026-10-01T10:35",
+  "firstReplyAt": "2026-10-01T10:42",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -923,26 +953,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-01T10:00",
+    "at": "2026-10-01T10:07",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-01T10:35",
+    "at": "2026-10-01T10:42",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e32",
   "couple": "Cara Ames & Neil Hale",
   "channel": "ref",
   "contact": "",
-  "receivedAt": "2026-10-01T11:00",
+  "receivedAt": "2026-10-01T11:01",
   "weddingDate": "2027-05-08",
   "venue": null,
   "guests": 137,
-  "budget": 50300,
-  "firstReplyAt": "2026-10-01T11:12",
+  "budget": 50050,
+  "firstReplyAt": "2026-10-01T11:13",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -950,26 +981,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-01T11:00",
+    "at": "2026-10-01T11:01",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-01T11:12",
+    "at": "2026-10-01T11:13",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e33",
   "couple": "Dana Bird & Paul Irwin",
   "channel": "ig",
   "contact": "",
-  "receivedAt": "2026-10-01T15:00",
+  "receivedAt": "2026-10-01T15:08",
   "weddingDate": "2027-06-12",
   "venue": null,
-  "guests": 150,
-  "budget": 54000,
-  "firstReplyAt": "2026-10-04T13:00",
+  "guests": 153,
+  "budget": 53600,
+  "firstReplyAt": "2026-10-04T13:08",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -977,26 +1009,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-01T15:00",
+    "at": "2026-10-01T15:08",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-04T13:00",
+    "at": "2026-10-04T13:08",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e34",
   "couple": "Fern Cross & Rhys Reed",
   "channel": "wa",
   "contact": "",
-  "receivedAt": "2026-10-01T19:00",
+  "receivedAt": "2026-10-01T19:04",
   "weddingDate": "2027-07-17",
   "venue": null,
   "guests": 73,
   "budget": 32700,
-  "firstReplyAt": "2026-10-01T19:28",
+  "firstReplyAt": "2026-10-01T19:32",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -1004,26 +1037,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-01T19:00",
+    "at": "2026-10-01T19:04",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-01T19:28",
+    "at": "2026-10-01T19:32",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e35",
   "couple": "Gina Dunn & Sean Shaw",
   "channel": "web",
   "contact": "",
-  "receivedAt": "2026-10-12T10:00",
+  "receivedAt": "2026-10-12T10:06",
   "weddingDate": "2027-08-21",
   "venue": null,
   "guests": 86,
-  "budget": 36400,
-  "firstReplyAt": "2026-10-12T10:30",
+  "budget": 36150,
+  "firstReplyAt": "2026-10-12T10:36",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -1031,26 +1065,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-12T10:00",
+    "at": "2026-10-12T10:06",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-12T10:30",
+    "at": "2026-10-12T10:36",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e36",
   "couple": "Hope Eden & Theo Webb",
   "channel": "ig",
   "contact": "",
-  "receivedAt": "2026-10-11T16:00",
+  "receivedAt": "2026-10-11T16:02",
   "weddingDate": "2027-09-25",
   "venue": null,
   "guests": 99,
   "budget": 40100,
-  "firstReplyAt": "2026-10-12T06:00",
+  "firstReplyAt": "2026-10-12T06:02",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -1058,26 +1093,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-11T16:00",
+    "at": "2026-10-11T16:02",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-12T06:00",
+    "at": "2026-10-12T06:02",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e37",
   "couple": "Ines Frost & Ugo Cole",
   "channel": "wa",
   "contact": "",
-  "receivedAt": "2026-10-10T11:00",
+  "receivedAt": "2026-10-10T11:09",
   "weddingDate": "2027-04-03",
   "venue": null,
   "guests": 112,
   "budget": 43800,
-  "firstReplyAt": "2026-10-10T11:25",
+  "firstReplyAt": "2026-10-10T11:34",
   "status": "Gone quiet",
   "quoteSentOn": "2026-10-11",
   "nudgesSent": [
@@ -1088,38 +1124,39 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-10T11:00",
+    "at": "2026-10-10T11:09",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-10T11:25",
+    "at": "2026-10-10T11:34",
     "what": "First reply sent"
    },
    {
-    "at": "2026-10-11T17:00",
+    "at": "2026-10-11T17:09",
     "what": "Quote sent"
    },
    {
-    "at": "2026-10-14T10:00",
+    "at": "2026-10-14T10:09",
     "what": "Day 3 nudge sent"
    },
    {
-    "at": "2026-10-18T10:00",
+    "at": "2026-10-18T10:09",
     "what": "Day 7 nudge sent"
    }
-  ]
+  ],
+  "owner": "Marcus Adebayo"
  },
  {
   "id": "e38",
   "couple": "Joy Gray & Vic Ford",
   "channel": "ig",
   "contact": "",
-  "receivedAt": "2026-10-10T20:00",
+  "receivedAt": "2026-10-10T20:05",
   "weddingDate": "2027-05-08",
   "venue": null,
   "guests": 125,
-  "budget": 47500,
-  "firstReplyAt": "2026-10-11T21:00",
+  "budget": 47250,
+  "firstReplyAt": "2026-10-11T21:05",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -1127,26 +1164,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-10T20:00",
+    "at": "2026-10-10T20:05",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-11T21:00",
+    "at": "2026-10-11T21:05",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e39",
   "couple": "Kate Hale & Wes Hunt",
   "channel": "web",
   "contact": "",
-  "receivedAt": "2026-10-08T14:00",
+  "receivedAt": "2026-10-08T14:03",
   "weddingDate": "2027-06-12",
   "venue": null,
   "guests": 138,
   "budget": 51200,
-  "firstReplyAt": "2026-10-08T15:00",
+  "firstReplyAt": "2026-10-08T15:03",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -1154,26 +1192,27 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-08T14:00",
+    "at": "2026-10-08T14:03",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-08T15:00",
+    "at": "2026-10-08T15:03",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  },
  {
   "id": "e40",
   "couple": "Lena Irwin & Zac Kerr",
   "channel": "ig",
   "contact": "",
-  "receivedAt": "2026-10-08T18:00",
+  "receivedAt": "2026-10-08T18:07",
   "weddingDate": "2027-07-17",
   "venue": null,
   "guests": 151,
   "budget": 54900,
-  "firstReplyAt": "2026-10-08T18:35",
+  "firstReplyAt": "2026-10-08T18:42",
   "status": "Lost",
   "quoteSentOn": null,
   "nudgesSent": [],
@@ -1181,13 +1220,14 @@
   "note": "",
   "history": [
    {
-    "at": "2026-10-08T18:00",
+    "at": "2026-10-08T18:07",
     "what": "Enquiry received"
    },
    {
-    "at": "2026-10-08T18:35",
+    "at": "2026-10-08T18:42",
     "what": "First reply sent"
    }
-  ]
+  ],
+  "owner": null
  }
 ]

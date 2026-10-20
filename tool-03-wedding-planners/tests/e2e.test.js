@@ -44,7 +44,7 @@ test('replying clears the item, logs history and survives a reload', { skip }, a
   assert.match(await p.textContent('#drawer .hist'), /First reply sent/);
   await p.reload(); await p.waitForSelector('main .tbl');
   const who = await p.$$eval('main tr[data-kind] .who', (els) => els.map((e) => e.textContent));
-  assert.ok(!who.includes('Grace Lin & Owen Hart'));
+  assert.ok(!who.includes('Grace Lindqvist & Owen McAteer'));
   await p.goto(url + '#enquiries'); await p.waitForSelector('tbody tr');
   assert.match(await p.textContent('tr[data-id="e02"]'), /Replied/);
 });
@@ -106,7 +106,7 @@ test('search, filters and keyboard', { skip }, async () => {
 test('clicking a Today row opens that couple, and leaving the page closes the panel', { skip }, async () => {
   const p = await page();
   await p.click('tr[data-oid="e09"] .who');
-  assert.equal(await p.textContent('#drawer h2'), 'Freya Hughes & Liam Ross');
+  assert.equal(await p.textContent('#drawer h2'), "Freya Hughes & Liam O'Rourke");
   assert.match(await p.inputValue('#draft'), /hold it for you/);
   await p.click('nav a[href="#referrals"]'); await p.waitForTimeout(100);
   assert.ok(await p.isHidden('#drawer'));
@@ -121,9 +121,13 @@ test('design system guardrails: no gradients, no emoji, one accent, hairline tab
       for (const el of document.querySelectorAll('body *')) {
         const cs = getComputedStyle(el);
         if (cs.backgroundImage.includes('gradient')) out.push('gradient on ' + el.className);
+        if (cs.backgroundColor.replace(/\s/g, '').startsWith('rgb(84,35,231') || cs.backgroundColor.replace(/\s/g, '').startsWith('rgba(84,35,231')) out.push('purple fill on ' + el.className);
         if (parseFloat(cs.borderTopLeftRadius) > 6 && !el.classList.contains('st') && el.tagName !== 'DIALOG' && !el.classList.contains('ini') && cs.width !== cs.height) out.push('radius ' + cs.borderTopLeftRadius + ' on ' + el.className);
       }
       if (/\p{Extended_Pictographic}/u.test(document.body.innerText)) out.push('emoji in text');
+      if (!getComputedStyle(document.body).fontFamily.startsWith('Inter')) out.push('font is not Inter');
+      if (/\d\d:\d\d/.test(document.querySelector('.side').innerText)) out.push('clock in sidebar');
+      if (/\b(sample|test|lorem|placeholder|john doe)\b/i.test(document.querySelector('main').innerText)) out.push('placeholder copy on screen');
       return out;
     });
     assert.deepEqual(bad, [], r);
@@ -134,7 +138,7 @@ test('referrals: thank-you is logged and leaves the queue', { skip }, async () =
   const p = await page();
   await p.goto(url + '#referrals'); await p.waitForSelector('main .tbl');
   await p.click('button[data-id="p4"]');
-  assert.match(await p.inputValue('#draft'), /^Hi Lucy & Sean.*Hartwell Manor/);
+  assert.match(await p.inputValue('#draft'), /^Hi Lucy & Seán.*Hartwell Manor/);
   await p.click('#drawer [data-act="pdo"]');
   assert.match(await p.textContent('main'), /Asked · reminder/);
 });

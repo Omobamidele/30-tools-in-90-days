@@ -6,10 +6,13 @@ const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '
 let rules, meta, data, view = { route: 'today', filter: 'open', channel: '', q: '', open: null };
 
 // ---------- clock ----------
-// The sample clock keeps every demo identical. Add ?clock=live to use the real time.
-const live = new URLSearchParams(location.search).get('clock') === 'live';
+// The fixed clock keeps every demo identical. Add ?clock=live for the real time, or ?clock=2026-10-22T14:10 to replay a later moment.
+const clockParam = new URLSearchParams(location.search).get('clock');
+const live = clockParam === 'live';
+const fixedClock = /^\d{4}-\d\d-\d\dT\d\d:\d\d$/.test(clockParam || '') ? clockParam : null;
 const pad = (n) => String(n).padStart(2, '0');
 const now = () => {
+  if (fixedClock) return fixedClock;
   if (!live) return meta.sampleClock;
   const d = new Date();
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
@@ -54,9 +57,12 @@ function replyPill(e) {
   if (r.state === 'waiting') return st('amber', `Waiting ${R.fmtMinutes(r.minutes)}`);
   return `<span class="sub2">None logged</span>`;
 }
-const STATUS_TONE = { New: 'blue', Replied: 'accent', 'Quote sent': 'accent', 'Gone quiet': '', Booked: 'green', Lost: '' };
+const STATUS_TONE = { New: 'new', Replied: 'half', 'Quote sent': 'quote', 'Gone quiet': '', Booked: 'green', Lost: '' };
+const initials = (n) => n.split(' ').map((x) => x[0]).join('');
+const owner = (n) => n ? `<span class="own"><i>${esc(initials(n))}</i>${esc(n.split(' ')[0])}</span>` : '<span class="own none">Unassigned</span>';
 const statusPill = (s) => st(`${STATUS_TONE[s] || ''} ink`, s);
 function checkLine(e) {
+  if (['Booked', 'Lost'].includes(e.status)) return '';
   const c = check(e);
   if (c.level === 'venue-clash' || c.level === 'full') return `<div class="flag">${esc(c.message)}</div>`;
   if (c.level === 'tight' || c.holds.length) return `<div class="flag tight">${esc(c.message)}</div>`;
@@ -77,6 +83,12 @@ function stepChips(f) {
 const shortDate = (d) => fmtDate(d, true);
 
 // ---------- views ----------
+function comingUp() {
+  const t = now().slice(0, 10), end = new Date(R.toMs(t + 'T12:00') + 14 * 864e5).toISOString().slice(0, 10);
+  const ws = data.weddings.filter((w) => w.date >= t && w.date <= end).sort((a, b) => a.date.localeCompare(b.date));
+  if (!ws.length) return '';
+  return `<tr class="grp"><td colspan="5">Weddings in the next 14 days<span class="cnt">${ws.length}</span></td></tr>${ws.map((w) => `<tr class="ro"><td><span class="who">${esc(w.couple)}</span></td><td class="sub2">${esc(w.venue)}</td><td class="opt">${owner(w.planner)}</td><td class="sub2 opt">${fmtDate(w.date, false)}</td><td></td></tr>`).join('')}`;
+}
 function navHtml() {
   const q = R.actionQueue(data, now(), rules);
   const quotes = data.enquiries.filter((e) => e.status === 'Quote sent').length;
@@ -96,21 +108,21 @@ function today() {
   const s = R.monthSummary(data.enquiries, now(), rules);
   const rows = GROUPS.map(([title, kinds]) => {
     const items = q.filter((a) => kinds.includes(a.kind));
-    return `<tr class="grp"><td colspan="5">${title} <span class="sub2">${items.length}</span></td></tr>` + (items.length ? items.map((a) => {
+    return `<tr class="grp"><td colspan="5">${title}<span class="cnt">${items.length}</span></td></tr>` + (items.length ? items.map((a) => {
       const past = a.kind === 'thank-you' || a.kind === 'review-nudge';
       const rec = past ? data.past.find((p) => p.id === a.id) : byId(a.id);
       const urgent = a.rank === 0 || a.rank === 2 || (a.kind === 'thank-you' && a.minutes > 0);
       return `<tr data-kind="${a.kind}" data-oid="${a.id}" class="${view.open?.id === a.id ? 'sel' : ''}">
-        <td><span class="who">${esc(a.who)}</span>${!past ? checkLine(rec) : ''}</td>
+        <td><span class="who">${esc(a.who)}</span>${!past ? checkLine(rec) || (rec.note ? `<span class="sub">${esc(rec.note)}</span>` : '') : rec.venue ? `<span class="sub">${esc(rec.venue)}</span>` : ''}</td>
         <td class="wrap">${st(urgent ? "red" : "amber", a.why)}</td>
         <td class="sub2 opt">${past ? 'Past couple' : rules.channels[rec.channel]}</td>
-        <td class="sub2 opt">${past ? `Married ${shortDate(rec.weddingDate)}` : rec.weddingDate ? shortDate(rec.weddingDate) : 'No date yet'}</td>
-        <td class="num"><button class="btn sm ${urgent ? 'pri' : ''}" data-act="open" data-kind="${a.kind}" data-id="${a.id}">${ACTION_LABEL[a.kind]}</button></td></tr>`;
-    }).join('') : `<tr class="grp"><td colspan="5" class="sub2" style="font-weight:400;background:#fff">Nothing waiting</td></tr>`);
+        <td class="sub2 opt">${past ? `Married ${new Date(rec.weddingDate + 'T12:00').toLocaleDateString(rules.company.locale, { day: 'numeric', month: 'short' })}` : rec.weddingDate ? shortDate(rec.weddingDate) : 'No date yet'}</td>
+        <td class="num"><button class="btn sm" data-act="open" data-kind="${a.kind}" data-id="${a.id}">${ACTION_LABEL[a.kind]}</button></td></tr>`;
+    }).join('') : `<tr class="grp"><td colspan="5" class="sub2" style="font-weight:400;background:#fff">All clear</td></tr>`);
   }).join('');
   return `${header('Today', '', addBtn)}
-  <div class="tools"><span class="sub2">${q.length ? `${q.length} couple${q.length > 1 ? 's' : ''} waiting on you, most urgent first` : 'Nothing is waiting on you'}</span><span class="meta">${fmtDate(now())}</span></div>
-  <div class="page"><table class="tbl today"><thead><tr><th>Couple</th><th>Why now</th><th class="opt">Channel</th><th class="opt">Wedding</th><th class="num"></th></tr></thead><tbody>${rows}</tbody></table>
+  <div class="tools"><span class="sub2">${q.length ? `${q.length} waiting on you, most urgent first` : 'Nothing is waiting on you'}</span><span class="meta">${new Date(now().slice(0,10)+'T12:00').toLocaleDateString(rules.company.locale,{weekday:'long',day:'numeric',month:'long'})}</span></div>
+  <div class="page"><table class="tbl today"><thead><tr><th>Couple</th><th>Why now</th><th class="opt">Channel</th><th class="opt">Wedding</th><th class="num"></th></tr></thead><tbody>${rows}${comingUp()}</tbody></table>
   <p class="month">So far this month we've had ${s.total} enquiries. Median first reply was ${R.fmtMinutes(s.medianReplyMinutes)}, and ${s.slowOrNone} waited over ${R.fmtMinutes(rules.firstReply.targetMinutes)} or got no reply. ${s.bookedFromReferrals} of ${s.booked} bookings came from referrals.</p></div>`;
 }
 
@@ -136,14 +148,14 @@ function enquiries() {
   return `${header('Enquiries', '', addBtn)}
   <div class="views" role="group" aria-label="Views">${tab('open', 'Open')}${tab('reply', 'Needs a reply')}${tab('booked', 'Booked')}${tab('closed', 'Lost or quiet')}${tab('all', 'All')}</div>
   <div class="tools"><label class="sr" for="chan">Channel</label><select id="chan"><option value="">All channels</option>${Object.entries(rules.channels).map(([k, v]) => `<option value="${k}" ${view.channel === k ? 'selected' : ''}>${v}</option>`).join('')}</select>
-   ${view.q ? `<span class="sub2">Matching “${esc(view.q)}”</span>` : ''}<span class="meta">${list.length} of ${data.enquiries.length} · newest first</span></div>
-  <div class="page">${list.length ? `<table class="tbl"><thead><tr><th>Couple</th><th>Channel</th><th class="opt">Received</th><th>Wedding</th><th class="opt">Venue</th><th class="num opt">Guests</th><th class="num opt">Budget</th><th>First reply</th><th>Status</th><th>Next step</th></tr></thead><tbody>
+   ${view.q ? `<span class="sub2">Matching “${esc(view.q)}”</span>` : ''}<span class="meta">${list.length} of ${data.enquiries.length}</span></div>
+  <div class="page">${list.length ? `<table class="tbl"><thead><tr><th>Couple</th><th>Channel</th><th class="opt">Received<span class="srt" aria-label="sorted newest first">↓</span></th><th>Wedding</th><th class="opt">Venue</th><th class="num opt">Guests</th><th class="num opt">Budget</th><th>First reply</th><th>Status</th><th>Planner</th><th>Next step</th></tr></thead><tbody>
   ${list.map((e) => `<tr data-id="${e.id}" class="${view.open?.id === e.id ? 'sel' : ''}"><td><button class="lnk who" data-act="open" data-id="${e.id}">${esc(e.couple)}</button>${checkLine(e)}</td>
    <td class="sub2">${rules.channels[e.channel]}</td><td class="sub2 opt">${fmtWhen(e.receivedAt)}</td>
    <td>${e.weddingDate ? shortDate(e.weddingDate) : '<span class="sub2">No date yet</span>'}</td><td class="sub2 opt">${esc(e.venue || '')}</td>
    <td class="num opt">${e.guests ?? ''}</td><td class="num opt">${e.budget ? money(e.budget) : ''}</td>
-   <td>${replyPill(e)}</td><td>${statusPill(e.status)}</td><td class="sub2">${esc(nextStep(e))}</td></tr>`).join('')}</tbody></table>`
-  : `<div class="empty"><b>No enquiries match</b>${view.q ? `Nothing for “${esc(view.q)}”. ` : ''}Try another view, or add the enquiry.</div>`}</div>`;
+   <td>${replyPill(e)}</td><td>${statusPill(e.status)}</td><td>${owner(e.owner)}</td><td class="sub2">${esc(nextStep(e))}</td></tr>`).join('')}</tbody></table>`
+  : `<div class="empty"><b>No enquiries match</b>${view.q ? `Nothing for “${esc(view.q)}”. ` : ''}Check the spelling or switch to All.</div>`}</div>`;
 }
 
 function followups() {
@@ -153,21 +165,21 @@ function followups() {
   <div class="page">${list.length ? `<table class="tbl"><thead><tr><th>Couple</th><th>Quote sent</th><th>Wedding</th>${rules.followUp.nudgeDays.map((d) => `<th>Day ${d}</th>`).join('')}<th class="num"></th></tr></thead><tbody>
   ${list.map(([e, f]) => `<tr data-id="${e.id}" class="${view.open?.id === e.id ? 'sel' : ''}"><td><span class="who">${esc(e.couple)}</span></td><td class="sub2">${fmtDate(e.quoteSentOn, false)}</td><td class="sub2">${shortDate(e.weddingDate)}</td>
    ${f.steps.map((s) => `<td>${s.state === 'sent' ? st('green', `Sent ${fmtDate(s.sentOn, false)}`) : s.state === 'late' ? st('red', `${s.daysLate} d late`) : s.state === 'due-today' ? st('amber', 'Due today') : st('', fmtDate(s.due, false))}</td>`).join('')}
-   <td class="num">${f.goneQuiet ? st('red', 'Gone quiet?') + ' ' : ''}<button class="btn sm ${f.next && ['late', 'due-today'].includes(f.next.state) ? 'pri' : ''}" data-act="open" data-kind="nudge" data-id="${e.id}">Open</button></td></tr>`).join('')}</tbody></table>`
+   <td class="num">${f.goneQuiet ? st('red', 'No answer') : f.next && ['late', 'due-today'].includes(f.next.state) ? `<button class="btn sm" data-act="open" data-kind="nudge" data-id="${e.id}">Nudge</button>` : ''}</td></tr>`).join('')}</tbody></table>`
   : '<div class="empty"><b>No quotes out</b>Quotes you send appear here with their nudge dates.</div>'}</div>`;
 }
 
-const REF_PILL = { 'not-yet': (s) => ['', `Ask opens ${fmtDate(s.opensOn, false)}`], 'thank-you-due': (s) => ['red', s.daysLate ? `Thank-you ${s.daysLate} d late` : 'Thank-you due today'], waiting: (s) => ['accent', `Asked · reminder ${fmtDate(s.nudgeOn, false)}`], 'review-nudge-due': () => ['amber', 'Review reminder due'], 'asked-twice': () => ['', 'Asked twice, leave it'], done: () => ['green', 'Review received'] };
+const REF_PILL = { 'not-yet': (s) => ['', `Ask opens ${fmtDate(s.opensOn, false)}`], 'thank-you-due': (s) => ['red', s.daysLate ? `Thank-you ${s.daysLate} d late` : 'Thank-you due today'], waiting: (s) => ['half', `Asked · reminder ${fmtDate(s.nudgeOn, false)}`], 'review-nudge-due': () => ['amber', 'Review reminder due'], 'asked-twice': () => ['', 'Asked twice, leave it'], done: () => ['green', 'Review received'] };
 function referrals() {
   const rows = [...data.past].sort((a, b) => a.weddingDate.localeCompare(b.weddingDate));
   const fromRefs = data.enquiries.filter((e) => e.referredBy);
   return `${header('Referrals and reviews', 'Pipeline')}
   <div class="tools"><span class="sub2">Thank-you with a review and referral ask ${rules.referral.askAfterDays} days after the wedding, then one reminder ${rules.referral.reviewNudgeAfterDays} days later.</span></div>
-  <div class="page"><table class="tbl"><thead><tr><th>Couple</th><th>Married</th><th>Venue</th><th>Review</th><th>Referred</th><th>Status</th><th class="num"></th></tr></thead><tbody>
+  <div class="page"><table class="tbl"><thead><tr><th>Couple</th><th>Married</th><th class="opt2">Venue</th><th>Review</th><th>Referred</th><th>Status</th><th class="num"></th></tr></thead><tbody>
   ${rows.map((p) => { const s = R.referralState(p, now(), rules); const [t, l] = REF_PILL[s.state](s); const sent = fromRefs.filter((e) => e.referredBy === p.couple);
-   return `<tr data-pid="${p.id}"><td><span class="who">${esc(p.couple)}</span></td><td class="sub2">${shortDate(p.weddingDate)}</td><td class="sub2">${esc(p.venue)}</td><td class="sub2">${esc(p.review || '')}</td>
+   return `<tr data-pid="${p.id}"><td><span class="who">${esc(p.couple)}</span></td><td class="sub2">${shortDate(p.weddingDate)}</td><td class="sub2 opt2">${esc(p.venue)}</td><td class="sub2">${esc(p.review || '')}</td>
    <td class="sub2">${sent.map((e) => esc(R.firstNames(e.couple))).join(', ')}</td><td>${st(t, l)}</td>
-   <td class="num">${s.state === 'thank-you-due' || s.state === 'review-nudge-due' ? `<button class="btn sm pri" data-act="open" data-kind="${s.state === 'thank-you-due' ? 'thank-you' : 'review-nudge'}" data-id="${p.id}">Write message</button>` : ''}</td></tr>`; }).join('')}</tbody></table>
+   <td class="num">${s.state === 'thank-you-due' || s.state === 'review-nudge-due' ? `<button class="btn sm" data-act="open" data-kind="${s.state === 'thank-you-due' ? 'thank-you' : 'review-nudge'}" data-id="${p.id}">Write message</button>` : ''}</td></tr>`; }).join('')}</tbody></table>
   <div class="tools" style="margin-top:18px;border-top:1px solid var(--line)"><b style="font-weight:500">Enquiries from referrals</b><span class="meta">${fromRefs.length}</span></div>
   <table class="tbl"><tbody>${fromRefs.map((e) => `<tr data-id="${e.id}"><td><span class="who">${esc(e.couple)}</span></td><td class="sub2">Referred by ${esc(e.referredBy)}</td><td class="sub2">${fmtDate(e.receivedAt)}</td><td>${statusPill(e.status)}</td></tr>`).join('') || '<tr><td class="empty">None yet.</td></tr>'}</tbody></table></div>`;
 }
@@ -182,7 +194,7 @@ function rulesView() {
     ['Thank-you and referral ask', `${r.referral.askAfterDays} days after the wedding; one review reminder ${r.referral.reviewNudgeAfterDays} days later`],
     ['Channels', Object.values(r.channels).join(', ')],
   ];
-  return `${header('House rules', 'Workspace', '<button class="btn" data-act="reset">Reset sample data</button>')}
+  return `${header('House rules', 'Workspace', '<button class="btn" data-act="reset">Restore starting data</button>')}
   <div class="tools"><span class="sub2">Set in <code>config/rules.json</code>. Change them there to fit another planning company.</span></div>
   <div class="page"><div class="cfg">${rows.map(([k, v]) => `<div class="k">${k}</div><div>${esc(v)}</div>`).join('')}</div>
   <div class="tools" style="margin-top:18px;border-top:1px solid var(--line)"><b style="font-weight:500">Message templates</b><span class="meta">Drafts only. You copy them into WhatsApp, Instagram or email</span></div>
@@ -212,7 +224,7 @@ function drawer() {
   if (R.OPEN_STATUSES.includes(e.status)) actions.push(`<button class="btn ghost" data-act="do" data-a="lost" data-id="${e.id}">Lost</button>`);
   el.innerHTML = `${panelHead('Enquiry')}
   <div class="hd"><h2>${esc(e.couple)}</h2><div class="meta">${rules.channels[e.channel]}${e.contact ? `, ${esc(e.contact)}` : ''}</div><div class="chips">${statusPill(e.status)}${replyPill(e)}</div></div>
-  <div class="sect"><dl class="facts"><dt>Wedding date</dt><dd>${e.weddingDate ? fmtDate(e.weddingDate) : 'Not given yet'}</dd><dt>Venue</dt><dd>${esc(e.venue || 'Not chosen')}</dd><dt>Guests</dt><dd>${e.guests ?? '—'}</dd><dt>Budget</dt><dd>${money(e.budget)}</dd><dt>Received</dt><dd>${fmtWhen(e.receivedAt)}</dd>${e.referredBy ? `<dt>Referred by</dt><dd>${esc(e.referredBy)}</dd>` : ''}${e.note ? `<dt>Note</dt><dd>${esc(e.note)}</dd>` : ''}</dl></div>
+  <div class="sect"><dl class="facts"><dt>Wedding date</dt><dd>${e.weddingDate ? fmtDate(e.weddingDate) : 'Not given yet'}</dd><dt>Venue</dt><dd>${esc(e.venue || 'Not chosen')}</dd><dt>Guests</dt><dd>${e.guests ?? '—'}</dd><dt>Budget</dt><dd>${money(e.budget)}</dd><dt>Planner</dt><dd>${owner(e.owner)}</dd><dt>Received</dt><dd>${fmtWhen(e.receivedAt)}</dd>${e.referredBy ? `<dt>Referred by</dt><dd>${esc(e.referredBy)}</dd>` : ''}${e.note ? `<dt>Note</dt><dd>${esc(e.note)}</dd>` : ''}</dl></div>
   <div class="sect"><h3>Date check</h3><div class="callout ${tone}"><div>${esc(c.message)}${c.booked.length ? `<small>${c.booked.map((w) => `${esc(w.couple)} at ${esc(w.venue)} (${esc(w.planner)})`).join('<br>')}</small>` : ''}</div></div></div>
   ${f ? `<div class="sect"><h3>Follow-up</h3><div class="steps">${stepChips(f)}</div></div>` : ''}
   ${draftKind ? `<div class="sect"><h3>Draft message</h3><label class="sr" for="draft">Draft message</label><textarea id="draft">${esc(R.draftFor(draftKind, e, c, rules, fmtDate))}</textarea><div class="row"><button class="btn" data-act="copy">Copy</button>${primary}</div></div>` : ''}
@@ -233,8 +245,8 @@ function addForm(values = {}, errors = {}, dup = null) {
   const f = (name, label, input, cls = '') => `<div class="f ${cls}"><label for="f-${name}">${label}</label>${input}${errors[name] ? `<span class="err" id="e-${name}">${errors[name]}</span>` : ''}</div>`;
   const inp = (name, type = 'text', extra = '') => `<input id="f-${name}" name="${name}" type="${type}" value="${esc(v[name] ?? '')}" ${errors[name] ? `aria-invalid="true" aria-describedby="e-${name}"` : ''} ${extra}>`;
   const c = v.weddingDate && !errors.weddingDate ? R.dateCheck({ weddingDate: v.weddingDate, venue: v.venue }, data.weddings, data.enquiries, rules) : null;
-  $('#addDialog').innerHTML = `<form method="dialog" id="addFormEl" novalidate><div class="dh"><h2 id="addTitle">New enquiry</h2><p>Paste it in from Instagram, WhatsApp, email or the website form.</p></div>
-  <div class="grid">${f('couple', 'Couple’s names', inp('couple', 'text', 'placeholder="e.g. Maya Ellis & Sam Turner" required'), 'full')}
+  $('#addDialog').innerHTML = `<form method="dialog" id="addFormEl" novalidate><div class="dh"><h2 id="addTitle">New enquiry</h2><p>From a DM, WhatsApp, email or the website form. The date is checked as you type.</p></div>
+  <div class="grid">${f('couple', 'Couple’s names', inp('couple', 'text', 'required'), 'full')}
   ${f('channel', 'Came in by', `<select id="f-channel" name="channel">${Object.entries(rules.channels).map(([k, l]) => `<option value="${k}" ${v.channel === k ? 'selected' : ''}>${l}</option>`).join('')}</select>`)}
   ${f('receivedAt', 'Received', inp('receivedAt', 'datetime-local'))}
   ${f('contact', 'Handle, phone or email', inp('contact'))}${f('referredBy', 'Referred by', inp('referredBy'))}
@@ -261,6 +273,7 @@ function act(e, a, at) {
   try {
     const i = data.enquiries.findIndex((x) => x.id === e.id);
     const next = R.applyAction(e, a, at);
+    if (a === 'reply' && !next.owner) next.owner = rules.team[0].name; // whoever sends the first reply owns the enquiry
     data.enquiries[i] = next;
     if (a === 'booked' && !data.weddings.some((w) => w.enquiryId === e.id || w.couple === e.couple)) data.weddings.push({ id: 'w-' + e.id, enquiryId: e.id, couple: e.couple, date: e.weddingDate, venue: e.venue || 'Venue to confirm', planner: R.dateCheck({ weddingDate: e.weddingDate, venue: e.venue }, data.weddings, [], rules).level === 'tight' ? rules.team.map((t) => t.name).find((n) => !data.weddings.some((w) => w.date === e.weddingDate && w.planner === n)) : rules.team[0].name });
     save(); render();
@@ -283,7 +296,7 @@ function bind() {
     if (a === 'add') { addForm(); $('#addDialog').showModal(); $('#f-couple').focus(); }
     if (a === 'cancel-add') $('#addDialog').close();
     if (a === 'open-dup') { $('#addDialog').close(); view.open = { id: t.dataset.id }; render(); }
-    if (a === 'reset') { if (confirm('Reset to the sample data? Your changes in this browser will be lost.')) { localStorage.removeItem(STORE_KEY); data = await sampleData((p) => fetch(p).then((r) => r.json())); view.open = null; render(); toast('Sample data restored'); } }
+    if (a === 'reset') { if (confirm('Restore the starting data? Changes made in this browser will be lost.')) { localStorage.removeItem(STORE_KEY); data = await sampleData((p) => fetch(p).then((r) => r.json())); view.open = null; render(); toast('Starting data restored'); } }
   });
   document.addEventListener('change', (ev) => {
     if (ev.target.id === 'chan') { view.channel = ev.target.value; render(); }
@@ -310,8 +323,8 @@ function bind() {
 
 load().then(() => {
   document.title = `Enquiries · ${rules.company.name}`;
-  $('#company').textContent = rules.company.name; $('#logo').textContent = rules.company.initial;
-  document.documentElement.style.setProperty('--accent', rules.company.brandColor); document.documentElement.style.setProperty('--sel', rules.company.brandColor + '14');
-  const n = now(); $('#clock').textContent = `${fmtDate(n, false)}, ${n.slice(11, 16)}`; $('#clock').title = live ? 'Live clock' : 'Fixed demo clock (add ?clock=live for real time)'; const me = rules.team[0].name; $('#meName').textContent = me; $('#meIni').textContent = me.split(' ').map((x) => x[0]).join('');
+  $('#company').textContent = rules.company.shortName || rules.company.name; $('#logo').textContent = rules.company.initial;
+  document.documentElement.style.setProperty('--accent', rules.company.brandColor);
+  const me = rules.team[0].name; $('#meName').textContent = me; $('#meIni').textContent = initials(me);
   bind(); route();
 }).catch((err) => { $('#app').innerHTML = `<div class="card"><div class="empty"><b>Couldn’t load the tracker</b>${esc(err.message)} is missing or unreadable. Run <code>npm run dev</code> from the tool folder, rather than opening the file directly.</div></div>`; });

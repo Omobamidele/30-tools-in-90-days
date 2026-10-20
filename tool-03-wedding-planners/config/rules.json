@@ -1,15 +1,16 @@
 {
   "company": {
-    "name": "Juniper & Lane Weddings",
-    "initial": "J",
-    "brandColor": "#2f5d50",
+    "name": "Hollis & Wren Weddings",
+    "shortName": "Hollis & Wren",
+    "initial": "H",
+    "brandColor": "#5423e7",
     "currency": "GBP",
     "locale": "en-GB",
     "senderName": "Elena"
   },
   "team": [
-    { "name": "Elena Lane", "role": "Owner, lead planner" },
-    { "name": "Marcus Hale", "role": "Lead planner" }
+    { "name": "Elena Marsh", "role": "Owner, lead planner" },
+    { "name": "Marcus Adebayo", "role": "Lead planner" }
   ],
   "capacity": {
     "maxWeddingsPerDate": 2,
