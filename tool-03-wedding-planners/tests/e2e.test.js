@@ -21,14 +21,14 @@ async function page(opts = {}) {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, ...opts });
   const p = await ctx.newPage();
   p.errors = []; p.on('pageerror', (e) => p.errors.push(e.message));
-  await p.goto(url); await p.waitForSelector('.item, .empty');
+  await p.goto(url); await p.waitForSelector('main .tbl, main .empty');
   return p;
 }
 const skip = !chrome && 'Chrome not found (set CHROME_PATH)';
 
 test('Today lists every couple waiting, most urgent first', { skip }, async () => {
   const p = await page();
-  const who = await p.$$eval('main .item .tx b', (els) => els.map((e) => e.textContent));
+  const who = await p.$$eval('main tr[data-kind] .who', (els) => els.map((e) => e.textContent));
   assert.deepEqual(who.map((w) => w.split(' ')[0]), ['Grace', 'Maya', 'Amelia', 'Freya', 'Ruby', 'Lucy', 'Aisha']);
   assert.match(await p.textContent('.month'), /40 enquiries.*40 min.*3 of 5 bookings/s);
   assert.deepEqual(p.errors, []);
@@ -42,8 +42,8 @@ test('replying clears the item, logs history and survives a reload', { skip }, a
   assert.ok(await p.isDisabled('#drawer [data-a="quote"]'), 'cannot quote a full date');
   await p.click('#drawer [data-a="reply"]');
   assert.match(await p.textContent('#drawer .hist'), /First reply sent/);
-  await p.reload(); await p.waitForSelector('.item');
-  const who = await p.$$eval('main .item .tx b', (els) => els.map((e) => e.textContent));
+  await p.reload(); await p.waitForSelector('main .tbl');
+  const who = await p.$$eval('main tr[data-kind] .who', (els) => els.map((e) => e.textContent));
   assert.ok(!who.includes('Grace Lin & Owen Hart'));
   await p.goto(url + '#enquiries'); await p.waitForSelector('tbody tr');
   assert.match(await p.textContent('tr[data-id="e02"]'), /Replied/);
@@ -60,7 +60,7 @@ test('nudge flow: day 3 nudge moves the quote on to day 7', { skip }, async () =
 
 test('add enquiry: validation, live date check, duplicate warning, then save', { skip }, async () => {
   const p = await page();
-  await p.click('text=Add enquiry');
+  await p.click('main >> text=New enquiry');
   await p.fill('#f-receivedAt', '2026-10-20T09:20');
   await p.click('dialog button[type=submit]');
   assert.match(await p.textContent('#e-couple'), /Add the couple/);
@@ -75,7 +75,7 @@ test('add enquiry: validation, live date check, duplicate warning, then save', {
   await p.waitForSelector('#drawer h2');
   assert.equal(await p.textContent('#drawer h2'), 'Ada Obi & Tunde Bello');
   // Same couple again, names reversed: warned, then allowed on purpose
-  await p.click('main >> text=Add enquiry');
+  await p.click('main >> text=New enquiry');
   await p.fill('#f-couple', 'Tunde Bello & Ada Obi'); await p.fill('#f-receivedAt', '2026-10-20T09:25');
   await p.click('dialog button[type=submit]');
   assert.match(await p.textContent('#dupWarn'), /Possible duplicate: Ada Obi/);
@@ -103,9 +103,36 @@ test('search, filters and keyboard', { skip }, async () => {
   assert.ok(await p.isHidden('#drawer'));
 });
 
+test('clicking a Today row opens that couple, and leaving the page closes the panel', { skip }, async () => {
+  const p = await page();
+  await p.click('tr[data-oid="e09"] .who');
+  assert.equal(await p.textContent('#drawer h2'), 'Freya Hughes & Liam Ross');
+  assert.match(await p.inputValue('#draft'), /hold it for you/);
+  await p.click('nav a[href="#referrals"]'); await p.waitForTimeout(100);
+  assert.ok(await p.isHidden('#drawer'));
+});
+
+test('design system guardrails: no gradients, no emoji, one accent, hairline tables', { skip }, async () => {
+  const p = await page();
+  for (const r of ['today', 'enquiries', 'followups', 'referrals', 'rules']) {
+    await p.goto(url + '#' + r); await p.waitForTimeout(100);
+    const bad = await p.evaluate(() => {
+      const out = [];
+      for (const el of document.querySelectorAll('body *')) {
+        const cs = getComputedStyle(el);
+        if (cs.backgroundImage.includes('gradient')) out.push('gradient on ' + el.className);
+        if (parseFloat(cs.borderTopLeftRadius) > 6 && !el.classList.contains('st') && el.tagName !== 'DIALOG' && !el.classList.contains('ini') && cs.width !== cs.height) out.push('radius ' + cs.borderTopLeftRadius + ' on ' + el.className);
+      }
+      if (/\p{Extended_Pictographic}/u.test(document.body.innerText)) out.push('emoji in text');
+      return out;
+    });
+    assert.deepEqual(bad, [], r);
+  }
+});
+
 test('referrals: thank-you is logged and leaves the queue', { skip }, async () => {
   const p = await page();
-  await p.goto(url + '#referrals'); await p.waitForSelector('.item');
+  await p.goto(url + '#referrals'); await p.waitForSelector('main .tbl');
   await p.click('button[data-id="p4"]');
   assert.match(await p.inputValue('#draft'), /^Hi Lucy & Sean.*Hartwell Manor/);
   await p.click('#drawer [data-act="pdo"]');
@@ -117,7 +144,7 @@ test('booking a free date holds it for the next enquiry', { skip }, async () => 
   await p.goto(url + '#enquiries'); await p.waitForSelector('tbody tr');
   await p.click('tr[data-id="e01"]'); // Maya & Sam, 5 Jun 2027, free
   await p.click('#drawer [data-a="booked"]');
-  await p.click('main >> text=Add enquiry');
+  await p.click('main >> text=New enquiry');
   await p.fill('#f-weddingDate', '2027-06-05'); await p.dispatchEvent('#f-weddingDate', 'change');
   assert.match(await p.textContent('#liveCheck'), /1 of 2 slots left \(Maya & Sam booked\)/);
 });
