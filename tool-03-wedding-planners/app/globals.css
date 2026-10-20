@@ -8,7 +8,7 @@
   --color-transparent: transparent;
   --color-ink: #131416;        /* headings, primary text, rail background */
   --color-fg: #2e3036;         /* body text */
-  --color-muted: #646875;      /* secondary text (4.9:1 on canvas) */
+  --color-muted: #646875;      /* secondary text (5.2:1 on canvas) */
   --color-faint: #9a9ea8;      /* icons and placeholders only, never text */
   --color-line: #e3e5e8;       /* hairlines, table rules */
   --color-line-strong: #cdd0d6;/* control borders */

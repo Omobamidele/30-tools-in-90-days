@@ -23,7 +23,7 @@ Yellow #ffc233 is not used. Everything else is neutral grey. There are no gradie
 |---|---|---|
 | Headings, rail | ink | #131416 |
 | Body text | fg | #2e3036 |
-| Secondary text | muted | #646875 (4.9:1 on canvas) |
+| Secondary text | muted | #646875 (5.2:1 on canvas, 5.6:1 on white) |
 | Icons and placeholders only | faint | #9a9ea8 |
 | Hairlines | line | #e3e5e8 |
 | Control borders | line-strong | #cdd0d6 |
