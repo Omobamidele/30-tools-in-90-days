@@ -1,6 +1,6 @@
-import { test, describe } from 'node:test';
+import { test, describe } from 'vitest';
 import assert from 'node:assert/strict';
-import * as R from '../src/rules.js';
+import * as R from '../lib/rules.js';
 import { rules as loadRules, sample, NOW, enq } from './helpers.js';
 
 const rules = loadRules();

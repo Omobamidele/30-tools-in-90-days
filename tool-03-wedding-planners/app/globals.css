@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+/* Mo Bamidele tool design kit (Lemon Squeezy dashboard style): white surfaces on a gray-50 canvas,
+   Inter, purple #5423e7 as the brand accent, yellow #ffc233 for one or two touches per screen. */
+@theme {
+  --color-brand-50: #f3f0fe;
+  --color-brand-100: #e6dffd;
+  --color-brand-500: #6a3ff0;
+  --color-brand-600: #5423e7;
+  --color-brand-700: #431bc0;
+  --color-accent: #ffc233;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html { -webkit-font-smoothing: antialiased; }
+body { font-feature-settings: "cv11", "ss01"; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+@keyframes sheet-in { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop-in { from { opacity: 0; transform: translate(-50%, -48%) scale(0.98); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+.anim-sheet[data-state="open"] { animation: sheet-in 200ms ease-out; }
+.anim-fade[data-state="open"] { animation: fade-in 200ms ease-out; }
+.anim-pop[data-state="open"] { animation: pop-in 200ms ease-out; }

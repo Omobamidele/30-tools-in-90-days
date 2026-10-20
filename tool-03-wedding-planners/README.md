@@ -33,17 +33,16 @@ Not included, on purpose: sending messages (you copy the draft), inbox sync, ven
 
 ## Architecture
 ```text
-Manual entry / sample-data/*.json ─▶ config/rules.json ─▶ src/rules.js (pure, tested) ─▶ src/app.js screens + draft messages
+Manual entry / sample-data/*.json ─▶ config/rules.json ─▶ lib/rules.js (pure, tested) ─▶ app/ routes + components/ (Next.js)
 ```
-One HTML page, plain ES modules, no framework, no build step, no backend. There's no AI, because every decision is a date comparison. Details: [docs/05-architecture.md](docs/05-architecture.md).
+Next.js 16 (app router) and React 19, with Tailwind v4, Radix UI primitives in the shadcn style (dialog, sheet, toggle group), TanStack Table v8, react-hook-form, sonner toasts and lucide icons. Every screen has its own URL (`/today`, `/enquiries`, `/follow-ups`, `/referrals`, `/settings`); filters and the open record live in the query string. No backend. There's no AI, because every decision is a date comparison. Details: [docs/05-architecture.md](docs/05-architecture.md).
 
 ## Setup
 ```bash
 cd tool-03-wedding-planners
-npm install        # only needed for the browser tests
+npm install
 npm run dev        # http://localhost:3003  (npm run demo is the same)
 ```
-Opening `index.html` straight from disk won't work: browsers block loading the JSON files over `file://`.
 
 ## Environment variables
 See `.env.example`. `PORT=3003` (fixed) and an optional `CHROME_PATH` for the browser tests. There are no secrets.
@@ -56,14 +55,14 @@ None live. A website-form webhook and calendar sync are on the roadmap.
 
 ## Testing
 ```bash
-npm test           # 56 rule and data tests (node --test, no install needed)
-npm run test:e2e   # 12 browser tests in Chrome via playwright-core
+npm test           # 51 rule and data tests (vitest)
+npm run test:e2e   # 10 browser tests in Chrome (@playwright/test, against a production build)
 npm run test:all   # both
 ```
-They cover each rule and its boundaries, bad and missing input, duplicates, empty data and 2,000 enquiries, plus the full reply → quote → nudge → booked flow, persistence after a reload, the phone layout, keyboard use, accessible names and design guardrails (no gradients, no emoji, no radius over 6px). The log is in [docs/06-build-log.md](docs/06-build-log.md).
+They cover each rule and its boundaries, bad and missing input, duplicates, empty data and 2,000 enquiries, plus the full reply → quote → nudge → booked flow, persistence after a reload, the phone layout, keyboard use, accessible names and design guardrails (no gradients, no emoji, Inter, no placeholder copy). The log is in [docs/06-build-log.md](docs/06-build-log.md).
 
 ## Deployment
-Any static host serving `index.html`, `src/`, `config/` and `sample-data/`. Not deployed.
+`npm run build` produces a fully static app; any Next.js host (e.g. Vercel) works. Not deployed.
 
 ## White-label configuration
 Everything client-specific is in [`config/rules.json`](config/rules.json): company name, initial, brand colour, currency, locale, sender name, team, weddings per date, the same-venue rule, the reply target, nudge days, the gone-quiet wait, the referral timing, channels and every message template.

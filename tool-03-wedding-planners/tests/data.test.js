@@ -1,8 +1,8 @@
 // Sample data and config: catches broken data before it reaches the screen.
-import { test } from 'node:test';
+import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { rules as loadRules, sample } from './helpers.js';
-import { STATUSES } from '../src/rules.js';
+import { STATUSES } from '../lib/rules.js';
 
 const rules = loadRules(), { enquiries, weddings, past } = sample();
 
