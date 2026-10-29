@@ -2,6 +2,7 @@
 
 Short daily notes on what I actually worked on in the Field Lab.
 
+- [2026-10-29](2026/10/2026-10-29.md): Builder's Desk Week 12 cold email kit and post, weekend events research, LinkedIn comment rounds
 - [2026-10-28](2026/10/2026-10-28.md): Builder's Desk Week 12 GTM Stack Health Check kit and Thursday post draft, Notion kit post check-in, LinkedIn comment rounds
 - [2026-10-27](2026/10/2026-10-27.md): Notion role-landing practice kit and first Built It post, best-ever post check-in, LinkedIn comment rounds
 - [2026-10-26](2026/10/2026-10-26.md): My GTM Life post on becoming a GTM Engineer, events carousel check-in, niche-only engagement list and comment rounds
