@@ -2,6 +2,7 @@
 
 Short daily notes on what I actually worked on in the Field Lab.
 
+- [2026-11-03](2026/11/2026-11-03.md): Clay Club Ibadan run of show, post performance check-in, LinkedIn comment rounds
 - [2026-11-02](2026/11/2026-11-02.md): Clay Club Ibadan hosting post, post performance check-in, LinkedIn comment rounds
 - [2026-11-01](2026/11/2026-11-01.md): Quiet Sunday, LinkedIn comment rounds and connection ideas only
 - [2026-10-31](2026/10/2026-10-31.md): Clay Club Ibadan invite research and WhatsApp group image, LinkedIn comment rounds
