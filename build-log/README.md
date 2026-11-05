@@ -2,6 +2,7 @@
 
 Short daily notes on what I actually worked on in the Field Lab.
 
+- [2026-11-05](2026/11/2026-11-05.md): Weekend GTM events scout, Clay Club Ibadan hiring demo, post performance check-in, LinkedIn comment rounds
 - [2026-11-04](2026/11/2026-11-04.md): Builder's Desk Week 13 stack health check kit, proof post, post performance check-in, LinkedIn comment rounds
 - [2026-11-03](2026/11/2026-11-03.md): Clay Club Ibadan run of show, post performance check-in, LinkedIn comment rounds
 - [2026-11-02](2026/11/2026-11-02.md): Clay Club Ibadan hosting post, post performance check-in, LinkedIn comment rounds
