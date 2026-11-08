@@ -2,6 +2,7 @@
 
 Short daily notes on what I actually worked on in the Field Lab.
 
+- [2026-11-08](2026/11/2026-11-08.md): Ask Mo portfolio assistant v1, Clay University digest for Clay Club Ibadan demo, 90-day hook pack revisions, comment batches stopped
 - [2026-11-07](2026/11/2026-11-07.md): 90-day LinkedIn post pack rebuild after feedback, watermarked memes, LinkedIn comment rounds
 - [2026-11-06](2026/11/2026-11-06.md): Creator audit v3, Mo/Veerly content strategy, week-4 weekend events carousel, post performance check-in, LinkedIn comment rounds
 - [2026-11-05](2026/11/2026-11-05.md): Weekend GTM events scout, Clay Club Ibadan hiring demo, post performance check-in, LinkedIn comment rounds
