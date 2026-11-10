@@ -2,6 +2,7 @@
 
 Short daily notes on what I actually worked on in the Field Lab.
 
+- [2026-11-10](2026/11/2026-11-10.md): Lead-list carousel posted, post performance check-in, product landing page v3 to v7.1, Notion-embeddable cohort coach app, Notion lesson word boxes
 - [2026-11-09](2026/11/2026-11-09.md): Tuesday outbound carousel and Mo's P.A.C.E. Framework (v1, v2), Monday story post, post performance check-in
 - [2026-11-08](2026/11/2026-11-08.md): Ask Mo portfolio assistant v1, Clay University digest for Clay Club Ibadan demo, 90-day hook pack revisions, comment batches stopped
 - [2026-11-07](2026/11/2026-11-07.md): 90-day LinkedIn post pack rebuild after feedback, watermarked memes, LinkedIn comment rounds
