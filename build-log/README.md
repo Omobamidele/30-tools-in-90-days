@@ -2,6 +2,7 @@
 
 Short daily notes on what I actually worked on in the Field Lab.
 
+- [2026-11-14](2026/11/2026-11-14.md): Step-by-step build guides for all 10 GTM portfolio projects in Notion, new "Where to start" sections
 - [2026-11-13](2026/11/2026-11-13.md): Weekend events carousel posted, post check-in, product landing page v9.5 to v9.6, new LinkedIn engagement plan
 - [2026-11-12](2026/11/2026-11-12.md): Builder's Desk Week 14 100 GTM jobs kit and post, post check-in, weekend events scout, Clay Club Ibadan practice plan, course lesson pages
 - [2026-11-11](2026/11/2026-11-11.md): Product landing page v8 to v9.4, cohort coach app v8 to v11.1, Notion emoji cleanup, Builder's Desk Week 14 prep, post check-in
