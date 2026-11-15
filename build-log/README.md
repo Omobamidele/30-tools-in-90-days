@@ -2,6 +2,7 @@
 
 Short daily notes on what I actually worked on in the Field Lab.
 
+- [2026-11-15](2026/11/2026-11-15.md): Quiet Sunday, small product template edits in Notion and prep for Project 1 of the portfolio plan
 - [2026-11-14](2026/11/2026-11-14.md): Step-by-step build guides for all 10 GTM portfolio projects in Notion, new "Where to start" sections
 - [2026-11-13](2026/11/2026-11-13.md): Weekend events carousel posted, post check-in, product landing page v9.5 to v9.6, new LinkedIn engagement plan
 - [2026-11-12](2026/11/2026-11-12.md): Builder's Desk Week 14 100 GTM jobs kit and post, post check-in, weekend events scout, Clay Club Ibadan practice plan, course lesson pages
