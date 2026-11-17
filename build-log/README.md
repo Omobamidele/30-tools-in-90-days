@@ -2,6 +2,7 @@
 
 Short daily notes on what I actually worked on in the Field Lab.
 
+- [2026-11-17](2026/11/2026-11-17.md): Community Discord set up and rebranded, CV check bot, career sprint job research and lesson drafts, post check-in
 - [2026-11-16](2026/11/2026-11-16.md): Post check-in on the Nov 13 events carousel and a format takeaway, light build day
 - [2026-11-15](2026/11/2026-11-15.md): Quiet Sunday, small product template edits in Notion and prep for Project 1 of the portfolio plan
 - [2026-11-14](2026/11/2026-11-14.md): Step-by-step build guides for all 10 GTM portfolio projects in Notion, new "Where to start" sections
