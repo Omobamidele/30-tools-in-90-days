@@ -2,6 +2,7 @@
 
 Short daily notes on what I actually worked on in the Field Lab.
 
+- [2026-11-21](2026/11/2026-11-21.md): Clay Club Ibadan talk deck cleanup, QR codes added and checked, new feedback slide
 - [2026-11-20](2026/11/2026-11-20.md): Weekend events carousel rebuilt and posted with Clay Club Ibadan up front, post check-in
 - [2026-11-19](2026/11/2026-11-19.md): Builder's Desk Week 15 free GTM courses sheet and post, community posts and helper bot fixes, Clay Club Ibadan deck fixes, weekend events scout
 - [2026-11-17](2026/11/2026-11-17.md): Community Discord set up and rebranded, CV check bot, career sprint job research and lesson drafts, post check-in
