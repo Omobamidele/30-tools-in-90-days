@@ -2,6 +2,7 @@
 
 Short daily notes on what I actually worked on in the Field Lab.
 
+- [2026-11-25](2026/11/2026-11-25.md): Builder's Desk 2027 GTM skills kit from 113 job listings, Wednesday post drafts, post check-in, Clay Club Ibadan venue clips
 - [2026-11-24](2026/11/2026-11-24.md): Clinic Helper Discord bot work, women-in-tech LinkedIn post and check-in, community drafts, banner research
 - [2026-11-23](2026/11/2026-11-23.md): Go To Growth Circle welcome posted and daily posts drafted, new "always feel behind" LinkedIn post drafted, post check-in
 - [2026-11-22](2026/11/2026-11-22.md): Clay Club Ibadan talk script written, scholarship QR added, deck reordered to 16 slides with a redesigned $1M slide
